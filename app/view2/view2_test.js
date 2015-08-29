@@ -1,8 +1,8 @@
 'use strict';
 
-describe('myApp.view2 module', function() {
+describe('flugel.view2 module', function() {
 
-  beforeEach(module('myApp.view2'));
+  beforeEach(module('flugel.view2'));
 
   describe('view2 controller', function(){
 
