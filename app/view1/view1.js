@@ -9,6 +9,9 @@ angular.module('flugel.view1', ['ngRoute'])
   });
 }])
 
-.controller('View1Ctrl', [function() {
-
+.controller('View1Ctrl', ['$scope', function($scope) {
+    $scope.idCustomer = "";
+    $scope.nextToDigitName = function (val) {
+        $scope.idCustomer = val;
+    };
 }]);

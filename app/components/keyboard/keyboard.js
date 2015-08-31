@@ -8,22 +8,27 @@ angular
     return {
       retrict: 'E',
       controller: keyboardCtrl,
+      controllerAs: 'vm',
       templateUrl: 'components/keyboard/keyboard.html'
     };
   }
 
   function keyboardCtrl($scope, $element, $attrs) {
-    $scope.keyboard = "";
-    $scope.keyboardNumber = "";
+    var vm = this;
+    vm.keyboard = "";
+    vm.keyboardNumber = "";
 
     $scope.addNumber = function (number) {
-        $scope.keyboardNumber = $scope.keyboardNumber + number;
+        vm.keyboardNumber = vm.keyboardNumber + number;
     };
     $scope.setNumber = function () {
-        $scope.keyboard = $scope.keyboardNumber;
+        vm.keyboard = vm.keyboardNumber;
+        if (typeof $scope[$attrs.onsubmitkb] === 'function') {
+            $scope[$attrs.onsubmitkb](vm.keyboard);
+        }
     };
     $scope.clearKeyboard = function () {
-        $scope.keyboard = "";
-        $scope.keyboardNumber = "";
+        vm.keyboard = "";
+        vm.keyboardNumber = "";
     };
   }
