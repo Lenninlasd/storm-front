@@ -1,0 +1,29 @@
+<div layout="row" flex-sm="100" flex-md="60" flex-gt-md="50" layout-align="center center">
+    <md-dialog aria-label="List dialog">
+      <md-dialog-content>
+          <h3>Confirmar petición de turno</h3>
+          <md-list-item class="md-2-line" ng-show="dataCustomer.name">
+            <div class="md-list-item-text">
+              <h3> {{ dataCustomer.name }} </h3>
+              <p>Nombre usuario</p>
+            </div>
+          </md-list-item>
+          <md-divider ></md-divider>
+
+          <md-list-item class="md-2-line">
+            <div class="md-list-item-text">
+              <h3> {{dataCustomer.id}} </h3>
+              <p>Numero de la linea</p>
+            </div>
+          </md-list-item>
+      </md-dialog-content>
+      <div class="md-actions" >
+        <md-button ng-click="cancel()" class="md-warn" >
+              Cancelar
+        </md-button>
+        <md-button ng-click="answer('ok')" class="md-primary md-raised" >
+             Generar
+        </md-button>
+      </div>
+    </md-dialog>
+</div>

@@ -1,0 +1,49 @@
+<div layout="column" layout-wrap>
+
+
+    <fg-keyboard ng-show="vc1.step === 1" onsubmitkb="nextToDigitName"></fg-keyboard>
+
+    <div ng-show="vc1.step === 2" layout="row" layout-align="center center">
+        <div flex="60" flex-md="80" flex-sm="100" class="md-whiteframe-z2" layout-padding layout="column" style="background-color:white;padding:5%">
+            <md-input-container>
+                <label style="font-size:1.2em">Ingrese del cliente con la id: {{vc1.dataCustomer.id}}</label>
+                <input ng-model="vc1.dataCustomer.name">
+            </md-input-container>
+            <section layout="row" layout-align="center center" layout-wrap>
+                  <md-button class="md-raised md-primary" ng-click="goBackStep(1)">Atras</md-button>
+                  <md-button class="md-raised md-primary" ng-click="digitName()">Siguiente</md-button>
+            </section>
+        </div>
+    </div>
+
+    <div ng-show="vc1.step === 3" layout="row" layout-align="center center">
+
+        <div flex="60" flex-md="90" flex-sm="100" layout="row" layout-wrap layout-align="start center"
+        class="md-whiteframe-z2" layout-padding style="background-color:#E8E8E8;margin-top:15px">
+            <md-button ng-click="goBackStep(2)" class="md-fab md-mini" style="background-color: rgba(224, 224, 224, 0.96);color:#111">
+                <md-tooltip hide-sm>Atrás</md-tooltip><i class="fa fa-arrow-left fa-lg"></i>
+            </md-button>
+            <h3 flex="100">Escoge el motivo de la visita</h3>
+            <div flex="100" flex-md="50" flex-gt-md="33" ng-click="choosePurposeVisit($event, 1)">
+                <div style="background-color:white" layout-padding class="md-whiteframe-z2">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                </div>
+            </div>
+            <div flex="100" flex-md="50" flex-gt-md="33">
+                <div style="background-color:white" layout-padding class="md-whiteframe-z2">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                </div>
+            </div>
+            <div flex="100" flex-md="50" flex-gt-md="33">
+                <div style="background-color:white" layout-padding class="md-whiteframe-z2">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                </div>
+            </div>
+            <div flex="100" flex-md="50" flex-gt-md="33">
+                <div style="background-color:white" layout-padding class="md-whiteframe-z2">
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

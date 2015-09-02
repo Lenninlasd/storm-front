@@ -14,6 +14,10 @@ angular
   }
 
   function keyboardCtrl($scope, $element, $attrs) {
+    // Máximo numero de degitos aceptados (deberia cambiarse por una ReGex)
+    var maxNumber = 10;
+    var minNumber = 4;
+
     var vm = this;
     vm.keyboard = "";
     vm.keyboardNumber = "";
@@ -23,9 +27,15 @@ angular
     };
     $scope.setNumber = function () {
         vm.keyboard = vm.keyboardNumber;
-        if (typeof $scope[$attrs.onsubmitkb] === 'function') {
-            $scope[$attrs.onsubmitkb](vm.keyboard);
+
+        if (vm.keyboard.length >= minNumber && vm.keyboard.length <= maxNumber) {
+            if (typeof $scope[$attrs.onsubmitkb] === 'function') {
+                $scope[$attrs.onsubmitkb](vm.keyboard);
+            }
+        }else{
+            alert('No es un número válido')
         }
+
     };
     $scope.clearKeyboard = function () {
         vm.keyboard = "";
