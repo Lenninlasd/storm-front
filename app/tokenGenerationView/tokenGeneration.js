@@ -4,7 +4,7 @@ angular.module('flugel.view1', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view1', {
-    templateUrl: 'tokenGeneration/tokenGeneration.html',
+    templateUrl: 'tokenGenerationView/tokenGeneration.html',
     controllerAs: 'vc1',
     controller: 'View1Ctrl'
   });
@@ -17,30 +17,36 @@ function View1Ctrl($scope, $mdDialog) {
     var vc1 = this;
     start();
 
+    $scope.start = start;
     $scope.goBackStep = goBackStep;
     $scope.nextToDigitName = nextToDigitName;
     $scope.digitName = digitName;
     $scope.choosePurposeVisit = choosePurposeVisit;
 
+    $scope.$on('submitKeyboard', function(event, val) {
+        nextToDigitName(val);
+    });
+
     function start() {
         vc1.step = 1;
         vc1.dataCustomer = {id: "", name:"", service:""};
+        $scope.keyboardNumber = "";
     }
 
     function goBackStep(step) {
         vc1.step = step;
-    };
+    }
 
     function nextToDigitName(val) {
         vc1.dataCustomer.id = val;
         vc1.step = 2;
         console.log(vc1);
-    };
+    }
 
     function digitName() {
         vc1.step = 3;
         console.log(vc1);
-    };
+    }
 
     function choosePurposeVisit(ev, idService) {
         vc1.dataCustomer.service = idService;
@@ -48,7 +54,7 @@ function View1Ctrl($scope, $mdDialog) {
 
         $mdDialog.show({
             controller: DialogController,
-             templateUrl: 'tokenGeneration/dialog.html',
+             templateUrl: 'tokenGenerationView/dialog.html',
              parent: angular.element(document.body),
              targetEvent: ev,
              clickOutsideToClose:true,
@@ -62,7 +68,7 @@ function View1Ctrl($scope, $mdDialog) {
             $scope.status = 'You cancelled the dialog.';
             console.log($scope.status);
         });
-    };
+    }
 
 
 }
