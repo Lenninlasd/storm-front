@@ -12,11 +12,11 @@ angular.module('flugel.view1', ['ngRoute'])
 .controller('View1Ctrl', View1Ctrl)
 .controller('DialogController', DialogController);
 
-View1Ctrl.$inject = ['$scope', '$mdDialog'];
-function View1Ctrl($scope, $mdDialog) {
+View1Ctrl.$inject = ['$scope', '$mdDialog', 'Turno'];
+function View1Ctrl($scope, $mdDialog, Turno) {
     var vc1 = this;
+    vc1.services = [];
     start();
-
     $scope.start = start;
     $scope.goBackStep = goBackStep;
     $scope.nextToDigitName = nextToDigitName;
@@ -25,6 +25,10 @@ function View1Ctrl($scope, $mdDialog) {
 
     $scope.$on('submitKeyboard', function(event, val) {
         nextToDigitName(val);
+    });
+
+    Turno.services.query(function (data) {
+        vc1.services = data;
     });
 
     function start() {

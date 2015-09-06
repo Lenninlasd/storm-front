@@ -4,10 +4,11 @@
 angular.module('flugel', [
   'ngRoute',
   'ngMaterial',
+  'flugel.services',
   'flugel.view1',
   'flugel.view2',
   'flugel.version',
-  'flugel.components'
+  'flugel.components',
 ]).
 config(['$routeProvider', function($routeProvider) {
   $routeProvider.otherwise({redirectTo: '/view1'});

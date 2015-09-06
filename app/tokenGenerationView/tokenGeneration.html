@@ -23,24 +23,9 @@
                 <md-tooltip hide-sm>Atrás</md-tooltip><i class="fa fa-arrow-left fa-lg"></i>
             </md-button>
             <h3 flex="100">Escoge el motivo de la visita</h3>
-            <div flex="100" flex-md="50" flex-gt-md="33" ng-click="choosePurposeVisit($event, 1)">
+            <div flex="100" flex-md="50" flex-gt-md="33" ng-repeat="serviceData in vc1.services" ng-click="choosePurposeVisit($event, serviceData._id)">
                 <div style="background-color:white" layout-padding class="md-whiteframe-z2">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                </div>
-            </div>
-            <div flex="100" flex-md="50" flex-gt-md="33">
-                <div style="background-color:white" layout-padding class="md-whiteframe-z2">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                </div>
-            </div>
-            <div flex="100" flex-md="50" flex-gt-md="33">
-                <div style="background-color:white" layout-padding class="md-whiteframe-z2">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
-                </div>
-            </div>
-            <div flex="100" flex-md="50" flex-gt-md="33">
-                <div style="background-color:white" layout-padding class="md-whiteframe-z2">
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit,
+                    {{serviceData.service.serviceName}}
                 </div>
             </div>
         </div>
