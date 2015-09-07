@@ -29,6 +29,7 @@ function View1Ctrl($scope, $mdDialog, Turno) {
 
     Turno.services.query(function (data) {
         vc1.services = data;
+        console.log(data);
     });
 
     function start() {
@@ -52,8 +53,8 @@ function View1Ctrl($scope, $mdDialog, Turno) {
         console.log(vc1);
     }
 
-    function choosePurposeVisit(ev, idService) {
-        vc1.dataCustomer.service = idService;
+    function choosePurposeVisit(ev, service) {
+        vc1.dataCustomer.service = service;
         console.log(vc1);
 
         $mdDialog.show({

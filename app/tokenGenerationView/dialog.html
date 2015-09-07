@@ -5,14 +5,21 @@
           <md-list-item class="md-2-line" ng-show="dataCustomer.name">
             <div class="md-list-item-text">
               <h3> {{ dataCustomer.name }} </h3>
-              <p>{{"Nombre usuario" | uppercase}}</p>
+              <p style="color:#777">{{"Nombre usuario" | uppercase}}</p>
             </div>
           </md-list-item>
           <md-divider ng-show="dataCustomer.name" ng-show="dataCustomer.name"></md-divider>
           <md-list-item class="md-2-line">
             <div class="md-list-item-text">
               <h3> {{dataCustomer.id}} </h3>
-              <p>{{"Número de la linea" | uppercase}}</p>
+              <p style="color:#777">{{"Número de la linea" | uppercase}}</p>
+            </div>
+          </md-list-item>
+          <md-divider ng-show="dataCustomer.name"></md-divider>
+          <md-list-item class="md-3-line">
+            <div class="md-list-item-text">
+              <h3 style="line-height: 1.3em;"> {{dataCustomer.service.service.serviceName}} </h3>
+              <p style="color:#777">{{"Motivo de la visita" | uppercase}}</p>
             </div>
           </md-list-item>
       </md-dialog-content>
