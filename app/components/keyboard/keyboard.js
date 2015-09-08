@@ -36,7 +36,8 @@ angular
         }
     };
     $scope.clearKeyboard = function () {
-        $scope.keyboard = "";
-        $scope.keyboardNumber = "";
+        $scope.keyboardNumber = $scope.keyboardNumber.slice(0,-1);
+        // $scope.keyboard = "";
+        // $scope.keyboardNumber = "";
     };
   }

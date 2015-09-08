@@ -6,14 +6,14 @@ angular.module('flugel.view1', ['ngRoute'])
   $routeProvider.when('/view1', {
     templateUrl: 'tokenGenerationView/tokenGeneration.html',
     controllerAs: 'vc1',
-    controller: 'View1Ctrl'
+    controller: 'TokenGenerationCtrl'
   });
 }])
-.controller('View1Ctrl', View1Ctrl)
-.controller('DialogController', DialogController);
+.controller('TokenGenerationCtrl', TokenGenerationCtrl)
+.controller('DialogCtrl', DialogCtrl);
 
-View1Ctrl.$inject = ['$scope', '$mdDialog', 'Turno'];
-function View1Ctrl($scope, $mdDialog, Turno) {
+TokenGenerationCtrl.$inject = ['$scope', '$mdDialog', 'Turno'];
+function TokenGenerationCtrl($scope, $mdDialog, Turno) {
     var vc1 = this;
     vc1.services = [];
     start();
@@ -58,7 +58,7 @@ function View1Ctrl($scope, $mdDialog, Turno) {
         console.log(vc1);
 
         $mdDialog.show({
-            controller: DialogController,
+            controller: DialogCtrl,
              templateUrl: 'tokenGenerationView/dialog.html',
              parent: angular.element(document.body),
              targetEvent: ev,
@@ -78,8 +78,8 @@ function View1Ctrl($scope, $mdDialog, Turno) {
 
 }
 
-DialogController.$inject = ['$scope', '$mdDialog', 'dataCustomer'];
-function DialogController($scope, $mdDialog, dataCustomer) {
+DialogCtrl.$inject = ['$scope', '$mdDialog', 'dataCustomer'];
+function DialogCtrl($scope, $mdDialog, dataCustomer) {
     console.log(dataCustomer);
     $scope.dataCustomer = dataCustomer;
     $scope.closeDialog = function() {
