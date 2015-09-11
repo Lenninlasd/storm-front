@@ -9,7 +9,7 @@ angular
       retrict: 'E',
       scope: {},
       controller: tokenScreenCtrl,
-      templateUrl: 'components/tokenScreen/tokenScreen.html',
+      templateUrl: 'src/components/tokenScreen/tokenScreen.html',
       link: tokenScreenLink
     };
   }

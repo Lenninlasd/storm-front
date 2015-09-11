@@ -5,10 +5,9 @@
         <div layout="row" layout-align="center center">
             <md-input-container flex="60" flex-sm="80" offset-gt-sm="10" offset-sm="10">
                 <label>Ingresa el número</label>
-                <input ng-model="keyboardNumber" readonly  style="font-size:1.5em;width:100%"  maxlength="10">
+                <input ng-model="keyboardNumber" class="input-keyboard" readonly  maxlength="10">
             </md-input-container>
-            <md-button class="" flex="5" ng-click="clearKeyboard()" aria-label="assa"
-                style="border-radius: 50% 0px 0px 50%;min-width:30px;line-height: 20px;min-height: 20px;">
+            <md-button class="button-delete-keyboard" flex="5" ng-click="clearKeyboard()" aria-label="assa">
                 <i class="fa fa-times"></i>
             </md-button>
         </div>

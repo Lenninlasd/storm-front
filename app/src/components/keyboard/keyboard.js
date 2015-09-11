@@ -11,7 +11,7 @@ angular
         keyboardNumber: "=keyboardnumber"
       },
       controller: keyboardCtrl,
-      templateUrl: 'components/keyboard/keyboard.html'
+      templateUrl: 'src/components/keyboard/keyboard.html'
     };
   }
 

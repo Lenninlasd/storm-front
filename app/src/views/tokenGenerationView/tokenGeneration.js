@@ -4,7 +4,7 @@ angular.module('flugel.view1', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
   $routeProvider.when('/view1', {
-    templateUrl: 'tokenGenerationView/tokenGeneration.html',
+    templateUrl: 'src/views/tokenGenerationView/tokenGeneration.html',
     controllerAs: 'vc1',
     controller: 'TokenGenerationCtrl'
   });
@@ -59,7 +59,7 @@ function TokenGenerationCtrl($scope, $mdDialog, Turno) {
 
         $mdDialog.show({
             controller: DialogCtrl,
-             templateUrl: 'tokenGenerationView/dialog.html',
+             templateUrl: 'src/views/tokenGenerationView/dialog.html',
              parent: angular.element(document.body),
              targetEvent: ev,
              clickOutsideToClose:true,
