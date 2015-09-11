@@ -1,0 +1,30 @@
+$baseline-grid:            8px !default;
+$layout-breakpoint-sm:     600px !default;
+$layout-breakpoint-md:     960px !default;
+$layout-breakpoint-lg:     1200px !default;
+$layout-gutter-width:      ($baseline-grid * 2) !default;
+
+
+.fg-resp-text {
+    font-size: 34px;
+    font-weight: 400;
+}
+
+// SMALL SCREEN
+@media (max-width: $layout-breakpoint-sm - 1) {
+    .fg-resp-text {
+        font-size: 14px;
+        font-weight: 400;
+        letter-spacing: 0.01em;
+    }
+
+}
+
+// MEDIUM SCREEN
+@media (min-width: $layout-breakpoint-sm) and (max-width: $layout-breakpoint-md - 1) {
+    .fg-resp-text {
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 32px;
+    }
+}

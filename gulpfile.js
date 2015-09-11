@@ -21,5 +21,5 @@ gulp.task('sass', function () {
 
 gulp.task('sass:watch', function () {
     'use strict';
-    gulp.watch('./sass/**/*.scss', ['sass']);
+    gulp.watch('./app/src/**/*.scss', ['sass']);
 });
