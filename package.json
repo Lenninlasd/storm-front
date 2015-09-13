@@ -23,7 +23,7 @@
     "shelljs": "^0.2.6"
   },
   "scripts": {
-    "postinstall": "bower install",
+    "postinstall": "bower install && gulp sass",
     "prestart": "npm install",
     "start": "node serve.js",
     "pretest": "npm install",
