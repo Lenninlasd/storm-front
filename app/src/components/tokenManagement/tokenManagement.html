@@ -1,26 +1,71 @@
 <div layout="row" layout-align="center center" >
-<md-card flex="100" style="max-width:800px">
-  <md-card-content layout="column" class="">
-    <div class="" layout="row" layout-padding aria-label="head">
-        <div flex="33" layout="column" layout-align="space-around center">
-            <div class="md-headline">{{"23:52"}}</div>
-            <div class="md-caption">Nombre</div>
+    <md-card flex="100" style="max-width:800px">
+
+        <md-card-content layout="column" class="">
+          <div class="" layout="row" layout-padding aria-label="head">
+              <div flex="33" layout="column"  style="text-align: center;">
+                  <div class="md-headline">{{"23:52"}}</div>
+                  <div class="md-caption">Tiempo de Espera</div>
+              </div>
+              <div flex="33" layout="column" style="text-align: center;">
+                  <div class="md-headline">{{"00:02"}}</div>
+                  <div class="md-caption">Tiempo de llamado</div>
+              </div>
+              <div flex="33" layout="column" style="text-align: center;">
+                  <div class="md-headline">{{"02:41"}}</div>
+                  <div class="md-caption">Tiempo de atención</div>
+              </div>
+          </div>
+
+          <div layout="row" layout-padding>
+              <div flex="33" layout="column" layout-align="space-around center">
+                  <div class="md-headline">{{"A057"}}</div>
+                  <div class="md-caption">Turno</div>
+              </div>
+          </div>
+
+          <md-list>
+              <md-list-item class="md-3-line">
+                  <div class="md-list-item-text" layout="column" style="padding-bottom:0px">
+                      <p>{{ "Servicio" }}</p>
+                      <h3 style="line-height: 1.3em;">{{ "QUIERO REPONER MI CHIP / MI FACTURA / ACTUALIZACION DE DATOS" }}</h3>
+                  </div>
+              </md-list-item>
+              <div class="" style="padding-left: 40px">
+                  <md-list-item class="md-3-line">
+                      <div class="md-list-item-text" layout="column" style="padding-top:0px;padding-bottom:0px">
+                          <p>{{ "tag" }}</p>
+                          <h3 style="line-height: 1.3em;">{{ "QUIERO REPONER MI CHIP / MI FACTURA / ACTUALIZACION DE DATOS" }}</h3>
+                      </div>
+                  </md-list-item>
+                  <md-list-item class="md-3-line">
+                      <div class="md-list-item-text" layout="column" style="padding-top:0px;padding-bottom:0px">
+                          <p>{{ "tag" }}</p>
+                          <h3 style="line-height: 1.3em;">{{ "QUIERO REPONER MI CHIP / MI FACTURA / ACTUALIZACION DE DATOS" }}</h3>
+                      </div>
+                  </md-list-item>
+              </div>
+          <md-list>
+        </md-card-content>
+
+        <div layout="row"  layout-align="end center" ng-hide="demo.onlyRead">
+            <md-fab-speed-dial layout="column" layout-align="center end" ng-hide="demo.hidden" md-direction="{{demo.direction}}" class="md-fling">
+              <md-fab-trigger layout="row" layout-align="end center">
+                <md-button aria-label="menu" class="md-fab md-primary" ng-click="demo.fondonegroT()">
+                  <md-tooltip hide-sm md-direction="left" md-autohide="false">Menu</md-tooltip>
+                  <i class="fa fa-bars fa-lg"></i>
+                </md-button>
+              </md-fab-trigger>
+
+              <md-fab-actions style="height: 0px;">
+                <div layout="row" layout-align="end center" ng-repeat="item in demo.items" >
+                  <span class="material-tag">{{item.name}}</span>
+                  <md-button aria-label="{{item.name}}" class="md-fab md-raised {{item.btnColor}}">
+                      <i class="fa fa-lg {{item.icon}}"></i>
+                  </md-button>
+                </div>
+              </md-fab-actions>
+            </md-fab-speed-dial>
         </div>
-        <div flex="33" layout="column" layout-align="space-around center">
-            <div class="md-headline">{{"00:02"}}</div>
-            <div class="md-caption">Turno</div>
-        </div>
-        <div flex="33" layout="column" layout-align="space-around center">
-            <div class="md-headline">{{"02:41"}}</div>
-            <div class="md-caption">Terminal</div>
-        </div>
-    </div>
-    <div layout="row" layout-padding>
-        <div flex="33" layout="column" layout-align="space-around center">
-            <div class="md-headline">{{"A057"}}</div>
-            <div class="md-caption">Turno</div>
-        </div>
-    </div>
-  </md-card-content>
-</md-card>
+    </md-card>
 </div>
