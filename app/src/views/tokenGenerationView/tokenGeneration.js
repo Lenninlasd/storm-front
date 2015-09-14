@@ -14,8 +14,8 @@ angular.module('flugel.view1', ['ngRoute'])
 
 TokenGenerationCtrl.$inject = ['$scope', '$mdDialog', 'Turno'];
 function TokenGenerationCtrl($scope, $mdDialog, Turno) {
-    var vc1 = this;
-    vc1.services = [];
+    var self = this;
+    self.services = [];
     start();
     $scope.start = start;
     $scope.goBackStep = goBackStep;
@@ -28,34 +28,40 @@ function TokenGenerationCtrl($scope, $mdDialog, Turno) {
     });
 
     Turno.services.query(function (data) {
-        vc1.services = data;
-        console.log(data);
+        self.services = data;
     });
 
     function start() {
-        vc1.step = 1;
-        vc1.dataCustomer = {id: "", name:"", service:""};
+        self.step = 1;
+        self.dataCustomer = {
+            service:"",
+            token: {
+              lineNumber: "",
+              screenName:"",
+              consecutive: 12,
+              adviserName: "Pablito Emilio",
+              adviserLastName: "Escobar Gaviria",
+              adviserId: "QuiboPues"
+            }
+        };
         $scope.keyboardNumber = "";
     }
 
     function goBackStep(step) {
-        vc1.step = step;
+        self.step = step;
     }
 
     function nextToDigitName(val) {
-        vc1.dataCustomer.id = val;
-        vc1.step = 2;
-        console.log(vc1);
+        self.dataCustomer.token.lineNumber = val;
+        self.step = 2;
     }
 
     function digitName() {
-        vc1.step = 3;
-        console.log(vc1);
+        self.step = 3;
     }
 
     function choosePurposeVisit(ev, service) {
-        vc1.dataCustomer.service = service;
-        console.log(vc1);
+        self.dataCustomer.service = service;
 
         $mdDialog.show({
             controller: DialogCtrl,
@@ -63,7 +69,7 @@ function TokenGenerationCtrl($scope, $mdDialog, Turno) {
              parent: angular.element(document.body),
              targetEvent: ev,
              clickOutsideToClose:true,
-             locals: { dataCustomer: vc1.dataCustomer }
+             locals: { dataCustomer: self.dataCustomer }
         })
         .then(function(answer) {
             $scope.status = 'You said the information was "' + answer + '".';
@@ -80,8 +86,17 @@ function TokenGenerationCtrl($scope, $mdDialog, Turno) {
 
 DialogCtrl.$inject = ['$scope', '$mdDialog', 'dataCustomer'];
 function DialogCtrl($scope, $mdDialog, dataCustomer) {
-    console.log(dataCustomer);
+
+    dataCustomer.token.numerator = dataCustomer.service.service.subServices[0].numerador;
+    dataCustomer.token.motivoVisita = dataCustomer.service.service.serviceName;
     $scope.dataCustomer = dataCustomer;
+    $scope.showTokenResult = false;
+
+    $scope.tokenGeneration = function () {
+        console.log($scope.dataCustomer.token);
+        $scope.showTokenResult = true;
+    };
+
     $scope.closeDialog = function() {
         $mdDialog.hide();
     };

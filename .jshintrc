@@ -9,6 +9,8 @@
     "beforeEach": false,
     "afterEach": false,
     "module": false,
-    "inject": false
+    "inject": false,
+    "console": false,
+    "document": false
   }
 }

@@ -5,8 +5,8 @@
     <div ng-show="vc1.step === 2" layout="row" layout-align="center center">
         <div flex="60" flex-md="80" flex-sm="100" class="md-whiteframe-z2" layout-padding layout="column" style="background-color:white;padding:5%">
             <md-input-container>
-                <label style="font-size:1.2em">Ingrese del cliente con la id: {{vc1.dataCustomer.id}}</label>
-                <input ng-model="vc1.dataCustomer.name">
+                <label style="font-size:1.2em">Ingrese el nombre del cliente con la id: {{vc1.dataCustomer.token.lineNumber}}</label>
+                <input ng-model="vc1.dataCustomer.token.screenName">
             </md-input-container>
             <section layout="row" layout-align="center center" layout-wrap>
                   <md-button class="md-raised md-primary" ng-click="goBackStep(1)">Atras</md-button>
