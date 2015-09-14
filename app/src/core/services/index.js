@@ -9,10 +9,10 @@ angular.module('flugel.services', ['ngResource'])
       protocol: 'http'
 	};
 })
-.factory('Turno',['$resource', 'Config', function ContenidoFactory($resource, Config){
+.factory('Token',['$resource', 'Config', function ContenidoFactory($resource, Config){
 	return {
 		services : $resource('http://' + Config.ip + ':' + Config.port + '/services'),
-		tokens : $resource('http://' + Config.ip + ':' + Config.port + '/turnos'),
+		tokens : $resource('http://' + Config.ip + ':' + Config.port + '/tokens'),
 		// contenido : $resource('http://' + Config.ip + ':' + Config.port + '/' +  Config.version + '/docente/contenido.json', {}, { update: {method: 'PUT'}}),
 		// calificaciones: $resource('http://' + Config.ip + ':' + Config.port + '/' +  Config.version + '/docente/calificaciones.json', {}, { update: {method: 'PUT'}}),
 		// notas: $resource('http://' + Config.ip + ':' + Config.port + '/' + Config.version +'/docente/notas.json', {}, { update: {method: 'PUT'}}),

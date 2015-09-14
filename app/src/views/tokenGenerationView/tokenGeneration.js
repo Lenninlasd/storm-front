@@ -12,8 +12,8 @@ angular.module('flugel.view1', ['ngRoute'])
 .controller('TokenGenerationCtrl', TokenGenerationCtrl)
 .controller('DialogCtrl', DialogCtrl);
 
-TokenGenerationCtrl.$inject = ['$scope', '$mdDialog', 'Turno'];
-function TokenGenerationCtrl($scope, $mdDialog, Turno) {
+TokenGenerationCtrl.$inject = ['$scope', '$mdDialog', 'Token'];
+function TokenGenerationCtrl($scope, $mdDialog, Token) {
     var self = this;
     self.services = [];
     start();
@@ -27,7 +27,7 @@ function TokenGenerationCtrl($scope, $mdDialog, Turno) {
         nextToDigitName(val);
     });
 
-    Turno.services.query(function (data) {
+    Token.services.query(function (data) {
         self.services = data;
     });
 
@@ -68,7 +68,7 @@ function TokenGenerationCtrl($scope, $mdDialog, Turno) {
              templateUrl: 'src/views/tokenGenerationView/dialog.html',
              parent: angular.element(document.body),
              targetEvent: ev,
-             clickOutsideToClose:true,
+             clickOutsideToClose:false,
              locals: { dataCustomer: self.dataCustomer }
         })
         .then(function(answer) {
@@ -84,8 +84,8 @@ function TokenGenerationCtrl($scope, $mdDialog, Turno) {
 
 }
 
-DialogCtrl.$inject = ['$scope', '$mdDialog', 'dataCustomer'];
-function DialogCtrl($scope, $mdDialog, dataCustomer) {
+DialogCtrl.$inject = ['$scope', '$mdDialog', 'dataCustomer', 'Token'];
+function DialogCtrl($scope, $mdDialog, dataCustomer, Token) {
 
     dataCustomer.token.numerator = dataCustomer.service.service.subServices[0].numerador;
     dataCustomer.token.motivoVisita = dataCustomer.service.service.serviceName;
@@ -94,7 +94,13 @@ function DialogCtrl($scope, $mdDialog, dataCustomer) {
 
     $scope.tokenGeneration = function () {
         console.log($scope.dataCustomer.token);
-        $scope.showTokenResult = true;
+        Token.tokens.save($scope.dataCustomer.token, function (data) {
+            console.log(data.token);
+            $scope.showTokenResult = true;
+
+        }, function (err) {
+            console.log(err);
+        });
     };
 
     $scope.closeDialog = function() {
