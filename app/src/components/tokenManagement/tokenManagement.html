@@ -1,7 +1,13 @@
 <div layout="row" layout-align="center center" >
-    <md-card flex="100" style="max-width:800px">
+    <md-card flex="100" style="max-width:800;position: relative;">
 
-        <md-card-content layout="column" class="">
+        <div ng-show="demo.stateAttention < 2  ? true : false" layout="column" layout-wrap layout-padding layout-align="center center" style="position: absolute;bottom: 0;top: 0;right: 0;left: 0;">
+              <div style="font-size:1.2em;color: #555;">{{"Lennin Suescun"}} <span style="font-weight:bold">{{"A002"}}</span> </div>
+              <div  flex="100" style="color: green;font-size: xx-large;text-align: center;">{{stateName[demo.stateAttention]}}</div>
+              <div><md-button ng-show="demo.stateAttention === 1" flex="100" class="md-raised" style="color:green;font-weight: bold;">{{"Atender"}}</md-button></div>
+        </div>
+
+        <md-card-content  layout="column" class="" ng-style="{'visibility': demo.stateAttention < 2 ? 'hidden' : 'visible'}">
           <div class="" layout="row" layout-padding aria-label="head">
               <div flex="33" layout="column"  style="text-align: center;">
                   <div class="md-headline">{{"23:52"}}</div>
@@ -48,8 +54,9 @@
           <md-list>
         </md-card-content>
 
-        <div layout="row"  layout-align="end center" ng-hide="demo.onlyRead">
-            <md-fab-speed-dial layout="column" layout-align="center end" ng-hide="demo.hidden" md-direction="{{demo.direction}}" class="md-fling">
+        <div layout="row"  layout-align="space-between center" ng-hide="demo.onlyRead">
+            <md-button class="md-raised">{{"cierre"}}</md-button>
+            <md-fab-speed-dial layout="column" layout-align="center end" ng-hide="demo.hidden || demo.stateAttention < 2  ? true : false" md-direction="{{demo.direction}}" class="md-fling">
               <md-fab-trigger layout="row" layout-align="end center">
                 <md-button aria-label="menu" class="md-fab md-primary" ng-click="demo.fondonegroT()">
                   <md-tooltip hide-sm md-direction="left" md-autohide="false">Menu</md-tooltip>
