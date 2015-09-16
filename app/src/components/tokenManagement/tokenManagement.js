@@ -21,7 +21,7 @@ angular
     self.hidden = false;
     self.direction = 'up';
     self.onlyRead = $attrs.onlyRead === 'true' ? true : false;
-    self.stateAttention = 1; // 0 = available, 1 = calling, 2 = in attention
+    self.stateAttention = 0; // 0 = available, 1 = calling, 2 = in attention
     $scope.stateName = ['Disponible', 'Llamando...'];
 
     self.items = [

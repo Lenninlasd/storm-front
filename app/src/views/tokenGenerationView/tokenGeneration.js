@@ -29,6 +29,7 @@ function TokenGenerationCtrl($scope, $mdDialog, Token) {
 
     Token.services.query(function (data) {
         self.services = data;
+        console.log(data);
     });
 
     function start() {
@@ -38,7 +39,6 @@ function TokenGenerationCtrl($scope, $mdDialog, Token) {
             token: {
               lineNumber: "",
               screenName:"",
-              consecutive: 12,
               adviserName: "Pablito Emilio",
               adviserLastName: "Escobar Gaviria",
               adviserId: "QuiboPues"
@@ -86,16 +86,17 @@ function TokenGenerationCtrl($scope, $mdDialog, Token) {
 
 DialogCtrl.$inject = ['$scope', '$mdDialog', 'dataCustomer', 'Token'];
 function DialogCtrl($scope, $mdDialog, dataCustomer, Token) {
-
-    dataCustomer.token.numerator = dataCustomer.service.service.subServices[0].numerador;
+    console.log(dataCustomer);
+    dataCustomer.token.numerator = dataCustomer.service.service.numerator;
     dataCustomer.token.motivoVisita = dataCustomer.service.service.serviceName;
     $scope.dataCustomer = dataCustomer;
     $scope.showTokenResult = false;
 
     $scope.tokenGeneration = function () {
-        console.log($scope.dataCustomer.token);
+        //console.log($scope.dataCustomer.token);
         Token.tokens.save($scope.dataCustomer.token, function (data) {
             console.log(data.token);
+            $scope.generatedToken = data.token;
             $scope.showTokenResult = true;
 
         }, function (err) {

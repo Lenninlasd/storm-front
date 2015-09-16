@@ -2,7 +2,8 @@
     <md-card flex="100" style="max-width:800;position: relative;">
 
         <div ng-show="demo.stateAttention < 2  ? true : false" layout="column" layout-wrap layout-padding layout-align="center center" style="position: absolute;bottom: 0;top: 0;right: 0;left: 0;">
-              <div style="font-size:1.2em;color: #555;">{{"Lennin Suescun"}} <span style="font-weight:bold">{{"A002"}}</span> </div>
+              <div ng-show="demo.stateAttention" style="font-size:1.2em;color: #555;">{{"Lennin Suescun"}} <span style="font-weight:bold">{{"A002"}}</span> </div>
+
               <div  flex="100" style="color: green;font-size: xx-large;text-align: center;">{{stateName[demo.stateAttention]}}</div>
               <div><md-button ng-show="demo.stateAttention === 1" flex="100" class="md-raised" style="color:green;font-weight: bold;">{{"Atender"}}</md-button></div>
         </div>
