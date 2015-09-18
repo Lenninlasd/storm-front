@@ -24,6 +24,12 @@ angular
     self.stateAttention = 0; // 0 = available, 1 = calling, 2 = in attention
     $scope.stateName = ['Disponible', 'Llamando...'];
 
+    var socket = io('http://localhost:5000');
+    socket.on('newToken', function (data) {
+        console.log(data);
+        self.stateAttention = 1;
+    });
+
     self.items = [
         {name: "Nueva transacción", icon: "fa-plus", direction: "left" },
         {name: "Reclasificar servicio", icon: "fa-reply", direction: "left" },
