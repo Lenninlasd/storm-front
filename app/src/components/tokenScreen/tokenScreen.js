@@ -16,10 +16,11 @@ angular
 
   function tokenScreenCtrl($scope, $element, $attrs, Token) {
       $scope.pendingTokens = [];
-      var socket = io('http://localhost:5000');
+      var socket = io('http://192.168.1.71:5000');
 
       Token.tokens.query({state: 0}, function (data) {
           $scope.pendingTokens = data;
+          console.log(data);
       });
 
       socket.on('newToken', function (data) {
@@ -27,6 +28,11 @@ angular
           Token.tokens.query({state: 0}, function (data) {
               $scope.pendingTokens = data;
           });
+      });
+      socket.on('takeToken', function () {
+        Token.tokens.query({state: 0}, function (data) {
+            $scope.pendingTokens = data;
+        });
       });
   }
 
