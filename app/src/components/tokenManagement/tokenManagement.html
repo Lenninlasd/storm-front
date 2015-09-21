@@ -18,14 +18,15 @@
                   <div class="md-caption">Creado: {{demo.tokenInAttention.token.infoToken.logCreationToken | date: 'h:mm:ss'}}</div>
               </div>
               <div flex="33" layout="column" style="text-align: center;">
-                  <div class="md-headline">{{"00:02"}}</div>
-                  <div class="md-caption">{{demo.tokenInAttention.token.infoToken.logCalledToken | date: 'h:mm:ss'}}</div>
+                  <div class="md-headline">{{callTime}}</div>
                   <div class="md-caption">Tiempo de llamado</div>
+                  <div class="md-caption">Llamado: {{demo.tokenInAttention.token.infoToken.logCalledToken | date: 'h:mm:ss'}}</div>
+
               </div>
               <div flex="33" layout="column" style="text-align: center;">
                   <div class="md-headline">{{attentionTime}}</div>
-                  <div class="md-caption">Atendido: {{demo.tokenInAttention.token.infoToken.logAtentionToken | date: 'h:mm:ss'}}</div>
                   <div class="md-caption">Tiempo de atención</div>
+                  <div class="md-caption">Atendido: {{demo.tokenInAttention.token.infoToken.logAtentionToken | date: 'h:mm:ss'}}</div>
               </div>
           </div>
 

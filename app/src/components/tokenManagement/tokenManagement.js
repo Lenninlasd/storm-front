@@ -16,7 +16,7 @@ angular
     };
   }
 
-  function tokenManagementCtrl($scope, $element, $attrs, $interval, Token) {
+  function tokenManagementCtrl($scope, $element, $attrs, $interval, Token, Config) {
     var self = this;
     self.hidden = false;
     self.direction = 'up';
@@ -28,7 +28,7 @@ angular
     $scope.waitTime = "00:00:00";
     $scope.callTime = "00:00:00";
     $scope.stateName = ['Disponible', 'Llamando...'];
-
+    var stopTime;
     self.items = [
         {name: "Nueva transacción", icon: "fa-plus", direction: "left" },
         {name: "Reclasificar servicio", icon: "fa-reply", direction: "left" },
@@ -41,7 +41,8 @@ angular
           adviserId: 'req.body.adviserId'
     };
 
-    var socket = io('http://192.168.1.71:5000');
+    //var socket = io('http://192.168.1.71:5000');
+    var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
 
     checkIfAttending();
 
@@ -61,11 +62,12 @@ angular
       Token.tokens.query({state: 2}, function (data) {
           if (data.length) {
               self.stateAttention = 2;
-              //console.log(data);
+
               self.tokenInAttention =  _.find(data, function (obj) {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;});
-              console.log(self.tokenInAttention);
-              $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logAtentionToken);
-              $interval(callAtInterval, 200, false);
+              $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
+              $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
+
+              stopTime = $interval(callAtInterval, 200, false);
           }else{
               // si está disponible llama el turno
               callToken();
@@ -90,9 +92,15 @@ angular
     }
 
     function getPendingToken(data) {
-        self.stateAttention = 1;
-        self.tokenToBeTaken = data.token;
-        self.tokenToBeTaken.id = data._id;
+        var id = {id : data._id};
+        console.log(data);
+
+        Token.callToken.update(id, function (data2) {
+             console.log(data2);
+             self.stateAttention = 1;
+             self.tokenToBeTaken = data.token;
+             self.tokenToBeTaken.id = data._id;
+        });
     }
     function callToken() {
         Token.tokens.query({state: 0}, function (data) {
@@ -108,20 +116,26 @@ angular
         Token.takeToken.update(id, adviserInfo, function (data) {
             self.stateAttention = 2;
             self.tokenInAttention = data;
-            $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logAtentionToken);
-            $interval(callAtInterval, 200);
+            $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
+            $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logAtentionToken);
+            stopTime = $interval(callAtInterval, 200);
+        });
+    }
+
+    function closeToken() {
+        var id = {id: self.tokenInAttention._id};
+        console.log(id);
+        Token.closeToken.update(id, function (data) {
+            $interval.cancel(stopTime);
+            available();
+            callToken();
         });
     }
 
     function tokenAction(sw) {
         // closeToken
         if (sw === 3) {
-            var id = {id: self.tokenInAttention._id};
-            console.log(id);
-            Token.closeToken.update(id, function (data) {
-                available();
-                callToken();
-            });
+            closeToken();
         }
     }
   }
