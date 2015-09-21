@@ -11,6 +11,9 @@
     "module": false,
     "inject": false,
     "console": false,
-    "document": false
+    "document": false,
+    "_": false,
+    "moment": false,
+    "io": false
   }
 }

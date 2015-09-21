@@ -13,6 +13,8 @@
     "angular-resource": "~1.4.0",
     "angular-route": "~1.4.0",
     "angular-ui-router": "~0.2.15",
-    "fontawesome": "~4.4.0"
+    "fontawesome": "~4.4.0",
+    "moment": "~2.10.6",
+    "underscore": "~1.8.3"
   }
 }

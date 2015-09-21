@@ -3,8 +3,8 @@
 
         <div ng-show="demo.stateAttention < 2  ? true : false" layout="column" layout-wrap layout-padding layout-align="center center" style="position: absolute;bottom: 0;top: 0;right: 0;left: 0;">
               <div ng-show="demo.stateAttention === 1" style="font-size:1.2em;color: #555;">
-                  {{demo.currentToken.client.screenName}}
-                  <span style="font-weight:bold">{{demo.currentToken.idToken.numerator + demo.currentToken.idToken.consecutive}}</span>
+                  {{demo.tokenToBeTaken.client.screenName}}
+                  <span style="font-weight:bold">{{demo.tokenToBeTaken.idToken.numerator + demo.tokenToBeTaken.idToken.consecutive}}</span>
               </div>
               <div  flex="100" style="color: green;font-size: xx-large;text-align: center;">{{stateName[demo.stateAttention]}}</div>
               <div><md-button ng-click="takeToken()" ng-show="demo.stateAttention === 1" flex="100" class="md-raised" style="color:green;font-weight: bold;">{{"Atender"}}</md-button></div>
@@ -13,22 +13,27 @@
         <md-card-content  layout="column" class="" ng-style="{'visibility': demo.stateAttention < 2 ? 'hidden' : 'visible'}">
           <div class="" layout="row" layout-padding aria-label="head">
               <div flex="33" layout="column"  style="text-align: center;">
-                  <div class="md-headline">{{"23:52"}}</div>
+                  <div class="md-headline">{{waitTime}}</div>
                   <div class="md-caption">Tiempo de Espera</div>
+                  <div class="md-caption">Creado: {{demo.tokenInAttention.token.infoToken.logCreationToken | date: 'h:mm:ss'}}</div>
               </div>
               <div flex="33" layout="column" style="text-align: center;">
                   <div class="md-headline">{{"00:02"}}</div>
+                  <div class="md-caption">{{demo.tokenInAttention.token.infoToken.logCalledToken | date: 'h:mm:ss'}}</div>
                   <div class="md-caption">Tiempo de llamado</div>
               </div>
               <div flex="33" layout="column" style="text-align: center;">
-                  <div class="md-headline">{{"02:41"}}</div>
+                  <div class="md-headline">{{attentionTime}}</div>
+                  <div class="md-caption">Atendido: {{demo.tokenInAttention.token.infoToken.logAtentionToken | date: 'h:mm:ss'}}</div>
                   <div class="md-caption">Tiempo de atención</div>
               </div>
           </div>
 
           <div layout="row" layout-padding>
               <div flex="33" layout="column" layout-align="space-around center">
-                  <div class="md-headline">{{"A057"}}</div>
+                  <div class="md-headline">
+                      {{demo.tokenInAttention.token.idToken.numerator + demo.tokenInAttention.token.idToken.consecutive}}
+                  </div>
                   <div class="md-caption">Turno</div>
               </div>
           </div>
@@ -68,9 +73,9 @@
               </md-fab-trigger>
 
               <md-fab-actions style="height: 0px;">
-                <div layout="row" layout-align="end center" ng-repeat="item in demo.items" >
+                <div layout="row" layout-align="end center" ng-repeat="(key, item) in demo.items" >
                   <span class="material-tag">{{item.name}}</span>
-                  <md-button aria-label="{{item.name}}" class="md-fab md-raised {{item.btnColor}}">
+                  <md-button ng-click="tokenAction(key)" aria-label="{{item.name}}" class="md-fab md-raised {{item.btnColor}}">
                       <i class="fa fa-lg {{item.icon}}"></i>
                   </md-button>
                 </div>
