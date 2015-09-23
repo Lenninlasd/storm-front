@@ -39,24 +39,18 @@
               </div>
           </div>
 
-          <md-list>
+          <md-list ng-repeat="(key, service) in demo.tokenInAttention.token.infoToken.services">
               <md-list-item class="md-3-line">
                   <div class="md-list-item-text" layout="column" style="padding-bottom:0px">
                       <p>{{ "Servicio" }}</p>
-                      <h3 style="line-height: 1.3em;">{{ "QUIERO REPONER MI CHIP / MI FACTURA / ACTUALIZACION DE DATOS" }}</h3>
+                      <h3 style="line-height: 1.3em;">{{ service.serviceName }}</h3>
                   </div>
               </md-list-item>
               <div class="" style="padding-left: 40px">
-                  <md-list-item class="md-3-line">
+                  <md-list-item class="md-3-line" ng-repeat="subservice in service.subServices">
                       <div class="md-list-item-text" layout="column" style="padding-top:0px;padding-bottom:0px">
                           <p>{{ "tag" }}</p>
-                          <h3 style="line-height: 1.3em;">{{ "QUIERO REPONER MI CHIP / MI FACTURA / ACTUALIZACION DE DATOS" }}</h3>
-                      </div>
-                  </md-list-item>
-                  <md-list-item class="md-3-line">
-                      <div class="md-list-item-text" layout="column" style="padding-top:0px;padding-bottom:0px">
-                          <p>{{ "tag" }}</p>
-                          <h3 style="line-height: 1.3em;">{{ "QUIERO REPONER MI CHIP / MI FACTURA / ACTUALIZACION DE DATOS" }}</h3>
+                          <h3 style="line-height: 1.3em;">{{ subservice.subServiceName }}</h3>
                       </div>
                   </md-list-item>
               </div>

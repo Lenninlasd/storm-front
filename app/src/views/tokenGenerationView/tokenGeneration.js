@@ -89,9 +89,14 @@ function DialogCtrl($scope, $mdDialog, dataCustomer, Token) {
     console.log(dataCustomer);
     dataCustomer.token.numerator = dataCustomer.service.service.numerator;
     dataCustomer.token.motivoVisita = dataCustomer.service.service.serviceName;
+    dataCustomer.token.service = {
+                                    serviceName: dataCustomer.service.service.serviceName,
+                                    serviceId: dataCustomer.service.service.serviceId
+                                };
+
     $scope.dataCustomer = dataCustomer;
     $scope.showTokenResult = false;
-
+    console.log(dataCustomer);
     $scope.tokenGeneration = function () {
         //console.log($scope.dataCustomer.token);
         Token.tokens.save($scope.dataCustomer.token, function (data) {
