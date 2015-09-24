@@ -3,5 +3,6 @@ angular
     'flugel.components.keyboard',
     'flugel.components.tokenScreen',
     'flugel.components.longpress',
-    'flugel.components.tokenManagement'
+    'flugel.components.tokenManagement',
+    'flugel.components.manageServices'
   ]);

@@ -11,22 +11,22 @@
         </div>
 
         <md-card-content  layout="column" class="" ng-style="{'visibility': demo.stateAttention < 2 ? 'hidden' : 'visible'}">
-          <div class="" layout="row" layout-padding aria-label="head">
-              <div flex="33" layout="column"  style="text-align: center;">
+          <div class="" layout="row" layout-sm="column" layout-padding aria-label="head">
+              <div flex="33" flex-sm="100" layout="column"  style="text-align: center;">
                   <div class="md-headline">{{waitTime}}</div>
                   <div class="md-caption">Tiempo de Espera</div>
-                  <div class="md-caption">Creado: {{demo.tokenInAttention.token.infoToken.logCreationToken | date: 'h:mm:ss'}}</div>
+                  <div class="md-caption">Creado: {{demo.tokenInAttention.token.infoToken.logCreationToken | date: 'HH:mm:ss'}}</div>
               </div>
-              <div flex="33" layout="column" style="text-align: center;">
+              <div flex="33" flex-sm="100" layout="column" style="text-align: center;">
                   <div class="md-headline">{{callTime}}</div>
                   <div class="md-caption">Tiempo de llamado</div>
-                  <div class="md-caption">Llamado: {{demo.tokenInAttention.token.infoToken.logCalledToken | date: 'h:mm:ss'}}</div>
+                  <div class="md-caption">Llamado: {{demo.tokenInAttention.token.infoToken.logCalledToken | date: 'HH:mm:ss'}}</div>
 
               </div>
-              <div flex="33" layout="column" style="text-align: center;">
+              <div flex="33" flex-sm="100" layout="column" style="text-align: center;">
                   <div class="md-headline">{{attentionTime}}</div>
                   <div class="md-caption">Tiempo de atención</div>
-                  <div class="md-caption">Atendido: {{demo.tokenInAttention.token.infoToken.logAtentionToken | date: 'h:mm:ss'}}</div>
+                  <div class="md-caption">Atendido: {{demo.tokenInAttention.token.infoToken.logAtentionToken | date: 'HH:mm:ss'}}</div>
               </div>
           </div>
 
@@ -39,8 +39,13 @@
               </div>
           </div>
 
-          <md-list ng-repeat="(key, service) in demo.tokenInAttention.token.infoToken.services">
+          <md-list class="md-whiteframe-z2" ng-repeat="(key, service) in demo.tokenInAttention.token.infoToken.services" style="padding: 0px;">
+
               <md-list-item class="md-3-line">
+                  <md-button class="md-icon-button md-accent" ng-click="editService($event, demo.tokenInAttention._id, service)" aria-label="Edit">
+                      <md-tooltip hide-sm>Editar servicio</md-tooltip>
+                      <i class="fa fa-pencil"></i>
+                  </md-button>
                   <div class="md-list-item-text" layout="column" style="padding-bottom:0px">
                       <p>{{ "Servicio" }}</p>
                       <h3 style="line-height: 1.3em;">{{ service.serviceName }}</h3>

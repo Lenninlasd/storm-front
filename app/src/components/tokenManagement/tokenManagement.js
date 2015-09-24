@@ -16,7 +16,7 @@ angular
     };
   }
 
-  function tokenManagementCtrl($scope, $element, $attrs, $interval, Token, Config) {
+  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, Token, Config) {
     var self = this;
     self.hidden = false;
     self.direction = 'up';
@@ -31,7 +31,7 @@ angular
     var stopTime;
     self.items = [
         {name: "Nueva transacción", icon: "fa-plus", direction: "left" },
-        {name: "Reclasificar servicio", icon: "fa-reply", direction: "left" },
+        //{name: "Editar servicio", icon: "fa-reply", direction: "left" },
         {name: "Tranferir turno", icon: "fa-exchange", direction: "left" },
         {name: "Terminar turno", icon: "fa-power-off", direction: "left", btnColor: "md-warn"}
     ];
@@ -49,6 +49,8 @@ angular
     $scope.takeToken = takeToken;
 
     $scope.tokenAction = tokenAction;
+
+    $scope.editService = editService;
 
     //socket.on('newToken', getPendingToken);
     socket.on('newToken', function (data) {
@@ -117,7 +119,7 @@ angular
             self.stateAttention = 2;
             self.tokenInAttention = data;
             $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
-            $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logAtentionToken);
+            $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
             stopTime = $interval(callAtInterval, 200);
         });
     }
@@ -138,6 +140,28 @@ angular
             closeToken();
         }
     }
+
+    function editService(ev, idToken, service) {
+        console.log(idToken, service);
+
+        $mdDialog.show({
+            controller: DialogController,
+            template:  '<md-dialog aria-label="List services">' +
+                            '<fg-manage-services></fg-manage-services>' +
+                       '</md-dialog>',
+            parent: angular.element(document.body),
+            clickOutsideToClose: true,
+            targetEvent: ev
+        }).then(function() {
+          //$scope.status = 'You said the information was "' + answer + '".';
+        });
+    }
+
+
+
+  }
+  function DialogController($scope, $mdDialog) {
+      // body...
   }
 
   function tokenManagementLink(scope, element, attrs) {
