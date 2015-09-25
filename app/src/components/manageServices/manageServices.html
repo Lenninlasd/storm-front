@@ -10,7 +10,7 @@
     </md-toolbar>
 
     <md-dialog-content >
-        <md-button ng-show="false" ng-click="goBackStep(2)" class="md-fab md-mini" style="background-color: rgba(224, 224, 224, 0.96);color:#111">
+        <md-button ng-show="true" ng-click="goBackStep()" class="md-fab md-mini" style="background-color: rgba(224, 224, 224, 0.96);color:#111">
             <md-tooltip hide-sm>Atrás</md-tooltip><i class="fa fa-arrow-left fa-lg"></i>
         </md-button>
         <div layout="row">
@@ -23,14 +23,13 @@
         <div flex="60" flex-md="90" flex-sm="100" layout="row" layout-wrap layout-align="start center"
          layout-padding style="margin-top:15px">
             <!-- <h3 flex="100">Escoge el motivo de la visita</h3> -->
-            <div ng-hide="searchText" flex="100" flex-md="50" flex-gt-md="33" ng-repeat="serviceData in demo.services" style="cursor:pointer">
+            <div ng-hide="searchText || selectedService !== ''" flex="100" flex-md="50" flex-gt-md="33" ng-repeat="serviceData in demo.services" style="cursor:pointer">
                 <div layout-padding class="md-whiteframe-z2" ng-click="choosePurposeVisit($event, serviceData)"
                     style="background-color:white;min-height:60px;border-radius: 3px;">
                     {{serviceData.service.serviceName}}
                 </div>
             </div>
-
-            <div ng-show="searchText" layout="column" flex="100" layout-margin class="md-whiteframe-z1" ng-repeat="serviceData in demo.services | filter:searchText" style="background-color:white;">
+            <div ng-show="selectedService !== '' || searchText" layout="column" flex="100" layout-margin class="md-whiteframe-z1" ng-repeat="serviceData in demo.services | filter:selectedService" style="background-color:white;">
                 <h3 >{{serviceData.service.serviceName}}</h3>
                 <md-list>
                     <md-list-item class="md-2-line"  ng-click="navigateTo('data usage', $event)" ng-repeat="subServices in serviceData.service.subServices | filter:searchText">

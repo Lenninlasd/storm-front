@@ -17,6 +17,7 @@ angular
   function servicesCtrl($scope, Token, $mdDialog) {
       var self = this;
       self.services = [];
+      $scope.selectedService = '';
 
       Token.services.query(function (data) {
           self.services = data;
@@ -26,4 +27,14 @@ angular
       $scope.cancel = function() {
            $mdDialog.cancel();
        };
+
+      $scope.choosePurposeVisit = function(ev, serviceData){
+          console.log(serviceData);
+          $scope.selectedService = serviceData._id;
+      };
+
+      $scope.goBackStep = function () {
+          $scope.selectedService = '';
+          $scope.searchText = '';
+      }
   }
