@@ -14,6 +14,16 @@ angular
     };
   }
 
-  function servicesCtrl($scope) {
-      // body...
+  function servicesCtrl($scope, Token, $mdDialog) {
+      var self = this;
+      self.services = [];
+
+      Token.services.query(function (data) {
+          self.services = data;
+          console.log(data);
+      });
+
+      $scope.cancel = function() {
+           $mdDialog.cancel();
+       };
   }

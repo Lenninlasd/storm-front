@@ -130,8 +130,8 @@ angular
           .title('¿Desea teminar el turno?')
           //content('Texto')
           .ariaLabel('End token')
-          .ok('Terminar turno')
-          .cancel('Cancelar');
+          .ok('Terminar')
+          .cancel('Continuar');
        $mdDialog.show(confirm).then(function() {
            var id = {id: self.tokenInAttention._id};
            console.log(id);
@@ -157,12 +157,12 @@ angular
         console.log(idToken, service);
         $scope.visibleTooltip = false;
         $mdDialog.show({
-            controller: DialogController,
+            //controller: DialogController,
             template:  '<md-dialog aria-label="List services">' +
                             '<fg-manage-services></fg-manage-services>' +
                        '</md-dialog>',
             parent: angular.element(document.body),
-            clickOutsideToClose: true,
+            clickOutsideToClose: false,
             targetEvent: ev
         }).then(function() {
           $scope.visibleTooltip = true;
@@ -174,9 +174,11 @@ angular
 
 
   }
-  function DialogController($scope, $mdDialog) {
-      // body...
-  }
+  // function DialogController($scope, $mdDialog) {
+  //     $scope.cancel = function() {
+  //          $mdDialog.cancel();
+  //      };
+  // }
 
   function tokenManagementLink(scope, element, attrs) {
   }
