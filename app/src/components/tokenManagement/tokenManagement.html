@@ -43,9 +43,10 @@
 
               <md-list-item class="md-3-line">
                   <md-button class="md-icon-button md-accent" ng-click="editService($event, demo.tokenInAttention._id, service)" aria-label="Edit">
-                      <md-tooltip hide-sm>Editar servicio</md-tooltip>
+                      <md-tooltip hide-sm ng-show="visibleTooltip">Editar servicio</md-tooltip>
                       <i class="fa fa-pencil"></i>
                   </md-button>
+
                   <div class="md-list-item-text" layout="column" style="padding-bottom:0px">
                       <p>{{ "Servicio" }}</p>
                       <h3 style="line-height: 1.3em;">{{ service.serviceName }}</h3>

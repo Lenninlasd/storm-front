@@ -28,6 +28,7 @@ angular
     $scope.waitTime = "00:00:00";
     $scope.callTime = "00:00:00";
     $scope.stateName = ['Disponible', 'Llamando...'];
+    $scope.visibleTooltip = true;
     var stopTime;
     self.items = [
         {name: "Nueva transacción", icon: "fa-plus", direction: "left" },
@@ -125,25 +126,36 @@ angular
     }
 
     function closeToken() {
-        var id = {id: self.tokenInAttention._id};
-        console.log(id);
-        Token.closeToken.update(id, function (data) {
-            $interval.cancel(stopTime);
-            available();
-            callToken();
-        });
+      var confirm = $mdDialog.confirm()
+          .title('¿Desea teminar el turno?')
+          //content('Texto')
+          .ariaLabel('End token')
+          .ok('Terminar turno')
+          .cancel('Cancelar');
+       $mdDialog.show(confirm).then(function() {
+           var id = {id: self.tokenInAttention._id};
+           console.log(id);
+           Token.closeToken.update(id, function (data) {
+               $interval.cancel(stopTime);
+               available();
+               callToken();
+           });
+
+       }, function() {
+
+       });
     }
 
     function tokenAction(sw) {
         // closeToken
-        if (sw === 3) {
+        if (sw === 2) {
             closeToken();
         }
     }
 
     function editService(ev, idToken, service) {
         console.log(idToken, service);
-
+        $scope.visibleTooltip = false;
         $mdDialog.show({
             controller: DialogController,
             template:  '<md-dialog aria-label="List services">' +
@@ -153,7 +165,9 @@ angular
             clickOutsideToClose: true,
             targetEvent: ev
         }).then(function() {
-          //$scope.status = 'You said the information was "' + answer + '".';
+          $scope.visibleTooltip = true;
+        },function () {
+          $scope.visibleTooltip = true;
         });
     }
 
