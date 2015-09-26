@@ -31,7 +31,7 @@ angular
     $scope.visibleTooltip = true;
     var stopTime;
     self.items = [
-        {name: "Nueva transacción", icon: "fa-plus", direction: "left" },
+        {name: "Nuevo servicio", icon: "fa-plus", direction: "left" },
         //{name: "Editar servicio", icon: "fa-reply", direction: "left" },
         {name: "Tranferir turno", icon: "fa-exchange", direction: "left" },
         {name: "Terminar turno", icon: "fa-power-off", direction: "left", btnColor: "md-warn"}
@@ -125,6 +125,22 @@ angular
         });
     }
 
+    function newService(ev, idToken) {
+        console.log(idToken);
+        $mdDialog.show({
+            //controller: DialogController,
+            template:  '<div layout="row" layout-fill  layout-align="center center">' +
+                           '<md-dialog aria-label="List services"  flex-md="70" flex-gt-md="70" flex-sm="100" style="overflow: hidden;max-width: 100%;">' +
+                                '<fg-manage-services></fg-manage-services>' +
+                           '</md-dialog>' +
+                       '</div>',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false,
+            targetEvent: ev
+        }).then(function() {
+        });
+    }
+
     function closeToken() {
       var confirm = $mdDialog.confirm()
           .title('¿Desea teminar el turno?')
@@ -148,7 +164,9 @@ angular
 
     function tokenAction(sw) {
         // closeToken
-        if (sw === 2) {
+        if (sw === 0) {
+            newService();
+        }else if (sw === 2) {
             closeToken();
         }
     }
@@ -176,11 +194,7 @@ angular
 
 
   }
-  // function DialogController($scope, $mdDialog) {
-  //     $scope.cancel = function() {
-  //          $mdDialog.cancel();
-  //      };
-  // }
+
 
   function tokenManagementLink(scope, element, attrs) {
   }

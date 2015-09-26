@@ -1,6 +1,9 @@
 <div layout="column" layout-align="center center" style="background-color:#E8E8E8;">
     <md-toolbar>
         <div class="md-toolbar-tools">
+          <md-button ng-show="selectedService !== ''" ng-click="goBackStep()" class="md-fab md-mini" style="background-color: rgba(224, 224, 224, 0.96);color:#111">
+              <md-tooltip hide-sm>Atrás</md-tooltip><i class="fa fa-arrow-left fa-lg"></i>
+          </md-button>
           <h2>Selección de servicio</h2>
           <span flex></span>
           <md-button class="md-icon-button" ng-click="cancel()">
@@ -9,10 +12,7 @@
         </div>
     </md-toolbar>
 
-    <md-dialog-content style="height: 60vh;overflow-y: auto;">
-        <md-button ng-show="selectedService !== ''" ng-click="goBackStep()" class="md-fab md-mini" style="background-color: rgba(224, 224, 224, 0.96);color:#111">
-            <md-tooltip hide-sm>Atrás</md-tooltip><i class="fa fa-arrow-left fa-lg"></i>
-        </md-button>
+    <md-dialog-content style="height: 70vh;">
         <div layout="row">
             <md-input-container flex="100" flex-gt-md="50">
                 <label>Busqueda de subservicios</label>
@@ -21,7 +21,7 @@
         </div>
 
         <div flex="60" flex-md="90" flex-sm="100" layout="row" layout-wrap layout-align="start center"
-         layout-padding style="margin-top:15px">
+         layout-padding style="margin-top:15px;overflow-y: auto;">
             <!-- <h3 flex="100">Escoge el motivo de la visita</h3> -->
             <div ng-hide="searchText || selectedService !== ''" flex="100" flex-md="50" flex-gt-md="33" ng-repeat="serviceData in demo.services" style="cursor:pointer">
                 <div layout-padding class="md-whiteframe-z2" ng-click="choosePurposeVisit($event, serviceData)"
@@ -32,9 +32,9 @@
             <div ng-show="selectedService !== '' || searchText" layout="column" flex="100" layout-margin class="md-whiteframe-z1" ng-repeat="serviceData in demo.services | filter:selectedService" style="background-color:white;">
                 <h3 >{{serviceData.service.serviceName}}</h3>
                 <md-list>
-                    <md-list-item class="md-2-line"  ng-click="navigateTo('data usage', $event)" ng-repeat="subServices in serviceData.service.subServices | filter:searchText">
+                    <md-list-item class="md-3-line"  ng-click="navigateTo('data usage', $event)" ng-repeat="subServices in serviceData.service.subServices | filter:searchText">
                         <div class="md-list-item-text">
-                            <h4>{{subServices.subServiceName}}</h4>
+                            <h3>{{subServices.subServiceName}}</h3>
                             <p>{{ subServices.description }}</p>
                         </div>
                         <md-divider ng-if="!$last"></md-divider>
