@@ -158,9 +158,11 @@ angular
         $scope.visibleTooltip = false;
         $mdDialog.show({
             //controller: DialogController,
-            template:  '<md-dialog aria-label="List services">' +
-                            '<fg-manage-services></fg-manage-services>' +
-                       '</md-dialog>',
+            template:  '<div layout="row" layout-fill  layout-align="center center">' +
+                           '<md-dialog aria-label="List services"  flex-md="70" flex-gt-md="70" flex-sm="100" style="overflow: hidden;max-width: 100%;">' +
+                                '<fg-manage-services></fg-manage-services>' +
+                           '</md-dialog>' +
+                       '</div>',
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             targetEvent: ev

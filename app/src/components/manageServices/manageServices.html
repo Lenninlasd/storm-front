@@ -9,8 +9,8 @@
         </div>
     </md-toolbar>
 
-    <md-dialog-content >
-        <md-button ng-show="true" ng-click="goBackStep()" class="md-fab md-mini" style="background-color: rgba(224, 224, 224, 0.96);color:#111">
+    <md-dialog-content style="height: 60vh;overflow-y: auto;">
+        <md-button ng-show="selectedService !== ''" ng-click="goBackStep()" class="md-fab md-mini" style="background-color: rgba(224, 224, 224, 0.96);color:#111">
             <md-tooltip hide-sm>Atrás</md-tooltip><i class="fa fa-arrow-left fa-lg"></i>
         </md-button>
         <div layout="row">
