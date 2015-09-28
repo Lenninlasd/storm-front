@@ -32,3 +32,12 @@
     color: rgba(44, 65, 164, 0.96);
     transition: 0.3s;
 }
+
+.md-list-item-force.md-3-line, .md-list-item-force.md-3-line > .md-no-style {
+    min-height: 88px !important;
+    height: initial !important;
+}
+
+.md-list-item-force.md-3-line > .md-no-style {
+    padding: 8px 16px !important;
+}

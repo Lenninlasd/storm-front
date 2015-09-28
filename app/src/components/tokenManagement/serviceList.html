@@ -18,22 +18,26 @@
         </md-input-container>
       </div>
   </md-toolbar>
-  <md-dialog-content layout="row" layout-wrap layout-padding >
-      <div flex="100" flex-md="50" flex-gt-md="33" ng-hide="searchText || selectedService !== ''"
-          ng-repeat="serviceData in demo.services" style="cursor:pointer;margin-top:10px;">
-         <div  layout-padding class="md-whiteframe-z1" ng-click="choosePurposeVisit($event, serviceData)"
-             style="background-color:white;min-height:60px;border-radius: 3px;">
-             {{serviceData.service.serviceName}}
+  <md-dialog-content layout="row" layout-wrap layout-padding layout-align="center start">
+
+      <div  layout="row" layout-wrap layout-padding>
+          <div flex="100" flex-md="50" flex-gt-md="33" ng-hide="searchText || selectedService !== ''"
+              ng-repeat="serviceData in demo.services" style="cursor:pointer">
+             <div  layout-padding class="md-whiteframe-z1" ng-click="choosePurposeVisit($event, serviceData)"
+                 style="background-color:white;min-height:60px;border-radius: 3px;">
+                 {{serviceData.service.serviceName}}
+             </div>
          </div>
-         <!-- <div flex="100" flex-md="50" flex-gt-md="33">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur natus quis ipsa. Molestias consequatur ea incidunt, consectetur rerum vel dolore! Nobis deserunt iste temporibus iure, voluptates, deleniti laborum est modi.</div> -->
      </div>
 
-     <div ng-show="selectedService !== '' || searchText"  class="" ng-repeat="serviceData in demo.services | filter:selectedService"
-          style="margin-bottom: 15px;background-color: #FDFDFD;">
-         <h3 class="md-whiteframe-z2" style="padding: 15px;margin: auto;" >{{serviceData.service.serviceName}}</h3>
+     <div flex="100" ng-show="selectedService !== '' || searchText"  class="" ng-repeat="serviceData in demo.services | filter:selectedService"
+          style="margin-bottom: 15px;">
+         <h3 class="md-whiteframe-z2" style="padding: 15px;margin: auto;background-color: #FDFDFD;" >{{serviceData.service.serviceName}}</h3>
          <md-list class="md-whiteframe-z1" style="background-color: #FCFCFC;">
-             <md-list-item class="md-3-line"  ng-click="insertService(serviceData, subService)" ng-repeat="subService in serviceData.service.subServices | filter:searchText">
-                 <div class="md-list-item-text">
+
+             <md-list-item class="md-list-item-force md-3-line"  ng-click="insertService(serviceData, subService)"
+                     ng-repeat="subService in serviceData.service.subServices | filter:searchText" >
+                 <div class="md-list-item-text" style="height: initial;">
                      <h3 style="line-height: 1em;">{{subService.subServiceName}}</h3>
                      <p>{{ subService.description }}</p>
                  </div>
@@ -41,5 +45,6 @@
              </md-list-item>
          </md-list>
      </div>
+
   </md-dialog-content>
 </md-dialog>

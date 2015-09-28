@@ -39,28 +39,22 @@
               </div>
           </div>
 
-          <md-list class="md-whiteframe-z1" ng-repeat="(key, service) in demo.tokenInAttention.token.infoToken.services" style="padding: 0px;">
+          <div class="md-whiteframe-z1">
+          <md-list  ng-repeat="(key, service) in demo.tokenInAttention.token.infoToken.services" style="padding: 0px;">
 
-              <md-list-item class="md-3-line">
+              <md-list-item class="md-3-line" ng-repeat="subservice in service.subServices" style="height: inherit;padding: 7px 0;">
                   <md-button class="md-icon-button md-accent" ng-click="editService($event, demo.tokenInAttention._id, service)" aria-label="Edit">
                       <md-tooltip hide-sm ng-show="visibleTooltip">Editar servicio</md-tooltip>
                       <i class="fa fa-pencil"></i>
                   </md-button>
 
                   <div class="md-list-item-text" layout="column" style="padding-bottom:0px">
-                      <p>{{ "Servicio" }}</p>
-                      <h3 style="line-height: 1.3em;">{{ service.serviceName }}</h3>
+                      <h3 style="line-height: 1.3em;margin: 0px;">{{ subservice.subServiceName }}</h3>
+                      <p style="font-size: 12px;">{{ "Servicio: " | uppercase}}{{ service.serviceName | uppercase}}</p>
                   </div>
               </md-list-item>
-              <div class="" style="padding-left: 40px">
-                  <md-list-item class="md-3-line" ng-repeat="subservice in service.subServices">
-                      <div class="md-list-item-text" layout="column" style="padding-top:0px;padding-bottom:0px">
-                          <p>{{ "tag" }}</p>
-                          <h3 style="line-height: 1.3em;">{{ subservice.subServiceName }}</h3>
-                      </div>
-                  </md-list-item>
-              </div>
-          <md-list>
+          </md-list>
+      </div>
         </md-card-content>
 
         <div layout="row"  layout-align="space-between center" ng-hide="demo.onlyRead">

@@ -131,22 +131,6 @@ angular
         });
     }
 
-    function newService(ev, idToken) {
-        idToken = idToken || 1212121;
-        $mdDialog.show({
-            controller: servicesCtrl,
-            controllerAs: 'demo',
-            templateUrl:  'src/components/tokenManagement/serviceList.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false,
-            targetEvent: ev,
-            locals: {
-               idToken: self.tokenInAttention._id
-            }
-        }).then(function() {
-        });
-    }
-
     function closeToken() {
       var confirm = $mdDialog.confirm()
           .title('¿Desea teminar el turno?')
@@ -177,6 +161,23 @@ angular
         }
     }
 
+    function newService(ev, idToken) {
+        idToken = idToken;
+        $mdDialog.show({
+            controller: servicesCtrl,
+            controllerAs: 'demo',
+            templateUrl:  'src/components/tokenManagement/serviceList.html',
+            parent: angular.element(document.body),
+            clickOutsideToClose: false,
+            targetEvent: ev,
+            locals: {
+                tokenData: {token: self.tokenInAttention},
+                mode: 'insert'
+            }
+        }).then(function() {
+        });
+    }
+
     function editService(ev, idToken, service) {
         console.log(idToken, service);
         $scope.visibleTooltip = false;
@@ -186,7 +187,11 @@ angular
             templateUrl:  'src/components/tokenManagement/serviceList.html',
             parent: angular.element(document.body),
             clickOutsideToClose: false,
-            targetEvent: ev
+            targetEvent: ev,
+            locals: {
+                tokenData: {token: self.tokenInAttention, service: service},
+                mode: 'edit'
+            }
         }).then(function() {
           $scope.visibleTooltip = true;
         },function () {
@@ -194,10 +199,17 @@ angular
         });
     }
 
-    function servicesCtrl($scope, Token, $mdDialog, Config, idToken) {
+    function servicesCtrl($scope, Token, $mdDialog, Config, tokenData, mode) {
         var self = this;
         self.services = [];
         $scope.selectedService = '';
+        console.log(tokenData.service);
+        if (mode === 'edit') {
+            $scope.selectedService = tokenData.service._id;
+        }else if (mode === 'insert') {
+            $scope.selectedService = '';
+        }
+
         var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
 
         Token.services.query(function (data) {
@@ -212,6 +224,7 @@ angular
         $scope.choosePurposeVisit = function(ev, serviceData){
             console.log(serviceData);
             $scope.selectedService = serviceData._id;
+            console.log($scope.selectedService);
         };
 
         $scope.goBackStep = function () {
@@ -219,12 +232,16 @@ angular
             $scope.searchText = '';
         };
 
+        $scope.actionService = function (argument) {
+            // body...
+        }
+
         $scope.insertService = function (serviceData, subService) {
             var service = _.clone(serviceData.service);
             console.log(subService);
             service.subServices = [subService];
             console.log(service);
-            socket.emit('insertService', {id: idToken, service: service});
+            socket.emit('insertService', {id: tokenData.token._id, service: service});
         };
     }
 
