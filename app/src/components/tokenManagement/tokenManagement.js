@@ -59,6 +59,12 @@ angular
             getPendingToken(data);
         }
     });
+    socket.on('resultService', function (data) {
+        console.log(self.tokenInAttention);
+        console.log(data);
+        self.tokenInAttention = data;
+        $mdDialog.hide();
+    })
 
     // valida que se esté atendiendo un turno
     function checkIfAttending() {
@@ -69,7 +75,7 @@ angular
               self.tokenInAttention =  _.find(data, function (obj) {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;});
               $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
               $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
-
+              console.log(self.tokenInAttention);
               stopTime = $interval(callAtInterval, 200, false);
           }else{
               // si está disponible llama el turno
@@ -126,17 +132,17 @@ angular
     }
 
     function newService(ev, idToken) {
-        console.log(idToken);
+        idToken = idToken || 1212121;
         $mdDialog.show({
-            //controller: DialogController,
-            template:  '<div layout="row" layout-fill  layout-align="center center">' +
-                           '<md-dialog aria-label="List services"  flex-md="70" flex-gt-md="70" flex-sm="100" style="overflow: hidden;max-width: 100%;">' +
-                                '<fg-manage-services></fg-manage-services>' +
-                           '</md-dialog>' +
-                       '</div>',
+            controller: servicesCtrl,
+            controllerAs: 'demo',
+            templateUrl:  'src/components/tokenManagement/serviceList.html',
             parent: angular.element(document.body),
             clickOutsideToClose: false,
-            targetEvent: ev
+            targetEvent: ev,
+            locals: {
+               idToken: self.tokenInAttention._id
+            }
         }).then(function() {
         });
     }
@@ -175,12 +181,9 @@ angular
         console.log(idToken, service);
         $scope.visibleTooltip = false;
         $mdDialog.show({
-            //controller: DialogController,
-            template:  '<div layout="row" layout-fill  layout-align="center center">' +
-                           '<md-dialog aria-label="List services"  flex-md="70" flex-gt-md="70" flex-sm="100" style="overflow: hidden;max-width: 100%;">' +
-                                '<fg-manage-services></fg-manage-services>' +
-                           '</md-dialog>' +
-                       '</div>',
+            controller: servicesCtrl,
+            controllerAs: 'demo',
+            templateUrl:  'src/components/tokenManagement/serviceList.html',
             parent: angular.element(document.body),
             clickOutsideToClose: false,
             targetEvent: ev
@@ -191,7 +194,39 @@ angular
         });
     }
 
+    function servicesCtrl($scope, Token, $mdDialog, Config, idToken) {
+        var self = this;
+        self.services = [];
+        $scope.selectedService = '';
+        var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
 
+        Token.services.query(function (data) {
+            self.services = data;
+            console.log(data);
+        });
+
+        $scope.cancel = function() {
+             $mdDialog.cancel();
+         };
+
+        $scope.choosePurposeVisit = function(ev, serviceData){
+            console.log(serviceData);
+            $scope.selectedService = serviceData._id;
+        };
+
+        $scope.goBackStep = function () {
+            $scope.selectedService = '';
+            $scope.searchText = '';
+        };
+
+        $scope.insertService = function (serviceData, subService) {
+            var service = _.clone(serviceData.service);
+            console.log(subService);
+            service.subServices = [subService];
+            console.log(service);
+            socket.emit('insertService', {id: idToken, service: service});
+        };
+    }
 
   }
 

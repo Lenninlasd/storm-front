@@ -6,6 +6,7 @@ angular
 
   function fgManageServicestDirective() {
     return {
+      retrict: 'E',
       scope: {
       },
       controller: servicesCtrl,
@@ -13,12 +14,13 @@ angular
       templateUrl: 'src/components/manageServices/manageServices.html'
     };
   }
-
-  function servicesCtrl($scope, Token, $mdDialog) {
+//  servicesCtrl.$inject = ['$scope', '$element',' $attrs', 'Token', '$mdDialog', 'Config'];
+  function servicesCtrl($scope, $element, $attrs, Token, $mdDialog, Config) {
       var self = this;
       self.services = [];
       $scope.selectedService = '';
-
+      var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
+      console.log($attrs);
       Token.services.query(function (data) {
           self.services = data;
           console.log(data);
@@ -36,5 +38,11 @@ angular
       $scope.goBackStep = function () {
           $scope.selectedService = '';
           $scope.searchText = '';
-      }
+      };
+
+      $scope.insertService = function (serviceData, subService) {
+          serviceData.service.subServices = [subService];
+          console.log(serviceData.service);
+          //socket.emit('insertService', serviceData.service);
+      };
   }
