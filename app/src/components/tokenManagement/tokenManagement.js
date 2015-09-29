@@ -60,8 +60,8 @@ angular
         }
     });
     socket.on('resultService', function (data) {
-        console.log(self.tokenInAttention);
-        console.log(data);
+        console.log(self.tokenInAttention.token.infoToken.services);
+        console.log(data.token.infoToken.services);
         self.tokenInAttention = data;
         $mdDialog.hide();
     })
@@ -179,7 +179,8 @@ angular
     }
 
     function editService(ev, idToken, service) {
-        console.log(idToken, service);
+        //console.log(idToken, service);
+        console.log(self.tokenInAttention);
         $scope.visibleTooltip = false;
         $mdDialog.show({
             controller: servicesCtrl,
@@ -202,10 +203,11 @@ angular
     function servicesCtrl($scope, Token, $mdDialog, Config, tokenData, mode) {
         var self = this;
         self.services = [];
+        self.mode = mode;
         $scope.selectedService = '';
-        console.log(tokenData.service);
+        //console.log(tokenData.service);
         if (mode === 'edit') {
-            $scope.selectedService = tokenData.service._id;
+            $scope.selectedService = tokenData.service.serviceId;
         }else if (mode === 'insert') {
             $scope.selectedService = '';
         }
@@ -223,7 +225,7 @@ angular
 
         $scope.choosePurposeVisit = function(ev, serviceData){
             console.log(serviceData);
-            $scope.selectedService = serviceData._id;
+            $scope.selectedService = serviceData.service.serviceId;
             console.log($scope.selectedService);
         };
 
@@ -238,10 +240,24 @@ angular
 
         $scope.insertService = function (serviceData, subService) {
             var service = _.clone(serviceData.service);
-            console.log(subService);
             service.subServices = [subService];
-            console.log(service);
-            socket.emit('insertService', {id: tokenData.token._id, service: service});
+
+            if (mode === 'insert') {
+                socket.emit('insertService', {id: tokenData.token._id, service: service});
+            }else if (mode === 'edit') {
+                //console.log(tokenData.service); //servicio actual del turno
+                console.log({
+                  idToken: tokenData.token._id,
+                  idService: tokenData.service._id,
+                  subServices: service.subServices
+                });
+                socket.emit('updateSubservice', {
+                  idToken: tokenData.token._id,
+                  idService: tokenData.service._id,
+                  subServices: service.subServices
+                });
+            }
+
         };
     }
 
