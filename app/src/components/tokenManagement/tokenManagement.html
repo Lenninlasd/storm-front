@@ -43,7 +43,7 @@
           <md-list  ng-repeat="(key, service) in demo.tokenInAttention.token.infoToken.services" style="padding: 0px;">
 
               <md-list-item class="md-3-line" ng-repeat="subservice in service.subServices" style="height: inherit;padding: 7px 0;">
-                  <md-button class="md-icon-button md-accent" ng-click="editService($event, demo.tokenInAttention._id, service)" aria-label="Edit">
+                  <md-button class="md-icon-button md-accent" ng-click="editService(demo.tokenInAttention._id, service)" aria-label="Edit">
                       <md-tooltip hide-sm ng-show="visibleTooltip">Editar servicio</md-tooltip>
                       <i class="fa fa-pencil"></i>
                   </md-button>

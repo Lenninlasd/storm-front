@@ -102,7 +102,6 @@ angular
 
     function getPendingToken(data) {
         var id = {id : data._id};
-        console.log(data);
 
         Token.callToken.update(id, function (data2) {
              console.log(data2);
@@ -128,13 +127,13 @@ angular
             $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
             $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
             stopTime = $interval(callAtInterval, 200);
+            newService();
         });
     }
 
     function closeToken() {
       var confirm = $mdDialog.confirm()
           .title('¿Desea teminar el turno?')
-          //content('Texto')
           .ariaLabel('End token')
           .ok('Terminar')
           .cancel('Continuar');
@@ -161,43 +160,39 @@ angular
         }
     }
 
-    function newService(ev, idToken) {
-        idToken = idToken;
+    function showDialog(locals, fnSuccess, fnError){
+        fnSuccess =  fnSuccess || function () {return undefined;};
+        fnError =  fnError || function () {return undefined;};
         $mdDialog.show({
             controller: servicesCtrl,
             controllerAs: 'demo',
             templateUrl:  'src/components/tokenManagement/serviceList.html',
             parent: angular.element(document.body),
             clickOutsideToClose: false,
-            targetEvent: ev,
-            locals: {
-                tokenData: {token: self.tokenInAttention},
-                mode: 'insert'
-            }
-        }).then(function() {
-        });
+            targetEvent: null,
+            locals: locals
+        }).then(fnSuccess, fnError);
     }
 
-    function editService(ev, idToken, service) {
-        //console.log(idToken, service);
-        console.log(self.tokenInAttention);
+    function newService() {
+        var locals = {
+            tokenData: {token: self.tokenInAttention},
+            mode: 'insert'
+        };
+        showDialog(locals);
+    }
+
+    function editService(idToken, service) {
         $scope.visibleTooltip = false;
-        $mdDialog.show({
-            controller: servicesCtrl,
-            controllerAs: 'demo',
-            templateUrl:  'src/components/tokenManagement/serviceList.html',
-            parent: angular.element(document.body),
-            clickOutsideToClose: false,
-            targetEvent: ev,
-            locals: {
-                tokenData: {token: self.tokenInAttention, service: service},
-                mode: 'edit'
-            }
-        }).then(function() {
+        var locals =  {
+            tokenData: {token: self.tokenInAttention, service: service},
+            mode: 'edit'
+        };
+        function fnSuccess() {
           $scope.visibleTooltip = true;
-        },function () {
-          $scope.visibleTooltip = true;
-        });
+        };
+
+        showDialog(locals, fnSuccess);
     }
 
     function servicesCtrl($scope, Token, $mdDialog, Config, tokenData, mode) {
