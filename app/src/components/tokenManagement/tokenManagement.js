@@ -127,7 +127,7 @@ angular
             $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
             $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
             stopTime = $interval(callAtInterval, 200);
-            newService();
+            initService();
         });
     }
 
@@ -182,6 +182,14 @@ angular
         showDialog(locals);
     }
 
+    function initService() {
+        var locals = {
+            tokenData: {token: self.tokenInAttention},
+            mode: 'initInsert'
+        };
+        showDialog(locals);
+    }
+
     function editService(idToken, service) {
         $scope.visibleTooltip = false;
         var locals =  {
@@ -205,13 +213,16 @@ angular
             $scope.selectedService = tokenData.service.serviceId;
         }else if (mode === 'insert') {
             $scope.selectedService = '';
+            console.log(tokenData.token.token.motivoVisita);
+        }else if (mode === 'initInsert') {
+            $scope.selectedService = tokenData.token.token.motivoVisita.serviceId;
         }
 
         var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
 
         Token.services.query(function (data) {
             self.services = data;
-            console.log(data);
+            //console.log(data);
         });
 
         $scope.cancel = function() {
@@ -219,9 +230,9 @@ angular
          };
 
         $scope.choosePurposeVisit = function(ev, serviceData){
-            console.log(serviceData);
+            //console.log(serviceData);
             $scope.selectedService = serviceData.service.serviceId;
-            console.log($scope.selectedService);
+            //console.log($scope.selectedService);
         };
 
         $scope.goBackStep = function () {
@@ -237,7 +248,7 @@ angular
             var service = _.clone(serviceData.service);
             service.subServices = [subService];
 
-            if (mode === 'insert') {
+            if (mode === 'insert'  || mode === 'initInsert') {
                 socket.emit('insertService', {id: tokenData.token._id, service: service});
             }else if (mode === 'edit') {
                 //console.log(tokenData.service); //servicio actual del turno

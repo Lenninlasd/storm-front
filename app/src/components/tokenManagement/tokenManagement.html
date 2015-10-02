@@ -38,7 +38,16 @@
                   <div class="md-caption">Turno</div>
               </div>
           </div>
-
+          <div>
+              <md-list  style="padding: 2px 10px;">
+                  <md-list-item class="md-3-line" style="height: inherit;padding: 7px 0;">
+                      <div class="md-list-item-text" layout="column" style="padding-bottom:0px">
+                          <h3 style="line-height: 1.3em;margin: 0px;">{{ demo.tokenInAttention.token.motivoVisita.serviceName }}</h3>
+                          <p style="font-size: 12px;">{{ "motivo de la visita" | uppercase}}</p>
+                      </div>
+                  </md-list-item>
+              </md-list>
+          </div>
           <div class="md-whiteframe-z1">
           <md-list  ng-repeat="(key, service) in demo.tokenInAttention.token.infoToken.services" style="padding: 0px;">
 
@@ -58,7 +67,7 @@
         </md-card-content>
 
         <div layout="row"  layout-align="space-between center" ng-hide="demo.onlyRead">
-            <md-button class="md-raised">{{"cierre"}}</md-button>
+            <md-button style="visibility:hidden" class="md-raised">{{"cierre"}}</md-button>
             <md-fab-speed-dial layout="column" layout-align="center end" ng-hide="demo.hidden || demo.stateAttention < 2  ? true : false"
                 md-direction="{{demo.direction}}" class="md-fling">
               <md-fab-trigger layout="row" layout-align="end center">
