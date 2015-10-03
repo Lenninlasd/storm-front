@@ -24,7 +24,7 @@
             </md-button>
             <h3 flex="100">Escoge el motivo de la visita</h3>
             <div flex="100" flex-md="50" flex-gt-md="33" ng-repeat="serviceData in vc1.services" style="cursor:pointer">
-                <div layout-padding class="md-whiteframe-z2" ng-click="choosePurposeVisit($event, serviceData)" style="background-color:white;min-height:60px;border-radius: 3px;">
+                <div layout-margin layout-padding class="md-whiteframe-z1" ng-click="choosePurposeVisit($event, serviceData)" style="background-color:white;min-height:60px;border-radius: 3px;">
                     {{serviceData.service.serviceName}}
                 </div>
             </div>

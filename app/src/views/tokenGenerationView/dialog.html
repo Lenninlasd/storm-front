@@ -1,16 +1,16 @@
-<div layout="row" flex-sm="100" flex-md="60" flex-gt-md="50" layout-align="center center">
+<div layout="row" flex layout-align="center center">
     <md-dialog aria-label="List dialog">
       <md-dialog-content>
-          <div ng-hide="showTokenResult">
+          <md-list ng-hide="showTokenResult">
               <h3>{{"Confirmar petición de turno"  | uppercase}}</h3>
-              <md-list-item class="md-2-line" ng-show="dataCustomer.token.screenName">
+              <md-list-item class="md-3-line" ng-show="dataCustomer.token.screenName">
                 <div class="md-list-item-text">
                   <h3> {{ dataCustomer.token.screenName }} </h3>
                   <p style="color:#777">{{"Nombre usuario" | uppercase}}</p>
                 </div>
               </md-list-item>
               <md-divider ng-show="dataCustomer.token.screenName"></md-divider>
-              <md-list-item class="md-2-line">
+              <md-list-item class="md-3-line">
                 <div class="md-list-item-text">
                   <h3> {{dataCustomer.token.lineNumber}} </h3>
                   <p style="color:#777">{{"Número de la linea" | uppercase}}</p>
@@ -19,11 +19,11 @@
               <md-divider></md-divider>
               <md-list-item class="md-3-line">
                 <div class="md-list-item-text">
-                  <h3 style="line-height: 1.3em;"> {{dataCustomer.service.service.serviceName}} </h3>
+                  <h3 style="line-height: 1.3em;white-space: normal;"> {{dataCustomer.service.service.serviceName}} </h3>
                   <p style="color:#777">{{"Motivo de la visita" | uppercase}}</p>
                 </div>
               </md-list-item>
-          </div>
+          </md-list>
           <div ng-show="showTokenResult">
               <h3>{{"Su turno Asignado es:" | uppercase}}</h3>
               <h1 class="md-display-3" layout="row" layout-align="center center">

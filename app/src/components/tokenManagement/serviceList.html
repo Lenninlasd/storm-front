@@ -21,7 +21,7 @@
   <md-dialog-content layout="row" layout-wrap layout-padding layout-align="center start">
 
       <div  layout="row" layout-wrap layout-padding>
-          <div flex="100" flex-md="50" flex-gt-md="33" ng-hide="searchText || selectedService !== ''"
+          <div flex="100" flex-md="50" flex-gt-md="33" layout-padding ng-hide="searchText || selectedService !== ''"
               ng-repeat="serviceData in demo.services" style="cursor:pointer">
              <div  layout-padding class="md-whiteframe-z1" ng-click="choosePurposeVisit($event, serviceData)"
                  style="background-color:white;min-height:60px;border-radius: 3px;">
