@@ -13,11 +13,16 @@ angular
     };
   }
 
-  function loginCardCtrl($scope, $element, $attrs) {
+  function loginCardCtrl($scope, $element, $attrs, Login) {
       $scope.user = {name:"", password:""};
 
       $scope.submit = function () {
-          console.log($scope.user);
-      }
+          //console.log($scope.user);
+          Login.login.save($scope.user, function (data) {
+             console.log(data.email); // body...
+         }, function (err) {
+             console.log(err);
+         });
+      };
 
   }
