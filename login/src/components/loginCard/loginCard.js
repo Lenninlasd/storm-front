@@ -13,15 +13,15 @@ angular
     };
   }
 
-  function loginCardCtrl($scope, $element, $attrs, $window, Login) {
+  function loginCardCtrl($scope, $element, $attrs, $window, $cookies, Login) {
       $scope.user = {name:"", password:""};
       $scope.msj = "";
       $scope.submit = function () {
           //console.log($scope.user);
           Login.login.save($scope.user, function (data) {
-             console.log(data); // body...
-             //$location.path = 'https://www.facebook.com/';
-             $window.location = $attrs.redirectto;
+             console.log(data);
+             $cookies.put('session', data.idSession);
+            //  $window.location = $attrs.redirectto;
           }, function (err) {
              if (err.data.invalidPassword) {
                 $scope.msj = "Contraseña incorrecta";
