@@ -1,4 +1,7 @@
 <md-card  layout-row layout-align="center" class="md-whiteframe-8dp" style="border-radius:4px">
+    <div ng-show="msj" style="padding:16px;background-color: #FF008B;border-radius: 4px 4px 0px 0px;color: floralwhite;font-weight: bold;">
+        {{msj}}
+    </div>
     <form name="loginForm" layout-padding ng-submit="submit()">
         <md-card-content>
             <md-input-container>

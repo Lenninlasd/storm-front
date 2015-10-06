@@ -15,13 +15,18 @@ angular
 
   function loginCardCtrl($scope, $element, $attrs, Login) {
       $scope.user = {name:"", password:""};
+      $scope.msj = "";
 
       $scope.submit = function () {
           //console.log($scope.user);
           Login.login.save($scope.user, function (data) {
-             console.log(data.email); // body...
-         }, function (err) {
-             console.log(err);
+             console.log(data); // body...
+          }, function (err) {
+             if (err.data.invalidPassword) {
+                $scope.msj = "Contraseña incorrecta";
+             }else if (err.data.nousername) {
+                $scope.msj = "Usuario incorrecto";
+             }
          });
       };
 
