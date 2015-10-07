@@ -16,12 +16,17 @@ angular
   function loginCardCtrl($scope, $element, $attrs, $window, $cookies, Login) {
       $scope.user = {name:"", password:""};
       $scope.msj = "";
+
+      Login.login.get(function (session) {
+          if (session.login) $window.location = $attrs.redirectto;
+      });
+
       $scope.submit = function () {
           //console.log($scope.user);
           Login.login.save($scope.user, function (data) {
              console.log(data);
-             $cookies.put('session', data.idSession);
-            //  $window.location = $attrs.redirectto;
+             $cookies.put('session', data.idSession, {path: '/'});
+             $window.location = $attrs.redirectto;
           }, function (err) {
              if (err.data.invalidPassword) {
                 $scope.msj = "Contraseña incorrecta";
