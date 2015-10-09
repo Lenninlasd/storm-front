@@ -22,9 +22,7 @@ angular
       });
 
       $scope.submit = function () {
-          //console.log($scope.user);
           Login.login.save($scope.user, function (data) {
-             console.log(data);
              $cookies.put('session', data.idSession, {path: '/'});
              $window.location = $attrs.redirectto;
           }, function (err) {

@@ -4,6 +4,7 @@
 angular.module('flugel', [
   'ngRoute',
   'ngMaterial',
+  'ngCookies',
   'flugel.services',
   'flugel.view1',
   'flugel.view2',
@@ -37,4 +38,16 @@ config(['$routeProvider', function($routeProvider) {
   });
   $mdThemingProvider.theme('docs-dark', 'default')
     .primaryPalette('amazingPaletteName').dark();
-});
+})
+.config(['$httpProvider', function($httpProvider) {
+    $httpProvider.interceptors.push(['$cookies', '$location', '$q', function ($cookies, $location, $q) {
+        return {
+          request : function (config) {
+              if ($cookies.get('session')) {
+                  config.headers.authorization = $cookies.get('session');
+              }
+              return config;
+          },
+        };
+    }]);
+}]);

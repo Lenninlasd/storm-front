@@ -9,6 +9,14 @@ angular.module('flugel.view2', ['ngRoute'])
   });
 }])
 
-.controller('View2Ctrl', [function() {
-
+.controller('View2Ctrl', ['$scope', 'Login', '$window', function($scope, Login, $window) {
+    Login.login.get(function (session) {
+        if (!session.login) $window.location = '/login';
+    });
+    $scope.logout = function(event) {
+        event.preventDefault();
+        Login.logout.save(function(session) {
+            if (!session.login) $window.location = '/login';
+        });
+    };
 }]);

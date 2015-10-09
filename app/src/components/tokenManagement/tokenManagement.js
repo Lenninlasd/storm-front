@@ -30,6 +30,7 @@ angular
     $scope.stateName = ['Disponible', 'Llamando...'];
     $scope.visibleTooltip = true;
     var stopTime;
+    var callTime;
     self.items = [
         {name: "Nuevo servicio", icon: "fa-plus", direction: "left" },
         //{name: "Editar servicio", icon: "fa-reply", direction: "left" },
@@ -64,7 +65,7 @@ angular
         console.log(data.token.infoToken.services);
         self.tokenInAttention = data;
         $mdDialog.hide();
-    })
+    });
 
     // valida que se esté atendiendo un turno
     function checkIfAttending() {
@@ -95,25 +96,42 @@ angular
     }
 
     function available() {
-        self.stateAttention = 0; // 0 = available, 1 = calling, 2 = in attention
+        self.stateAttention = 0; // 0 = pending, 1 = calling, 2 = in attention, 3 = closed, 4 = abandoned, 5 = canceled
         self.tokenToBeTaken = {};
         self.tokenInAttention = {};
     }
 
-    function getPendingToken(data) {
-        var id = {id : data._id};
+    function getPendingToken(token) {
+        var id = {id : token._id};
 
-        Token.callToken.update(id, function (data2) {
-             console.log(data2);
-             self.stateAttention = 1;
-             self.tokenToBeTaken = data.token;
-             self.tokenToBeTaken.id = data._id;
-        });
+        if (token.token.infoToken.logCalledToken) {
+            setTokenToBeTaken(token);
+        }else{
+            Token.callToken.update(id, function (tokenCalled) {
+                setTokenToBeTaken(tokenCalled) ;
+            });
+        }
+
+        function setTokenToBeTaken(token) {
+            self.stateAttention = 1;
+            self.tokenToBeTaken = token.token;
+            self.tokenToBeTaken.id = token._id;
+            callTime = $interval(function() {
+                $scope.callTime = diffTime(token.token.infoToken.logCalledToken, false);
+                if ($scope.callTime[4] >= 1) { //tiempo en minutos
+                    Token.abandoningToken.update({id: token._id}, function (data) {
+                        $interval.cancel(callTime);
+                        available();
+                        callToken();
+                    });
+                }
+            }, 200, false);
+        }
     }
+
     function callToken() {
         Token.tokens.query({state: 0}, function (data) {
             if (data.length) {
-                console.log(data);
                 getPendingToken(data[0]);
             }
         });
@@ -127,6 +145,7 @@ angular
             $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
             $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
             stopTime = $interval(callAtInterval, 200);
+            $interval.cancel(callTime);
             initService();
         });
     }
@@ -198,7 +217,7 @@ angular
         };
         function fnSuccess() {
           $scope.visibleTooltip = true;
-        };
+        }
 
         showDialog(locals, fnSuccess);
     }
