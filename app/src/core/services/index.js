@@ -6,7 +6,7 @@ angular.module('flugel.services', ['ngResource'])
 			version : '0.0.1',
 			ip: location.hostname,
 			port: 5000,
-      		protocol: 'http'
+      protocol: 'http'
 	};
 })
 .factory('Token',['$resource', 'Config', function ContenidoFactory($resource, Config){

@@ -16,7 +16,7 @@ angular
     };
   }
 
-  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, Token, Config) {
+  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, Token, Config, Login) {
     var self = this;
     self.hidden = false;
     self.direction = 'up';
@@ -33,25 +33,16 @@ angular
     var callTime;
     self.items = [
         {name: "Nuevo servicio", icon: "fa-plus", direction: "left" },
-        //{name: "Editar servicio", icon: "fa-reply", direction: "left" },
         {name: "Tranferir turno", icon: "fa-exchange", direction: "left" },
         {name: "Terminar turno", icon: "fa-power-off", direction: "left", btnColor: "md-warn"}
     ];
-    var adviserInfo = {
-          adviserName: 'Lennin',
-          adviserLastName: 'Suescun Devia',
-          adviserId: 'req.body.adviserId'
-    };
+    var adviserInfo = {};
 
-    //var socket = io('http://192.168.1.71:5000');
     var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
 
     checkIfAttending();
-
     $scope.takeToken = takeToken;
-
     $scope.tokenAction = tokenAction;
-
     $scope.editService = editService;
 
     //socket.on('newToken', getPendingToken);
@@ -67,22 +58,38 @@ angular
         $mdDialog.hide();
     });
 
+    function getAdviserInfo(callback) {
+        Login.login.get(function (session) {
+            if (session.login) {
+                adviserInfo = {
+                      adviserName: session.userData.name,
+                      adviserLastName: session.userData.lastName,
+                      adviserId: session.userData._id,
+                      adviserEmail: session.userData.email
+                };
+                console.log(adviserInfo);
+                return callback();
+            }
+        });
+    }
+
     // valida que se esté atendiendo un turno
     function checkIfAttending() {
-      Token.tokens.query({state: 2}, function (data) {
-          if (data.length) {
-              self.stateAttention = 2;
-
-              self.tokenInAttention =  _.find(data, function (obj) {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;});
-              $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
-              $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
-              console.log(self.tokenInAttention);
-              stopTime = $interval(callAtInterval, 200, false);
-          }else{
-              // si está disponible llama el turno
-              callToken();
-          }
-      });
+        getAdviserInfo(function () {
+            Token.tokens.query({state: 2}, function (data) {
+                if (data.length) {
+                    self.stateAttention = 2;
+                    self.tokenInAttention =  _.find(data, function (obj) {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;});
+                    $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
+                    $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
+                    console.log(self.tokenInAttention);
+                    stopTime = $interval(callAtInterval, 200, false);
+                }else{
+                    // si está disponible llama el turno
+                    callToken();
+                }
+            });
+        });
     }
 
     function callAtInterval() {
@@ -139,6 +146,7 @@ angular
 
     function takeToken() {
         var id = {id : self.tokenToBeTaken.id};
+        console.log(adviserInfo);
         Token.takeToken.update(id, adviserInfo, function (data) {
             self.stateAttention = 2;
             self.tokenInAttention = data;
@@ -258,10 +266,6 @@ angular
             $scope.selectedService = '';
             $scope.searchText = '';
         };
-
-        $scope.actionService = function (argument) {
-            // body...
-        }
 
         $scope.insertService = function (serviceData, subService) {
             var service = _.clone(serviceData.service);
