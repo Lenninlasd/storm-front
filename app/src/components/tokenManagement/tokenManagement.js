@@ -16,7 +16,7 @@ angular
     };
   }
 
-  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, Token, Config, Login) {
+  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, Token, Config, Login) {
     var self = this;
     self.hidden = false;
     self.direction = 'up';
@@ -45,6 +45,10 @@ angular
     $scope.tokenAction = tokenAction;
     $scope.editService = editService;
 
+    socket.on('connect', function() {
+        socket.emit('session', {idSession: $cookies.get('session')});
+    });
+
     //socket.on('newToken', getPendingToken);
     socket.on('newToken', function (data) {
         if (self.stateAttention === 0) {
@@ -58,8 +62,29 @@ angular
         $mdDialog.hide();
     });
 
+    // valida que se esté atendiendo un turno
+    function checkIfAttending() {
+        getAdviserInfo(function () {
+            Token.tokens.query({state: 2}, function (data) {
+                if (data.length) {
+                    self.stateAttention = 2;
+                    self.tokenInAttention =  _.find(data, function (obj) {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;}) || {};
+                    console.log(self.tokenInAttention);
+                    if (_.size(self.tokenInAttention)) {
+                        $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
+                        $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
+                        stopTime = $interval(callAtInterval, 200, false);
+                        return;
+                    }
+                }
+                available();callToken();
+            });
+        });
+    }
+
     function getAdviserInfo(callback) {
         Login.login.get(function (session) {
+            console.log(session);
             if (session.login) {
                 adviserInfo = {
                       adviserName: session.userData.name,
@@ -67,28 +92,8 @@ angular
                       adviserId: session.userData._id,
                       adviserEmail: session.userData.email
                 };
-                console.log(adviserInfo);
                 return callback();
             }
-        });
-    }
-
-    // valida que se esté atendiendo un turno
-    function checkIfAttending() {
-        getAdviserInfo(function () {
-            Token.tokens.query({state: 2}, function (data) {
-                if (data.length) {
-                    self.stateAttention = 2;
-                    self.tokenInAttention =  _.find(data, function (obj) {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;});
-                    $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
-                    $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
-                    console.log(self.tokenInAttention);
-                    stopTime = $interval(callAtInterval, 200, false);
-                }else{
-                    // si está disponible llama el turno
-                    callToken();
-                }
-            });
         });
     }
 
@@ -125,7 +130,7 @@ angular
             self.tokenToBeTaken.id = token._id;
             callTime = $interval(function() {
                 $scope.callTime = diffTime(token.token.infoToken.logCalledToken, false);
-                if ($scope.callTime[4] >= 1) { //tiempo en minutos
+                if ($scope.callTime[4] >= 2) { //tiempo en minutos
                     Token.abandoningToken.update({id: token._id}, function (data) {
                         $interval.cancel(callTime);
                         available();

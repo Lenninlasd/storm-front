@@ -18,7 +18,11 @@ angular
       $scope.msj = "";
 
       Login.login.get(function (session) {
-          if (session.login) $window.location = $attrs.redirectto;
+          if (session.login) {
+            $window.location = $attrs.redirectto;
+          }else if ($cookies.get('session')) {
+              $cookies.remove('session', {path: '/'});
+          }
       });
 
       $scope.submit = function () {
