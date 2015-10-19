@@ -24,4 +24,9 @@ angular.module('flugel.services', ['ngResource'])
 			login : $resource('http://' + Config.ip + ':' + Config.port + '/user/login.json', {}, { update: {method: 'PUT'}}),
 			logout : $resource('http://' + Config.ip + ':' + Config.port + '/user/logout.json', {}, { update: {method: 'PUT'}})
 	};
+}])
+.factory('Activity',['$resource', 'Config', function ContenidoFactory($resource, Config){
+	return {
+			activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}})
+	};
 }]);

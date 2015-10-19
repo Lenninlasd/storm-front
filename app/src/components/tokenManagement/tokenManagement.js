@@ -16,39 +16,40 @@ angular
     };
   }
 
-  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, Token, Config, Login) {
+  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, Token, Config, Login, Activity) {
+    var stopTime;
+    var callTime;
+    var adviserInfo = {};
+    var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
     var self = this;
+
     self.hidden = false;
     self.direction = 'up';
     self.onlyRead = $attrs.onlyRead === 'true' ? true : false;
     self.stateAttention = 0; // 0 = available, 1 = calling, 2 = in attention
     self.tokenToBeTaken = {};
     self.tokenInAttention = {};
-    $scope.attentionTime = "00:00:00";
-    $scope.waitTime = "00:00:00";
-    $scope.callTime = "00:00:00";
-    $scope.stateName = ['Disponible', 'Llamando...'];
-    $scope.visibleTooltip = true;
-    var stopTime;
-    var callTime;
     self.items = [
         {name: "Nuevo servicio", icon: "fa-plus", direction: "left" },
         {name: "Tranferir turno", icon: "fa-exchange", direction: "left" },
         {name: "Terminar turno", icon: "fa-power-off", direction: "left", btnColor: "md-warn"}
     ];
-    var adviserInfo = {};
 
-    var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
+    $scope.attentionTime = "00:00:00";
+    $scope.waitTime = "00:00:00";
+    $scope.callTime = "00:00:00";
+    $scope.stateName = ['Disponible', 'Llamando...'];
+    $scope.visibleTooltip = true;
 
-    checkIfAttending();
     $scope.takeToken = takeToken;
     $scope.tokenAction = tokenAction;
     $scope.editService = editService;
 
+    inicializeAttending();
+
     socket.on('connect', function() {
         socket.emit('session', {idSession: $cookies.get('session')});
     });
-
     //socket.on('newToken', getPendingToken);
     socket.on('newToken', function (data) {
         if (self.stateAttention === 0) {
@@ -63,38 +64,49 @@ angular
     });
 
     // valida que se esté atendiendo un turno
-    function checkIfAttending() {
+    function inicializeAttending() {
         getAdviserInfo(function () {
-            Token.tokens.query({state: 2}, function (data) {
-                if (data.length) {
-                    self.stateAttention = 2;
-                    self.tokenInAttention =  _.find(data, function (obj) {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;}) || {};
-                    console.log(self.tokenInAttention);
-                    if (_.size(self.tokenInAttention)) {
-                        $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
-                        $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
-                        stopTime = $interval(callAtInterval, 200, false);
-                        return;
-                    }
-                }
-                available();callToken();
-            });
+            checkIfAttending();
         });
     }
 
     function getAdviserInfo(callback) {
+        // *** Punto 2 ***
         Login.login.get(function (session) {
             console.log(session);
             if (session.login) {
                 adviserInfo = {
                       adviserName: session.userData.name,
                       adviserLastName: session.userData.lastName,
-                      adviserId: session.userData._id,
+                      adviserId: session.userData.idUser,
                       adviserEmail: session.userData.email
                 };
+                Activity.activity.get({adviserId : adviserInfo.adviserId}, function (data) {
+                    console.log(data);
+                });
+                Activity.activity.save(adviserInfo, function (data) {
+                    console.log(data);
+                });
+                // *** Punto 0 ***
                 return callback();
             }
         });
+    }
+    function checkIfAttending(){
+      Token.tokens.query({state: 2}, function (data) {
+          if (data.length) {
+              self.stateAttention = 2;
+              self.tokenInAttention =  _.find(data, function (obj) {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;}) || {};
+              console.log(self.tokenInAttention);
+              if (_.size(self.tokenInAttention)) {
+                  $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
+                  $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
+                  stopTime = $interval(callAtInterval, 200, false);
+                  return;
+              }
+          }
+          available();callToken(); // ***Punto 1***
+      });
     }
 
     function callAtInterval() {
@@ -116,18 +128,21 @@ angular
     function getPendingToken(token) {
         var id = {id : token._id};
 
+        // turno que ya se está llamando...
         if (token.token.infoToken.logCalledToken) {
             setTokenToBeTaken(token);
         }else{
+            // Nuevo turno a llamar
             Token.callToken.update(id, function (tokenCalled) {
                 setTokenToBeTaken(tokenCalled) ;
             });
         }
-
+        // Llama turno.
         function setTokenToBeTaken(token) {
             self.stateAttention = 1;
             self.tokenToBeTaken = token.token;
             self.tokenToBeTaken.id = token._id;
+            // *** Punto 3 ***
             callTime = $interval(function() {
                 $scope.callTime = diffTime(token.token.infoToken.logCalledToken, false);
                 if ($scope.callTime[4] >= 2) { //tiempo en minutos
@@ -143,7 +158,7 @@ angular
 
     function callToken() {
         Token.tokens.query({state: 0}, function (data) {
-            if (data.length) {
+            if (data.length) { // Hay turnos Disponibles?
                 getPendingToken(data[0]);
             }
         });
