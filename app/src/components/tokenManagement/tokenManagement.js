@@ -19,6 +19,7 @@ angular
   function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, Token, Config, Login, Activity) {
     var stopTime;
     var callTime;
+    var availableTime;
     var adviserInfo = {};
     var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
     var self = this;
@@ -38,6 +39,7 @@ angular
     $scope.attentionTime = "00:00:00";
     $scope.waitTime = "00:00:00";
     $scope.callTime = "00:00:00";
+    $scope.availableTime = "00:00:00";
     $scope.stateName = ['Disponible', 'Llamando...'];
     $scope.visibleTooltip = true;
     $scope.activity = {};
@@ -119,18 +121,27 @@ angular
         self.stateAttention = 0; // 0 = pending, 1 = calling, 2 = in attention, 3 = closed, 4 = abandoned, 5 = canceled
         self.tokenToBeTaken = {};
         self.tokenInAttention = {};
-        setEventActivity('3', 'available'); // *** Punto 1 *** Pending
+
+         // *** Punto 1 ***
+        setEventActivity('3', 'available', function (data) {
+              var activityStartTime = _.last($scope.activity.activity).activityStartTime;
+              $interval.cancel(availableTime);
+              availableTime = $interval(function () {
+                  $scope.availableTime = diffTime(activityStartTime, false);
+              }, 200, false);
+        });
     }
 
-    function setEventActivity(eventCode, eventName) {
+    function setEventActivity(eventCode, eventName, callback) {
         var eventCodeBefore = _.last($scope.activity.activity).activityEvent.eventCode;
         if (eventCodeBefore !== eventCode) {
             var activity = {idActivity: $scope.activity._id, eventCode: eventCode, eventName: eventName};
             Activity.activity.update(activity, function (data) {
-                console.log(data);
                 $scope.activity = data;
+                if (callback) return callback(data);
             });
         }
+        if (callback) return callback(null);
     }
 
     function callToken() {
@@ -141,6 +152,7 @@ angular
     }
 
     function getPendingToken(token) {
+        $interval.cancel(availableTime);
         var id = {id : token._id};
 
         // turno que ya se está llamando...

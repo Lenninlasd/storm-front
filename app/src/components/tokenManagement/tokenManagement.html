@@ -7,6 +7,7 @@
                   <span style="font-weight:bold">{{demo.tokenToBeTaken.idToken.numerator + demo.tokenToBeTaken.idToken.consecutive}}</span>
               </div>
               <div style="color: green;font-size: xx-large;text-align: center;">{{stateName[demo.stateAttention]}}</div>
+              <div ng-show="demo.stateAttention === 0" style="color: green;font-weight:bold;text-align: center;">{{availableTime}}</div>
               <div ng-show="demo.stateAttention === 1" style="color: green;font-weight:bold;text-align: center;">{{callTime}}</div>
               <div><md-button ng-click="takeToken()" ng-show="demo.stateAttention === 1" flex="100" class="md-raised" style="color:green;font-weight: bold;">{{"Atender"}}</md-button></div>
         </div>
