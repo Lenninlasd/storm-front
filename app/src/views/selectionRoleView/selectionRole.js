@@ -9,9 +9,17 @@ angular.module('flugel.views.selectionRole', ['ngRoute'])
   });
 }])
 
-.controller('selectionRoleCtrl', ['$scope', 'Login', '$window', function($scope, Login, $window) {
+.controller('selectionRoleCtrl', ['$scope', 'Login', '$window', '$cookies', function($scope, Login, $window, $cookies) {
     Login.login.get(function (session) {
         if (!session.login) $window.location = '/login';
     });
+
+    $scope.logout = function(event) {
+        event.preventDefault();
+        Login.logout.save(function(session) {
+            $cookies.remove('session');
+            if (!session.login) $window.location = '/login';
+        });
+    };
 
 }]);

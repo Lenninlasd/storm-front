@@ -82,19 +82,20 @@ angular
         adviserInfo.branchOffice = branchOffice;
 
         if (_.size($scope.activity)) {
-            //setEventActivity('10', 'closed');
-            // update new terminal ..role etc
+            //validar si hubo cambio de rol o terminal
+            var activity = {idActivity: $scope.activity._id, eventCode: '10', eventName: 'closed'};
+            activity.terminal = branchOffice.terminal;
+            activity.role = role;
+            Activity.activity.update(activity, function (data) {
+                $scope.activity = data;
+                redirectActivity(data);
+            });
+
         }else{
             Activity.activity.save(adviserInfo, function (data) {
                 console.log(data);
                 $scope.activity = data;
-                var roleCode = _.last(data.activity).role.code;
-                if (roleCode === '0') {
-                    $window.location = '#/view1'; return;
-                }else{
-                    $window.location = '#/view2'; return;
-                }
-
+                redirectActivity(data);
             }, function (err) {
                 console.log(err);
             });
@@ -102,11 +103,12 @@ angular
 
     };
 
-    function setEventActivity(eventCode, eventName, callback) {
-        var activity = {idActivity: $scope.activity._id, eventCode: eventCode, eventName: eventName};
-        Activity.activity.update(activity, function (data) {
-            $scope.activity = data;
-            if (callback) return callback(data);
-        });
+    function redirectActivity(data) {
+        var roleCode = _.last(data.activity).role.code;
+        if (roleCode === '0') {
+            $window.location = '#/view1'; return;
+        }else{
+            $window.location = '#/view2'; return;
+        }
     }
   }

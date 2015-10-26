@@ -61,8 +61,8 @@ angular
         }
     });
     socket.on('resultService', function (data) {
-        console.log(self.tokenInAttention.token.infoToken.services);
-        console.log(data.token.infoToken.services);
+        // console.log(self.tokenInAttention.token.infoToken.services);
+        // console.log(data.token.infoToken.services);
         self.tokenInAttention = data;
         $mdDialog.hide();
     });
@@ -133,6 +133,9 @@ angular
     }
 
     function setEventActivity(eventCode, eventName, callback) {
+        // valida si existe actividad
+        if (!$scope.activity._id) { $window.location = '#/select'; return; }
+
         var eventCodeBefore = _.last($scope.activity.activity).activityEvent.eventCode;
         if (eventCodeBefore !== eventCode) {
             var activity = {idActivity: $scope.activity._id, eventCode: eventCode, eventName: eventName};
