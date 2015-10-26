@@ -20,6 +20,7 @@ angular
     var redirection;
 
     $scope.data = {};
+    $scope.activity = {};
 
     Login.login.get(function (session) {
           if (!session.login) {
@@ -35,6 +36,8 @@ angular
             };
             Activity.activity.get(adviserInfo, function (activities) {
                 if (!activities._id) return;
+
+                $scope.activity = activities;
 
                 var activitiesList = _.last(activities.activity);
                 var closeEvent = activitiesList.activityEvent.eventCode;
@@ -78,17 +81,32 @@ angular
         adviserInfo.role = role;
         adviserInfo.branchOffice = branchOffice;
 
-        Activity.activity.save(adviserInfo, function (data) {
-            $scope.activity = data;
-            var roleCode = _.last(data.activity).role.code;
-            if (roleCode === '0') {
-                $window.location = '#/view1'; return;
-            }else{
-                $window.location = '#/view2'; return;
-            }
+        if (_.size($scope.activity)) {
+            //setEventActivity('10', 'closed');
+            // update new terminal ..role etc
+        }else{
+            Activity.activity.save(adviserInfo, function (data) {
+                console.log(data);
+                $scope.activity = data;
+                var roleCode = _.last(data.activity).role.code;
+                if (roleCode === '0') {
+                    $window.location = '#/view1'; return;
+                }else{
+                    $window.location = '#/view2'; return;
+                }
 
-        }, function (err) {
-            console.log(err);
-        });
+            }, function (err) {
+                console.log(err);
+            });
+        }
+
     };
+
+    function setEventActivity(eventCode, eventName, callback) {
+        var activity = {idActivity: $scope.activity._id, eventCode: eventCode, eventName: eventName};
+        Activity.activity.update(activity, function (data) {
+            $scope.activity = data;
+            if (callback) return callback(data);
+        });
+    }
   }
