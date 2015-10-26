@@ -4,5 +4,6 @@ angular
     'flugel.components.tokenScreen',
     'flugel.components.longpress',
     'flugel.components.tokenManagement',
-    'flugel.components.manageServices'
+    'flugel.components.manageServices',
+    'flugel.components.selectionRole'
   ]);

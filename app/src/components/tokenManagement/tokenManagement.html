@@ -40,10 +40,10 @@
                     <div style="font-size: 12px;">Turno</div>
                 </div>
             </div>
-            <div layout="row" layout-wrap style="padding:0 14px">
+            <div layout="row" layout-wrap style="padding:0 14px;">
               <div layout="row" flex flex-sm="100">
                   <md-list ng-hide="showTokenResult" style="padding: 0;">
-                      <md-list-item class="md-3-line" style="height: inherit;padding: 7px 0;">
+                      <md-list-item class="md-3-line" style="height: inherit;padding: 7px 0;min-height: initial">
                         <div class="md-list-item-text">
                           <h3> {{demo.tokenInAttention.token.client.screenName}} </h3>
                           <p style="font-size: 12px;color:#777">{{"Nombre del cliente" | uppercase}}</p>
@@ -53,8 +53,7 @@
               </div>
               <div layout="row" flex flex-sm="100">
                 <md-list ng-hide="showTokenResult" style="padding: 0;">
-                    <!-- <md-divider ng-show="true"></md-divider> -->
-                    <md-list-item class="md-3-line" style="height: inherit;padding: 7px 0;">
+                    <md-list-item class="md-3-line" style="height: inherit;padding: 7px 0;min-height: initial">
                       <div class="md-list-item-text">
                         <h3> {{demo.tokenInAttention.token.client.lineNumber}} </h3>
                         <p style="font-size: 12px;color:#777">{{"Celular" | uppercase}}</p>
@@ -66,7 +65,7 @@
 
           <div layout="row" style="padding: 4px 10px;">
               <md-list>
-                  <md-list-item class="md-3-line" style="height: inherit;padding: 7px 0;">
+                  <md-list-item class="md-3-line" style="height: inherit;padding: 7px 0;min-height: initial">
                       <div class="md-list-item-text" layout="column" style="padding-bottom:0px">
                           <h3 style="line-height: 1.3em;margin: 0px;white-space: normal;">{{ demo.tokenInAttention.token.motivoVisita.serviceName }}</h3>
                           <p style="font-size: 12px;">{{ "motivo de la visita" | uppercase}}</p>
@@ -77,7 +76,7 @@
           <div class="md-whiteframe-z1">
               <md-list  ng-repeat="(key, service) in demo.tokenInAttention.token.infoToken.services" style="padding: 0px;">
 
-                  <md-list-item class="md-3-line" ng-repeat="subservice in service.subServices" style="height: inherit;padding: 7px 0;">
+                  <md-list-item class="md-3-line" ng-repeat="subservice in service.subServices" style="height: inherit;padding: 7px 0;min-height: initial;">
                       <md-button class="md-icon-button md-accent" ng-click="editService(demo.tokenInAttention._id, service)" aria-label="Edit">
                           <md-tooltip hide-sm ng-show="visibleTooltip">Editar servicio</md-tooltip>
                           <i class="fa fa-pencil"></i>
@@ -93,7 +92,7 @@
         </md-card-content>
 
         <div layout="row"  layout-align="space-between center" ng-hide="demo.onlyRead">
-            <md-button style="visibility:hidden" class="md-raised">{{"cierre"}}</md-button>
+            <md-button ng-disabled="demo.stateAttention !== 0" ng-click="closeAttention()" class="md-raised">{{"cierre atención"}}</md-button>
             <md-fab-speed-dial layout="column" layout-align="center end" ng-hide="demo.hidden || demo.stateAttention < 2  ? true : false"
                 md-direction="{{demo.direction}}" class="md-fling">
               <md-fab-trigger layout="row" layout-align="end center">

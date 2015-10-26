@@ -6,8 +6,7 @@ angular.module('flugel', [
   'ngMaterial',
   'ngCookies',
   'flugel.services',
-  'flugel.view1',
-  'flugel.view2',
+  'flugel.views',
   'flugel.version',
   'flugel.components',
 ]).

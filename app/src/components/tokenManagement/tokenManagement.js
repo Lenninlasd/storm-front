@@ -16,7 +16,7 @@ angular
     };
   }
 
-  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, Token, Config, Login, Activity) {
+  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, $window, Token, Config, Login, Activity) {
     var stopTime;
     var callTime;
     var availableTime;
@@ -47,6 +47,7 @@ angular
     $scope.takeToken = takeToken;
     $scope.tokenAction = tokenAction;
     $scope.editService = editService;
+    $scope.closeAttention = closeAttention;
 
     inicializeAttending();
 
@@ -82,8 +83,7 @@ angular
                       adviserId: session.userData.idUser,
                       adviserEmail: session.userData.email
                 };
-                // *** Punto 0 *** Done
-                Activity.activity.save(adviserInfo, function (data) {
+                Activity.activity.get(adviserInfo, function (data) {
                     $scope.activity = data;
                     return callback();
                 });
@@ -267,6 +267,12 @@ angular
         }
 
         showDialog(locals, fnSuccess);
+    }
+
+    function closeAttention() {
+        setEventActivity('10', 'closed', function (data) {
+            $window.location = '#/select'; return;
+        });
     }
 
     function servicesCtrl($scope, Token, $mdDialog, Config, tokenData, mode) {
