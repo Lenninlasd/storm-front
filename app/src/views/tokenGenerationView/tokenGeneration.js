@@ -12,20 +12,27 @@ angular.module('flugel.view1', ['ngRoute'])
 .controller('TokenGenerationCtrl', TokenGenerationCtrl)
 .controller('DialogCtrl', DialogCtrl);
 
-TokenGenerationCtrl.$inject = ['$scope', '$mdDialog', 'Token'];
-function TokenGenerationCtrl($scope, $mdDialog, Token) {
+TokenGenerationCtrl.$inject = ['$scope', '$mdDialog', '$window', 'Token', 'Activity', 'Login'];
+function TokenGenerationCtrl($scope, $mdDialog, $window, Token, Activity, Login) {
     var self = this;
     self.services = [];
     start();
+
+    $scope.activity = {};
+
     $scope.start = start;
     $scope.goBackStep = goBackStep;
     $scope.nextToDigitName = nextToDigitName;
     $scope.digitName = digitName;
     $scope.choosePurposeVisit = choosePurposeVisit;
+    $scope.closeAttention = closeAttention;
+
 
     $scope.$on('submitKeyboard', function(event, val) {
         nextToDigitName(val);
     });
+
+    getAdviserInfo();
 
     Token.services.query(function (data) {
         self.services = data;
@@ -39,9 +46,9 @@ function TokenGenerationCtrl($scope, $mdDialog, Token) {
             token: {
               lineNumber: "",
               screenName:"",
-              adviserName: "Pablito Emilio",
-              adviserLastName: "Escobar Gaviria",
-              adviserId: "QuiboPues"
+              // adviserName: "Pablito Emilio",
+              // adviserLastName: "Escobar Gaviria",
+              // adviserId: "QuiboPues"
             }
         };
         $scope.keyboardNumber = "";
@@ -81,6 +88,46 @@ function TokenGenerationCtrl($scope, $mdDialog, Token) {
         });
     }
 
+    function getAdviserInfo() {
+        Login.login.get(function (session) {
+            if (session.login) {
+              console.log(session.userData);
+              self.dataCustomer.token.adviserName = session.userData.name;
+              self.dataCustomer.token.adviserLastName = session.userData.lastName;
+              self.dataCustomer.token.adviserId = session.userData.idUser;
+              self.dataCustomer.token.adviserEmail = session.userData.email;
+
+                Activity.activity.get(self.dataCustomer.token, function (data) {
+                    $scope.activity = data;
+                    setEventActivity('0', 'generateToken');
+                });
+            }else{
+                $window.location = '/login';
+            }
+        });
+    }
+
+    function setEventActivity(eventCode, eventName, callback) {
+        // valida si existe actividad
+        if (!$scope.activity._id) { $window.location = '#/select'; return; }
+
+        var eventCodeBefore = _.last($scope.activity.activity).activityEvent.eventCode;
+        if (eventCodeBefore !== eventCode) {
+            var activity = {idActivity: $scope.activity._id, eventCode: eventCode, eventName: eventName};
+            Activity.activity.update(activity, function (data) {
+                $scope.activity = data;
+                if (callback) return callback(data);
+            });
+        }
+        if (callback) return callback(null);
+    }
+
+    function closeAttention() {
+      setEventActivity('10', 'closed', function (data) {
+          $window.location = '#/select'; return;
+      });
+    }
+
 
 }
 
@@ -96,9 +143,8 @@ function DialogCtrl($scope, $mdDialog, dataCustomer, Token) {
 
     $scope.dataCustomer = dataCustomer;
     $scope.showTokenResult = false;
-    console.log(dataCustomer);
+
     $scope.tokenGeneration = function () {
-        //console.log($scope.dataCustomer.token);
         Token.tokens.save($scope.dataCustomer.token, function (data) {
             console.log(data.token);
             $scope.generatedToken = data.token;
