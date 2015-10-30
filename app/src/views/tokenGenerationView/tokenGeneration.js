@@ -12,9 +12,10 @@ angular.module('flugel.view1', ['ngRoute'])
 .controller('TokenGenerationCtrl', TokenGenerationCtrl)
 .controller('DialogCtrl', DialogCtrl);
 
-TokenGenerationCtrl.$inject = ['$scope', '$mdDialog', '$window', 'Token', 'Activity', 'Login'];
-function TokenGenerationCtrl($scope, $mdDialog, $window, Token, Activity, Login) {
+TokenGenerationCtrl.$inject = ['$scope', '$mdDialog', '$window', '$cookies', 'Token', 'Activity', 'Login', 'Config', 'socket'];
+function TokenGenerationCtrl($scope, $mdDialog, $window, $cookies, Token, Activity, Login, Config, socket) {
     var self = this;
+
     self.services = [];
     start();
 
@@ -34,6 +35,10 @@ function TokenGenerationCtrl($scope, $mdDialog, $window, Token, Activity, Login)
 
     getAdviserInfo();
 
+    socket.on('connect', function() {
+        socket.emit('session', {idSession: $cookies.get('session')});
+    });
+
     Token.services.query(function (data) {
         self.services = data;
         console.log(data);
@@ -43,13 +48,7 @@ function TokenGenerationCtrl($scope, $mdDialog, $window, Token, Activity, Login)
         self.step = 1;
         self.dataCustomer = {
             service:"",
-            token: {
-              lineNumber: "",
-              screenName:"",
-              // adviserName: "Pablito Emilio",
-              // adviserLastName: "Escobar Gaviria",
-              // adviserId: "QuiboPues"
-            }
+            token: {lineNumber: "", screenName:""}
         };
         $scope.keyboardNumber = "";
     }
@@ -76,7 +75,7 @@ function TokenGenerationCtrl($scope, $mdDialog, $window, Token, Activity, Login)
              parent: angular.element(document.body),
              targetEvent: ev,
              clickOutsideToClose:false,
-             locals: { dataCustomer: self.dataCustomer }
+             locals: { dataCustomer: self.dataCustomer, branchOffice:  _.last($scope.activity.activity).branchOffice}
         })
         .then(function(answer) {
             $scope.status = 'You said the information was "' + answer + '".';
@@ -124,6 +123,7 @@ function TokenGenerationCtrl($scope, $mdDialog, $window, Token, Activity, Login)
 
     function closeAttention() {
       setEventActivity('10', 'closed', function (data) {
+          socket.emit('closeAttention');
           $window.location = '#/select'; return;
       });
     }
@@ -131,11 +131,12 @@ function TokenGenerationCtrl($scope, $mdDialog, $window, Token, Activity, Login)
 
 }
 
-DialogCtrl.$inject = ['$scope', '$mdDialog', 'dataCustomer', 'Token'];
-function DialogCtrl($scope, $mdDialog, dataCustomer, Token) {
-    console.log(dataCustomer);
+DialogCtrl.$inject = ['$scope', '$mdDialog', 'dataCustomer', 'branchOffice', 'Token'];
+function DialogCtrl($scope, $mdDialog, dataCustomer, branchOffice, Token) {
+    
     dataCustomer.token.numerator = dataCustomer.service.service.numerator;
     dataCustomer.token.motivoVisita = dataCustomer.service.service.serviceName;
+    dataCustomer.token.posCode = branchOffice.posCode;
     dataCustomer.token.service = {
                                     serviceName: dataCustomer.service.service.serviceName,
                                     serviceId: dataCustomer.service.service.serviceId
@@ -145,6 +146,7 @@ function DialogCtrl($scope, $mdDialog, dataCustomer, Token) {
     $scope.showTokenResult = false;
 
     $scope.tokenGeneration = function () {
+        console.log($scope.dataCustomer);
         Token.tokens.save($scope.dataCustomer.token, function (data) {
             console.log(data.token);
             $scope.generatedToken = data.token;

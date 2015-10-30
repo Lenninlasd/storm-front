@@ -14,7 +14,7 @@ angular
     };
   }
 
-  function selectionRoleDirectiveCtrl($scope, $element, $attrs, Login, Activity, $window) {
+  function selectionRoleDirectiveCtrl($scope, $element, $attrs, Login, Activity, $window, socket) {
     var adviserInfo = {};
     var userSession;
     var redirection;
@@ -88,6 +88,7 @@ angular
             activity.role = role;
             Activity.activity.update(activity, function (data) {
                 $scope.activity = data;
+                socket.emit('selectionRole');
                 redirectActivity(data);
             });
 

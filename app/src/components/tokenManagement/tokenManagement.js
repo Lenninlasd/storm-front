@@ -16,12 +16,13 @@ angular
     };
   }
 
-  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, $window, Token, Config, Login, Activity) {
+  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, $window, Token, Config, Login, Activity, socket) {
     var stopTime;
     var callTime;
     var availableTime;
     var adviserInfo = {};
-    var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
+    // var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
+
     var self = this;
 
     self.hidden = false;
@@ -51,22 +52,6 @@ angular
 
     inicializeAttending();
 
-    socket.on('connect', function() {
-        socket.emit('session', {idSession: $cookies.get('session')});
-    });
-    //socket.on('newToken', getPendingToken);
-    socket.on('newToken', function (data) {
-        if (self.stateAttention === 0) {
-            getPendingToken(data);
-        }
-    });
-    socket.on('resultService', function (data) {
-        // console.log(self.tokenInAttention.token.infoToken.services);
-        // console.log(data.token.infoToken.services);
-        self.tokenInAttention = data;
-        $mdDialog.hide();
-    });
-
     // valida que se esté atendiendo un turno
     function inicializeAttending() {
         getAdviserInfo(function () {
@@ -77,6 +62,7 @@ angular
     function getAdviserInfo(callback) {
         Login.login.get(function (session) {
             if (session.login) {
+                inicializeSocket(session.userData.circleList.branchOffices[0].posCode);
                 adviserInfo = {
                       adviserName: session.userData.name,
                       adviserLastName: session.userData.lastName,
@@ -105,6 +91,23 @@ angular
           }
           callToken();
       });
+    }
+
+    function inicializeSocket(room) {
+        socket.on('connect', function() {
+            socket.emit('session', {idSession: $cookies.get('session')});
+        });
+        //socket.on('newToken', getPendingToken);
+        socket.on('newToken', function (data) {
+            // socket.join(room);
+            if (self.stateAttention === 0) {
+                getPendingToken(data);
+            }
+        });
+        socket.on('resultService', function (data) {
+            self.tokenInAttention = data;
+            $mdDialog.hide();
+        });
     }
 
     function callAtInterval() {
@@ -274,11 +277,12 @@ angular
 
     function closeAttention() {
         setEventActivity('10', 'closed', function (data) {
+            socket.emit('closeAttention');
             $window.location = '#/select'; return;
         });
     }
 
-    function servicesCtrl($scope, Token, $mdDialog, Config, tokenData, mode) {
+    function servicesCtrl($scope, Token, $mdDialog, Config, tokenData, mode, socket) {
         var self = this;
         self.services = [];
         self.mode = mode;
@@ -292,8 +296,6 @@ angular
         }else if (mode === 'initInsert') {
             $scope.selectedService = tokenData.token.token.motivoVisita.serviceId;
         }
-
-        var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
 
         Token.services.query(function (data) {
             self.services = data;

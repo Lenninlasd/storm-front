@@ -29,4 +29,29 @@ angular.module('flugel.services', ['ngResource'])
 	return {
 			activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}})
 	};
-}]);
+}])
+
+.factory('socket', function ($rootScope, Config) {
+	  //var socket = io.connect();
+		var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
+	  return {
+		    on: function (eventName, callback) {
+			      socket.on(eventName, function () {
+				        var args = arguments;
+				        $rootScope.$apply(function () {
+				          	callback.apply(socket, args);
+				        });
+			      });
+		    },
+		    emit: function (eventName, data, callback) {
+			      socket.emit(eventName, data, function () {
+				        var args = arguments;
+				        $rootScope.$apply(function () {
+					          if (callback) {
+					            callback.apply(socket, args);
+					          }
+				        });
+			      });
+		    }
+  };
+});
