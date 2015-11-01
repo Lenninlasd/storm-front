@@ -14,10 +14,8 @@ angular
     };
   }
 
-  function tokenScreenCtrl($scope, $element, $attrs, Token, Config) {
+  function tokenScreenCtrl($scope, $element, $attrs, Token, Config, socket) {
       $scope.pendingTokens = [];
-      //var socket = io('http://192.168.1.71:5000');
-      var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
 
       Token.tokens.query({state: 0}, function (data) {
           $scope.pendingTokens = data;

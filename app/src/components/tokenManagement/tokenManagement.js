@@ -17,11 +17,12 @@ angular
   }
 
   function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, $window, Token, Config, Login, Activity, socket) {
-    var stopTime;
-    var callTime;
-    var availableTime;
+    var stopTime,
+        callTime,
+        availableTime,
+        room;
+
     var adviserInfo = {};
-    // var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
 
     var self = this;
 
@@ -62,7 +63,8 @@ angular
     function getAdviserInfo(callback) {
         Login.login.get(function (session) {
             if (session.login) {
-                inicializeSocket(session.userData.circleList.branchOffices[0].posCode);
+                room = session.userData.circleList.branchOffices[0].posCode;
+                inicializeSocket(room);
                 adviserInfo = {
                       adviserName: session.userData.name,
                       adviserLastName: session.userData.lastName,
@@ -79,6 +81,7 @@ angular
     function checkIfAttending(){
       Token.tokens.query({state: 2}, function (data) {
           if (data.length) {
+              // Cambiar esto ******* del receiverAdviser
               self.tokenInAttention =  _.find(data, function (obj) {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;}) || {};
               console.log(self.tokenInAttention);
               if (_.size(self.tokenInAttention)) {
@@ -93,13 +96,8 @@ angular
       });
     }
 
-    function inicializeSocket(room) {
-        socket.on('connect', function() {
-            socket.emit('session', {idSession: $cookies.get('session')});
-        });
-        //socket.on('newToken', getPendingToken);
+    function inicializeSocket() {
         socket.on('newToken', function (data) {
-            // socket.join(room);
             if (self.stateAttention === 0) {
                 getPendingToken(data);
             }
@@ -151,7 +149,7 @@ angular
     }
 
     function callToken() {
-        Token.tokens.query({state: 0}, function (data) {
+        Token.tokens.query({state: 0, room: room}, function (data) {
             if (data.length) return getPendingToken(data[0]);  // Hay turnos Disponibles?
             available();
         });

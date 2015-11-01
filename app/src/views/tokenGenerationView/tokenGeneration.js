@@ -133,10 +133,11 @@ function TokenGenerationCtrl($scope, $mdDialog, $window, $cookies, Token, Activi
 
 DialogCtrl.$inject = ['$scope', '$mdDialog', 'dataCustomer', 'branchOffice', 'Token'];
 function DialogCtrl($scope, $mdDialog, dataCustomer, branchOffice, Token) {
-    
+
     dataCustomer.token.numerator = dataCustomer.service.service.numerator;
     dataCustomer.token.motivoVisita = dataCustomer.service.service.serviceName;
     dataCustomer.token.posCode = branchOffice.posCode;
+    dataCustomer.token.branchOffice = branchOffice;
     dataCustomer.token.service = {
                                     serviceName: dataCustomer.service.service.serviceName,
                                     serviceId: dataCustomer.service.service.serviceId
