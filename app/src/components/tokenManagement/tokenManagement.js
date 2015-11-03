@@ -98,8 +98,9 @@ angular
 
     function inicializeSocket() {
         socket.on('newToken', function (data) {
-            if (self.stateAttention === 0) {
-                getPendingToken(data);
+            console.log(data);
+            if (self.stateAttention === 0 && adviserInfo.adviserId === data.availableUser.adviserId) {
+                getPendingToken(data.token);
             }
         });
         socket.on('resultService', function (data) {

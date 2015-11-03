@@ -150,7 +150,7 @@ function DialogCtrl($scope, $mdDialog, dataCustomer, branchOffice, Token) {
         console.log($scope.dataCustomer);
         Token.tokens.save($scope.dataCustomer.token, function (data) {
             console.log(data.token);
-            $scope.generatedToken = data.token;
+            $scope.generatedToken = data.token.token;
             $scope.showTokenResult = true;
 
         }, function (err) {
