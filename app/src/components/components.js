@@ -5,5 +5,6 @@ angular
     'flugel.components.longpress',
     'flugel.components.tokenManagement',
     'flugel.components.manageServices',
-    'flugel.components.selectionRole'
+    'flugel.components.selectionRole',
+    'flugel.components.charts'
   ]);
