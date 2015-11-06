@@ -15,6 +15,8 @@ angular
   }
 
   function chartBarCtrl($scope, $element, $attrs) {
+
+    $scope.barId = $attrs.id;
     var data = {
         labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
         series: [
@@ -38,8 +40,8 @@ angular
         }]
     ];
 
-    new Chartist.Bar('.ct-chart', data, options, responsiveOptions)
+    new Chartist.Bar('#'+$attrs.id, data, options, responsiveOptions)
     .on('draw', function(data) {
-        if(data.type === 'bar') data.element.attr({style: 'stroke-width: 2.5%'});
+        if(data.type === 'bar') data.element.attr({style: 'stroke-width: ' + $attrs.ancho});
     });
   }
