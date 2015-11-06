@@ -1,0 +1,44 @@
+<div layout="column">
+    <section layout="row" flex="100" style="bottom: 0;top: 0;right: 0;left: 0;position: absolute;">
+        <md-sidenav flex style="botton:0;" class="md-sidenav-left md-whiteframe-2dp sideNavResposive" md-component-id="left"
+            md-is-locked-open="$mdMedia('min-width: 500px')">
+              <md-toolbar class="md-theme-indigo">
+                <h1 class="md-toolbar-tools">Sidenav Left</h1>
+              </md-toolbar>
+              <md-content layout-padding >
+                <md-button ng-click="close()" class="md-primary" hide-gt-md>
+                    Close Sidenav Left
+                </md-button>
+                <p hide-md show-gt-md>
+                    This sidenav is locked open on your device. To go back to the default behavior,
+                    narrow your display.
+                </p>
+              </md-content>
+        </md-sidenav>
+        <md-content flex layout-padding>
+          <div layout="column" layout-fill layout-align="top center">
+            <p>
+            The left sidenav will 'lock open' on a medium (>=960px wide) device.
+            </p>
+            <p>
+            The right sidenav will focus on a specific child element.
+            </p>
+            <div>
+              <md-button ng-click="toggleLeft()"
+                class="md-primary" hide-gt-md>
+                Toggle left
+              </md-button>
+            </div>
+            <div>
+              <md-button ng-click="toggleRight()"
+                ng-hide="isOpenRight()"
+                class="md-primary">
+                Toggle right
+              </md-button>
+            </div>
+          </div>
+          <div flex></div>
+        </md-content>
+    </section>
+
+</div>

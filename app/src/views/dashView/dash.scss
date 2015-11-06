@@ -1,0 +1,13 @@
+.sideNavResposive {
+    min-width: 200px !important;
+    width: 250px !important;
+    max-width: 250px !important;
+}
+
+@media (max-width: 799px) {
+  .sideNavResposive {
+      min-width: 50px !important;
+      width: 50px !important;
+      max-width: 100px !important;
+  }
+}
