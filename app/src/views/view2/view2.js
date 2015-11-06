@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 angular.module('flugel.view2', ['ngRoute'])
@@ -22,3 +23,4 @@ angular.module('flugel.view2', ['ngRoute'])
         });
     };
 }]);
+})();

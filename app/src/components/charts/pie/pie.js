@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 angular
@@ -6,11 +7,11 @@ angular
 
   function fgChartBarDirective() {
     return {
-      retrict: 'E',
+      retrict: 'A',
       scope: {
       },
       controller: chartPieCtrl,
-      templateUrl: 'src/components/charts/pie/pie.html'
+      template: '<div class="ct-chart" id="{{pieId}}"></div>'
     };
   }
 
@@ -45,3 +46,4 @@ angular
 
     new Chartist.Pie('#'+$attrs.id, data, options, responsiveOptions);
   }
+})();
