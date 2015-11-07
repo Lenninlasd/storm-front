@@ -2,6 +2,15 @@
     min-width: 200px !important;
     width: 250px !important;
     max-width: 250px !important;
+    background-color: #17365d;
+}
+
+.sideNavCanvas{
+    bottom: 0;
+    top: 0px;
+    right: 0;
+    left: 0;
+    position: absolute;
 }
 
 @media (max-width: 799px) {

@@ -1,43 +1,55 @@
 <div layout="column">
-    <section layout="row" flex="100" style="bottom: 0;top: 0;right: 0;left: 0;position: absolute;">
-        <md-sidenav flex style="botton:0;" class="md-sidenav-left md-whiteframe-2dp sideNavResposive" md-component-id="left"
-            md-is-locked-open="$mdMedia('min-width: 500px')">
-              <md-toolbar class="md-theme-indigo">
-                <h1 class="md-toolbar-tools">Sidenav Left</h1>
-              </md-toolbar>
-              <md-content layout-padding >
-                <md-button ng-click="close()" class="md-primary" hide-gt-md>
-                    Close Sidenav Left
-                </md-button>
-                <p hide-md show-gt-md>
-                    This sidenav is locked open on your device. To go back to the default behavior,
-                    narrow your display.
-                </p>
-              </md-content>
+    <section layout="row" flex="100" class="sideNavCanvas">
+        <!-- volver componente -->
+        <md-sidenav flex class="md-sidenav-left md-whiteframe-2dp sideNavResposive" md-component-id="left"
+            md-is-locked-open="$mdMedia('min-width: 600px')">
+            <md-list >
+                <md-list-item class="md-2-line">
+                    <div class="md-list-item-text">
+                        <h3 style="color:white">{{ "todos[0].who" }}</h3>
+                        <p>Secondary text</p>
+                    </div>
+                </md-list-item>
+            </md-list>
         </md-sidenav>
-        <md-content flex layout-padding>
-          <div layout="column" layout-fill layout-align="top center">
-            <p>
-            The left sidenav will 'lock open' on a medium (>=960px wide) device.
-            </p>
-            <p>
-            The right sidenav will focus on a specific child element.
-            </p>
-            <div>
-              <md-button ng-click="toggleLeft()"
-                class="md-primary" hide-gt-md>
-                Toggle left
-              </md-button>
+
+
+        <md-content flex >
+            <md-toolbar md-scroll-shrink class="md-whiteframe-1dp" style="background-color:white">
+                <div class="md-toolbar-tools" >
+                  <md-button hide show-sm class="md-icon-button md-primary" aria-label="Settings">
+                    <i style="color:black" class="fa fa-lg fa-bars"></i>
+                  </md-button>
+
+                  <h2 style="color:black" >
+                    <i style="color:darkorange" class="fa fa-bolt"></i><span> Tiempo Real</span>
+                  </h2>
+                  <span flex></span>
+                  <md-button class="md-icon-button" aria-label="More">
+                    <i style="color:black" class="fa fa-lg fa-caret-down"></i>
+                  </md-button>
+                </div>
+            </md-toolbar>
+            <div layout="row" layout-wrap layout-margin>
+                <md-card flex="100" class="md-whiteframe-1dp">
+                    <md-card-content>
+                      <div fg-chart-line id="asa2"></div>
+                    </md-card-content>
+                </md-card>
+
+                  <md-card flex="60" flex-md="100" flex-sm="100" class="md-whiteframe-1dp">
+                      <md-card-content>
+                        <div fg-chart-bar  id="ns2" ancho="1.5%"></div>
+                      </md-card-content>
+                  </md-card>
+
+                  <md-card flex="35" flex-md="100" flex-sm="100" class="md-whiteframe-1dp">
+                      <md-card-content>
+                          <div fg-chart-pie id="aht2"></div>
+                      </md-card-content>
+                  </md-card>
             </div>
-            <div>
-              <md-button ng-click="toggleRight()"
-                ng-hide="isOpenRight()"
-                class="md-primary">
-                Toggle right
-              </md-button>
-            </div>
-          </div>
-          <div flex></div>
+            <div flex></div>
         </md-content>
     </section>
 
