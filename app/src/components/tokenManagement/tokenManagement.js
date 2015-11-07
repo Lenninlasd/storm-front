@@ -12,12 +12,11 @@ angular
       },
       controller: tokenManagementCtrl,
       controllerAs: 'demo',
-      templateUrl: 'src/components/tokenManagement/tokenManagement.html',
-      link: tokenManagementLink
+      templateUrl: 'src/components/tokenManagement/tokenManagement.html'
     };
   }
 
-  tokenManagementCtrl.$inject = ['$scope', '$element',' $attrs', '$interval', '$mdDialog', '$cookies', '$window', 'Token', 'Config', 'Login', 'Activity', 'socket'];
+  tokenManagementCtrl.$inject = ['$scope', '$element','$attrs', '$interval', '$mdDialog', '$cookies', '$window', 'Token', 'Config', 'Login', 'Activity', 'socket'];
   function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, $window, Token, Config, Login, Activity, socket) {
     var stopTime,
         callTime,
@@ -337,9 +336,5 @@ angular
         };
     }
 
-  }
-
-
-  function tokenManagementLink(scope, element, attrs) {
   }
 })();

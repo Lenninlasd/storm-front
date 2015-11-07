@@ -10,11 +10,10 @@ angular
       retrict: 'E',
       scope: {},
       controller: tokenScreenCtrl,
-      templateUrl: 'src/components/tokenScreen/tokenScreen.html',
-      link: tokenScreenLink
+      templateUrl: 'src/components/tokenScreen/tokenScreen.html'
     };
   }
-  tokenScreenCtrl.$inject = ['$scope', '$element',' $attrs', 'Token', 'Config', 'socket'];
+  tokenScreenCtrl.$inject = ['$scope', '$element','$attrs', 'Token', 'Config', 'socket'];
   function tokenScreenCtrl($scope, $element, $attrs, Token, Config, socket) {
       $scope.pendingTokens = [];
 
@@ -36,6 +35,4 @@ angular
       });
   }
 
-  function tokenScreenLink(scope, element, attrs) {
-  }
 })();

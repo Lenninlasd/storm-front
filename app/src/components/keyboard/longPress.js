@@ -13,6 +13,7 @@ angular
     };
   }
 
+  longpressCtrl.$inject = ['$scope', '$element', '$attrs', '$rootScope', '$timeout'];
   function longpressCtrl($scope, $element, $attrs, $rootScope, $timeout) {
 
     var timeout = null;

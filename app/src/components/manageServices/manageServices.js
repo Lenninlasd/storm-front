@@ -15,7 +15,7 @@ angular
       templateUrl: 'src/components/manageServices/manageServices.html'
     };
   }
-  servicesCtrl.$inject = ['$scope', '$element',' $attrs', 'Token', '$mdDialog', 'Config', 'socket'];
+  servicesCtrl.$inject = ['$scope', '$element','$attrs', 'Token', '$mdDialog', 'Config', 'socket'];
   function servicesCtrl($scope, $element, $attrs, Token, $mdDialog, Config, socket) {
       var self = this;
       self.services = [];
