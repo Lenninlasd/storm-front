@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 angular.module('flugel.view1', ['ngRoute'])
@@ -168,3 +169,4 @@ function DialogCtrl($scope, $mdDialog, dataCustomer, branchOffice, Token) {
         $mdDialog.hide(answer);
     };
 }
+})();

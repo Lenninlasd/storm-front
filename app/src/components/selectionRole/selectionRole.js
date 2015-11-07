@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 angular
@@ -14,6 +15,7 @@ angular
     };
   }
 
+  selectionRoleDirectiveCtrl.$inject = ['$scope', '$element',' $attrs', 'Login', 'Activity', '$window', 'socket'];
   function selectionRoleDirectiveCtrl($scope, $element, $attrs, Login, Activity, $window, socket) {
     var adviserInfo = {};
     var userSession;
@@ -113,3 +115,4 @@ angular
         }
     }
   }
+})();

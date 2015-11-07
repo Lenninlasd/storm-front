@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 angular
@@ -13,7 +14,7 @@ angular
       link: tokenScreenLink
     };
   }
-
+  tokenScreenCtrl.$inject = ['$scope', '$element',' $attrs', 'Token', 'Config', 'socket'];
   function tokenScreenCtrl($scope, $element, $attrs, Token, Config, socket) {
       $scope.pendingTokens = [];
 
@@ -37,3 +38,4 @@ angular
 
   function tokenScreenLink(scope, element, attrs) {
   }
+})();

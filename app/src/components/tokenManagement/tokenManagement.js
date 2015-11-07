@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 angular
@@ -16,6 +17,7 @@ angular
     };
   }
 
+  tokenManagementCtrl.$inject = ['$scope', '$element',' $attrs', '$interval', '$mdDialog', '$cookies', '$window', 'Token', 'Config', 'Login', 'Activity', 'socket'];
   function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, $window, Token, Config, Login, Activity, socket) {
     var stopTime,
         callTime,
@@ -281,6 +283,7 @@ angular
         });
     }
 
+    servicesCtrl.$inject = ['$scope', 'Token', '$mdDialog', 'Config', 'tokenData', 'mode', 'socket'];
     function servicesCtrl($scope, Token, $mdDialog, Config, tokenData, mode, socket) {
         var self = this;
         self.services = [];
@@ -339,3 +342,4 @@ angular
 
   function tokenManagementLink(scope, element, attrs) {
   }
+})();

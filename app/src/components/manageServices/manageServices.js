@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 angular
@@ -14,12 +15,12 @@ angular
       templateUrl: 'src/components/manageServices/manageServices.html'
     };
   }
-//  servicesCtrl.$inject = ['$scope', '$element',' $attrs', 'Token', '$mdDialog', 'Config'];
-  function servicesCtrl($scope, $element, $attrs, Token, $mdDialog, Config) {
+  servicesCtrl.$inject = ['$scope', '$element',' $attrs', 'Token', '$mdDialog', 'Config', 'socket'];
+  function servicesCtrl($scope, $element, $attrs, Token, $mdDialog, Config, socket) {
       var self = this;
       self.services = [];
       $scope.selectedService = '';
-      var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
+
       console.log($attrs);
       Token.services.query(function (data) {
           self.services = data;
@@ -46,3 +47,4 @@ angular
           //socket.emit('insertService', serviceData.service);
       };
   }
+})();

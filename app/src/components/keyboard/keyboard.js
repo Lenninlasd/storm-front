@@ -1,3 +1,4 @@
+(function () {
 'use strict';
 
 angular
@@ -14,7 +15,7 @@ angular
       templateUrl: 'src/components/keyboard/keyboard.html'
     };
   }
-
+  keyboardCtrl.$inject = ['$scope', '$element', '$attrs', '$rootScope'];
   function keyboardCtrl($scope, $element, $attrs, $rootScope) {
     // Máximo numero de degitos aceptados (deberia cambiarse por una ReGex)
     var maxNumber = 10;
@@ -41,3 +42,4 @@ angular
         // $scope.keyboardNumber = "";
     };
   }
+})();

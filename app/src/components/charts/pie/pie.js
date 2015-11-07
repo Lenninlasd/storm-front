@@ -14,7 +14,8 @@ angular
       template: '<div class="ct-chart" id="{{pieId}}"></div>'
     };
   }
-
+  
+  chartPieCtrl.$inject = ['$scope', '$element', '$attrs'];
   function chartPieCtrl($scope, $element, $attrs) {
     $scope.pieId = $attrs.id;
 

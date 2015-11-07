@@ -13,7 +13,7 @@
     config(['$routeProvider', function($routeProvider) {
       $routeProvider.otherwise({redirectTo: '/view1'});
     }])
-    .config(function($mdThemingProvider) {
+    .config(['$mdThemingProvider', function($mdThemingProvider) {
       $mdThemingProvider.definePalette('amazingPaletteName', {
         '50': 'ffebee',
         '100': 'ffcdd2',
@@ -37,7 +37,7 @@
       });
       $mdThemingProvider.theme('docs-dark', 'default')
         .primaryPalette('amazingPaletteName').dark();
-    })
+    }])
     .config(['$httpProvider', function($httpProvider) {
         $httpProvider.interceptors.push(['$cookies', '$location', '$q', function ($cookies, $location, $q) {
             return {

@@ -33,9 +33,9 @@ gulp.task('minjs', function(){
         gulp.src('app/src/**/*.js')
     )
     .pipe(concat('flugel.js'))
-    // .pipe(gulp.dest(bases.dist))
-  	// .pipe(uglify())
-    // .pipe(rename('flugel.min.js'))
+    .pipe(gulp.dest(bases.dist))
+  	.pipe(uglify())
+    .pipe(rename('flugel.min.js'))
   	.pipe(gulp.dest(bases.dist));
 });
 

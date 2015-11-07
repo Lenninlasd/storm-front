@@ -14,7 +14,7 @@
           template: '<div class="ct-chart" id="{{lineId}}"></div>'
         };
       }
-
+      chartLineCtrl.$inject = ['$scope', '$element', '$attrs'];
       function chartLineCtrl($scope, $element, $attrs) {
 
           $scope.lineId = $attrs.id;
