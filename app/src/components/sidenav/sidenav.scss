@@ -1,0 +1,30 @@
+.docs-menu, .docs-menu ul {
+    list-style: none;
+    padding: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+}
+.docs-menu .md-button:hover {
+    color: white !important;
+}
+
+.docs-menu .md-button.active {
+    background: rgba(255, 255, 255, 0.2);;
+}
+
+.docs-menu .md-button {
+    border-radius: 0;
+    color: white;
+    cursor: pointer;
+    display: block;
+    align-items: inherit;
+    line-height: 40px;
+    margin: 0;
+    max-height: 40px;
+    overflow: hidden;
+    padding: 0px 16px;
+    text-align: left;
+    text-decoration: none;
+    white-space: normal;
+    width: 100%;
+}

@@ -13,10 +13,18 @@
     position: absolute;
 }
 
-@media (max-width: 799px) {
+@media (min-width:600px) and  (max-width: 799px) {
   .sideNavResposive {
       min-width: 50px !important;
       width: 50px !important;
       max-width: 100px !important;
+  }
+}
+@media (max-width: 599px){
+  .sideNavResposive {
+      min-width: 200px !important;
+      width: 300px !important;
+      max-width: 350px !important;
+
   }
 }

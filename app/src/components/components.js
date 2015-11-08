@@ -6,5 +6,6 @@ angular
     'flugel.components.tokenManagement',
     'flugel.components.manageServices',
     'flugel.components.selectionRole',
-    'flugel.components.charts'
+    'flugel.components.charts',
+    'flugel.components.sidenav'
   ]);

@@ -14,6 +14,12 @@
       // Login.login.get(function (session) {
       //     if (!session.login) $window.location = '/login';
       // });
+      $scope.close = function () {
+          $mdSidenav('left').toggle()
+          .then(function () {
+            console.log("close RIGHT is done");
+          });
+      };
   }]);
 
 })();

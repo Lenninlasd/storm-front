@@ -3,26 +3,19 @@
         <!-- volver componente -->
         <md-sidenav flex class="md-sidenav-left md-whiteframe-2dp sideNavResposive" md-component-id="left"
             md-is-locked-open="$mdMedia('min-width: 600px')">
-            <md-list >
-                <md-list-item class="md-2-line">
-                    <div class="md-list-item-text">
-                        <h3 style="color:white">{{ "todos[0].who" }}</h3>
-                        <p>Secondary text</p>
-                    </div>
-                </md-list-item>
-            </md-list>
+            <fg-sidenav></fg-sidenav>
         </md-sidenav>
 
 
-        <md-content flex >
+        <md-content flex style="background-color: #F1F1F1">
             <md-toolbar md-scroll-shrink class="md-whiteframe-1dp" style="background-color:white">
                 <div class="md-toolbar-tools" >
-                  <md-button hide show-sm class="md-icon-button md-primary" aria-label="Settings">
+                  <md-button hide show-sm class="md-icon-button md-primary" ng-click="close()" aria-label="Settings">
                     <i style="color:black" class="fa fa-lg fa-bars"></i>
                   </md-button>
 
                   <h2 style="color:black" >
-                    <i style="color:darkorange" class="fa fa-bolt"></i><span> Tiempo Real</span>
+                    <i style="color:darkorange" class="fa fa-bolt"></i><span> Actividad en tiempo Real</span>
                   </h2>
                   <span flex></span>
                   <md-button class="md-icon-button" aria-label="More">
