@@ -1,0 +1,9 @@
+{
+  "firebase": "flugel",
+  "public": "C:\\\\Users\\\\David\\\\Flugel\\\\stormLanding\\\\app",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
