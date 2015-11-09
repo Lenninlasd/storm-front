@@ -5,7 +5,7 @@ angular.module('flugel.services', ['ngResource'])
 	return {
 			version : '0.0.1',
 			ip: location.hostname,
-			port: 5000,
+			port: 3001,
       		protocol: 'http'
 	};
 })

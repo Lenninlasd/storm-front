@@ -2,7 +2,7 @@ var express = require('express'),
  	app = express(),
   server = require('http').createServer(app),
   io = require('socket.io')(server),
- 	port = 8000;
+ 	port = 3000;
 
 
 app.use('/app', express.static(__dirname + '/app'));
