@@ -14,18 +14,18 @@
 
         <md-card-content  layout="column" class="" ng-style="{'visibility': demo.stateAttention < 2 ? 'hidden' : 'visible'}">
           <div flex class="" layout="row"  layout-wrap  aria-label="head">
-              <div flex="33" flex-sm="100" layout="column" layout-padding >
+              <div flex="33" flex-sm="100" layout="column" style="padding:10px">
                   <div class="md-headline">{{waitTime}}</div>
                   <div class="md-caption">Tiempo de Espera</div>
                   <div class="md-caption">Creado: {{demo.tokenInAttention.token.infoToken.logCreationToken | date: 'HH:mm:ss'}}</div>
               </div>
-              <div flex="33" flex-sm="100" layout="column" layout-padding >
+              <div flex="33" flex-sm="100" layout="column" style="padding:10px">
                   <div class="md-headline">{{callTime}}</div>
                   <div class="md-caption">Tiempo de llamado</div>
                   <div class="md-caption">Llamado: {{demo.tokenInAttention.token.infoToken.logCalledToken | date: 'HH:mm:ss'}}</div>
 
               </div>
-              <div flex="33" flex-sm="100" layout="column" layout-padding >
+              <div flex="33" flex-sm="100" layout="column" style="padding:10px">
                   <div class="md-headline">{{attentionTime}}</div>
                   <div class="md-caption">Tiempo de atención</div>
                   <div class="md-caption">Atendido: {{demo.tokenInAttention.token.infoToken.logAtentionToken | date: 'HH:mm:ss'}}</div>
