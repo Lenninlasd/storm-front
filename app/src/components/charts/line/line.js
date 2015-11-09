@@ -20,15 +20,15 @@
           $scope.lineId = $attrs.id;
           console.log($attrs.id);
           new Chartist.Line('#'+$attrs.id, {
-              labels: ['1', '2', '3', '4', '5', '6'],
+              labels: ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30'],
               series: [
                   {
-                    name: 'Fibonacci sequence',
-                    data: [1, 2, 3, 5, 8, 13]
+                    name: 'NS',
+                    data: [100, 60, 83, 75, 90, 88]
                   },
                   {
-                    name: 'Golden section',
-                    data: [1, 1.618, 2.618, 4.236, 6.854, 11.09]
+                    name: 'NS Acumulado',
+                    data: [100, 83, 85, 70, 60, 86]
                   }
               ]
             });

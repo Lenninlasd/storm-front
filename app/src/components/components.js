@@ -7,5 +7,6 @@ angular
     'flugel.components.manageServices',
     'flugel.components.selectionRole',
     'flugel.components.charts',
-    'flugel.components.sidenav'
+    'flugel.components.sidenav',
+    'flugel.components.gtr'
   ]);

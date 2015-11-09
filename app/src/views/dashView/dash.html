@@ -24,6 +24,13 @@
                 </div>
             </md-toolbar>
             <div layout="row" layout-wrap layout-margin>
+
+              <md-card flex="100">
+                    <md-card-content style="padding: 6px;">
+                          <fg-header></fg-header>
+                    </md-card-content>
+              </md-card>
+
                 <md-card flex="100" class="md-whiteframe-1dp">
                     <md-card-content>
                       <div fg-chart-line id="asa2"></div>
@@ -39,6 +46,15 @@
                   <md-card flex="35" flex-md="100" flex-sm="100" class="md-whiteframe-1dp">
                       <md-card-content>
                           <div fg-chart-pie id="aht2"></div>
+                      </md-card-content>
+                  </md-card>
+
+                  <md-card flex="100" class="md-whiteframe-1dp">
+                      <md-card-content>
+                          <fg-activity-adviser></fg-activity-adviser>
+                          <fg-activity-adviser></fg-activity-adviser>
+                          <fg-activity-adviser></fg-activity-adviser>
+                          <fg-activity-adviser></fg-activity-adviser>
                       </md-card-content>
                   </md-card>
             </div>
