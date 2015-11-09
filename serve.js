@@ -5,7 +5,7 @@ var express = require('express'),
  	port = 8000;
 
 
-app.use(express.static(__dirname + '/app'));
+app.use('/app', express.static(__dirname + '/app'));
 app.use('/login', express.static(__dirname + '/login'));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 
