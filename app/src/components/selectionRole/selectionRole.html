@@ -1,5 +1,5 @@
 <div layout="row"  layout-align="center center">
-      <form name="myForm" layout="column" flex-sm="100" flex-md="80" flex="50">
+      <form name="myForm" ng-submit="setConfData()" layout="column" flex-sm="100" flex-md="80" flex="50">
         <h2 style="color:white;text-align:center">Selecciona tus preferencias</h2>
         <md-card flex class="" layout-margin layout-padding>
             <p>Selecciona una sucursal: <span class="radioValue">{{ data.branchOffice }}</span> </p>
@@ -11,20 +11,20 @@
         <md-card flex class="" layout-padding layout-padding>
             <p>Selecciona un rol: <span class="radioValue">{{ data.role }}</span> </p>
             <md-radio-group ng-model="data.role">
-                <md-radio-button ng-disabled="!data.branchOffice" ng-repeat="role in roles" ng-value="role.code" class="md-primary">{{role.name}}</md-radio-button>
+                <md-radio-button ng-disabled="!data.branchOffice" ng-repeat="role in roles" ng-value="role.code" class="md-primary" required>{{role.name}}</md-radio-button>
             </md-radio-group>
         </md-card>
 
           <md-card flex class="" layout-margin layout-padding>
               <p>Selecciona una terminal: <span class="radioValue">{{ data.terminal }}</span> </p>
-              <md-radio-group layout="row" layout-wrap ng-model="data.terminal">
-                  <md-radio-button ng-disabled="!data.role" flex-sm="40" flex="25" class="md-primary" ng-repeat="terminal in terminals" ng-value="terminal.terminalId" >
+              <md-radio-group required layout="row" layout-wrap ng-model="data.terminal">
+                  <md-radio-button  ng-disabled="!data.role" flex-sm="40" flex="25" class="md-primary" ng-repeat="terminal in terminals" ng-value="terminal.terminalId" >
                       {{terminal.terminalName}}
                   </md-radio-button>
               </md-radio-group>
           </md-card>
           <div layout="row"  layout-align="center center">
-              <md-button ng-click="setConfData()" flex-sm="100" flex-md="40" class="md-raised md-primary">Listo</md-button>
+              <md-button type="submit" flex-sm="100" flex-md="40" class="md-raised md-primary">Listo</md-button>
           </div>
       </form>
 </div>

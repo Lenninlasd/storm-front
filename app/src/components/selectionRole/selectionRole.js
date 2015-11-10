@@ -74,6 +74,9 @@ angular
     ];
 
     $scope.setConfData = function () {
+        console.log($scope.branchOffices);
+        if (!$scope.branchOffices) return console.log('closed');
+
         var branchOffice = _.clone(_.findWhere($scope.branchOffices, {posCode: $scope.data.branchOffice}));
         branchOffice.blueCircle = branchOffice.blueCircles[0]; //*** tempo
         branchOffice.terminal = _.findWhere($scope.terminals, {terminalId: $scope.data.terminal});
