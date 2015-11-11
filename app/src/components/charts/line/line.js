@@ -16,10 +16,7 @@
       }
       chartLineCtrl.$inject = ['$scope', '$element', '$attrs'];
       function chartLineCtrl($scope, $element, $attrs) {
-
-          $scope.lineId = $attrs.id;
-          console.log($attrs.id);
-          new Chartist.Line('#'+$attrs.id, {
+          var data = {
               labels: ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30'],
               series: [
                   {
@@ -31,7 +28,10 @@
                     data: [100, 83, 85, 70, 60, 86]
                   }
               ]
-            });
+            };
+          $scope.lineId = $attrs.id;
+
+          new Chartist.Line('#'+$attrs.id, data);
 
       }
 })();
