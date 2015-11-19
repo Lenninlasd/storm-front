@@ -175,12 +175,6 @@ angular
   }
 })();
 
-angular
-  .module('flugel.components.gtr',[
-    'flugel.components.gtr.activityAdviser',
-    'flugel.components.gtr.header'
-  ]);
-
 (function () {
 'use strict';
 
@@ -231,6 +225,12 @@ angular
       };
   }
 })();
+
+angular
+  .module('flugel.components.gtr',[
+    'flugel.components.gtr.activityAdviser',
+    'flugel.components.gtr.header'
+  ]);
 
 (function () {
 'use strict';
