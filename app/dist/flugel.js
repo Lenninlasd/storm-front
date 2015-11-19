@@ -41,14 +41,6 @@ angular
     'flugel.components.gtr'
   ]);
 
-angular
-  .module('flugel.views',[
-    'flugel.view1',
-    'flugel.view2',
-    'flugel.views.selectionRole',
-    'flugel.views.dash'
-  ]);
-
 (function () {
     'use strict';
 
@@ -59,8 +51,8 @@ angular
         '100': 'ffcdd2',
         '200': 'ef9a9a',
         '300': 'e57373',
-        '400': 'fafafa',
-        '500': 'fafafa',
+        '400': 'b71c1c',
+        '500': '9FB4CF',
         '600': 'e53935',
         '700': 'd32f2f',
         '800': 'c62828',
@@ -81,16 +73,18 @@ angular
 })();
 
 angular
+  .module('flugel.views',[
+    'flugel.view1',
+    'flugel.view2',
+    'flugel.views.selectionRole',
+    'flugel.views.dash'
+  ]);
+
+angular
   .module('flugel.components.charts', [
     'flugel.components.charts.bar',
     'flugel.components.charts.pie',
     'flugel.components.charts.line'
-  ]);
-
-angular
-  .module('flugel.components.gtr',[
-    'flugel.components.gtr.activityAdviser',
-    'flugel.components.gtr.header'
   ]);
 
 (function () {
@@ -180,6 +174,12 @@ angular
     // };
   }
 })();
+
+angular
+  .module('flugel.components.gtr',[
+    'flugel.components.gtr.activityAdviser',
+    'flugel.components.gtr.header'
+  ]);
 
 (function () {
 'use strict';
@@ -758,6 +758,66 @@ angular
 })();
 
 (function () {
+		'use strict';
+		angular.module('flugel.services', ['ngResource'])
+
+		.factory('Config', function () {
+			return {
+					version : '0.0.1',
+					ip: location.hostname,
+					port: 3001,
+		      protocol: 'http'
+			};
+		})
+		.factory('Token',['$resource', 'Config', function ContenidoFactory($resource, Config){
+			return {
+				services : $resource('http://' + Config.ip + ':' + Config.port + '/services'),
+				tokens : $resource('http://' + Config.ip + ':' + Config.port + '/tokens'),
+				callToken : $resource('http://' + Config.ip + ':' + Config.port + '/callToken', {}, { update: {method: 'PUT'}}),
+				takeToken : $resource('http://' + Config.ip + ':' + Config.port + '/takeToken', {}, { update: {method: 'PUT'}}),
+				closeToken : $resource('http://' + Config.ip + ':' + Config.port + '/closeToken', {}, { update: {method: 'PUT'}}),
+				abandoningToken : $resource('http://' + Config.ip + ':' + Config.port + '/abandoningToken', {}, { update: {method: 'PUT'}})
+			};
+		}])
+		.factory('Login',['$resource', 'Config', function ContenidoFactory($resource, Config){
+			return {
+					login : $resource('http://' + Config.ip + ':' + Config.port + '/user/login.json', {}, { update: {method: 'PUT'}}),
+					logout : $resource('http://' + Config.ip + ':' + Config.port + '/user/logout.json', {}, { update: {method: 'PUT'}})
+			};
+		}])
+		.factory('Activity',['$resource', 'Config', function ContenidoFactory($resource, Config){
+			return {
+					activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}})
+			};
+		}])
+
+		.factory('socket', ['$rootScope', 'Config', function ($rootScope, Config) {
+			  //var socket = io.connect();
+				var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
+			  return {
+				    on: function (eventName, callback) {
+					      socket.on(eventName, function () {
+						        var args = arguments;
+						        $rootScope.$apply(function () {
+						          	callback.apply(socket, args);
+						        });
+					      });
+				    },
+				    emit: function (eventName, data, callback) {
+					      socket.emit(eventName, data, function () {
+						        var args = arguments;
+						        $rootScope.$apply(function () {
+							          if (callback) {
+							            callback.apply(socket, args);
+							          }
+						        });
+					      });
+				    }
+		  };
+		}]);
+})();
+
+(function () {
 'use strict';
 
   angular.module('flugel.views.dash', ['ngRoute'])
@@ -1012,66 +1072,6 @@ angular.module('flugel.view2', ['ngRoute'])
 })();
 
 (function () {
-		'use strict';
-		angular.module('flugel.services', ['ngResource'])
-
-		.factory('Config', function () {
-			return {
-					version : '0.0.1',
-					ip: location.hostname,
-					port: 3001,
-		      protocol: 'http'
-			};
-		})
-		.factory('Token',['$resource', 'Config', function ContenidoFactory($resource, Config){
-			return {
-				services : $resource('http://' + Config.ip + ':' + Config.port + '/services'),
-				tokens : $resource('http://' + Config.ip + ':' + Config.port + '/tokens'),
-				callToken : $resource('http://' + Config.ip + ':' + Config.port + '/callToken', {}, { update: {method: 'PUT'}}),
-				takeToken : $resource('http://' + Config.ip + ':' + Config.port + '/takeToken', {}, { update: {method: 'PUT'}}),
-				closeToken : $resource('http://' + Config.ip + ':' + Config.port + '/closeToken', {}, { update: {method: 'PUT'}}),
-				abandoningToken : $resource('http://' + Config.ip + ':' + Config.port + '/abandoningToken', {}, { update: {method: 'PUT'}})
-			};
-		}])
-		.factory('Login',['$resource', 'Config', function ContenidoFactory($resource, Config){
-			return {
-					login : $resource('http://' + Config.ip + ':' + Config.port + '/user/login.json', {}, { update: {method: 'PUT'}}),
-					logout : $resource('http://' + Config.ip + ':' + Config.port + '/user/logout.json', {}, { update: {method: 'PUT'}})
-			};
-		}])
-		.factory('Activity',['$resource', 'Config', function ContenidoFactory($resource, Config){
-			return {
-					activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}})
-			};
-		}])
-
-		.factory('socket', ['$rootScope', 'Config', function ($rootScope, Config) {
-			  //var socket = io.connect();
-				var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
-			  return {
-				    on: function (eventName, callback) {
-					      socket.on(eventName, function () {
-						        var args = arguments;
-						        $rootScope.$apply(function () {
-						          	callback.apply(socket, args);
-						        });
-					      });
-				    },
-				    emit: function (eventName, data, callback) {
-					      socket.emit(eventName, data, function () {
-						        var args = arguments;
-						        $rootScope.$apply(function () {
-							          if (callback) {
-							            callback.apply(socket, args);
-							          }
-						        });
-					      });
-				    }
-		  };
-		}]);
-})();
-
-(function () {
   'use strict';
 
   angular
@@ -1153,7 +1153,14 @@ angular.module('flugel.view2', ['ngRoute'])
             };
           $scope.lineId = $attrs.id;
 
-          new Chartist.Line('#'+$attrs.id, data);
+          new Chartist.Line('#'+$attrs.id, data, {
+            plugins: [
+              Chartist.plugins.ctPointLabels({
+                textAnchor: 'middle'
+              }),
+              // Chartist.plugins.tooltip()
+            ]
+          });
 
       }
 })();

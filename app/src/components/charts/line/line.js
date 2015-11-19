@@ -31,7 +31,14 @@
             };
           $scope.lineId = $attrs.id;
 
-          new Chartist.Line('#'+$attrs.id, data);
+          new Chartist.Line('#'+$attrs.id, data, {
+            plugins: [
+              Chartist.plugins.ctPointLabels({
+                textAnchor: 'middle'
+              }),
+              // Chartist.plugins.tooltip()
+            ]
+          });
 
       }
 })();

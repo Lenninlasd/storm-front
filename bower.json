@@ -17,6 +17,9 @@
     "fontawesome": "~4.4.0",
     "moment": "~2.10.6",
     "underscore": "~1.8.3",
-    "chartist": "~0.9.4"
+    "chartist": "~0.9.4",
+    "chartist-plugin-tooltip": "~0.0.12",
+    "chartist-plugin-pointlabels": "~0.0.4",
+    "chartist-plugin-axistitle": "~0.1.0"
   }
 }
