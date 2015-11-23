@@ -26,7 +26,7 @@
     "streamqueue": "^1.1.1"
   },
   "scripts": {
-    "postinstall": "bower install && gulp sass",
+    "postinstall": "bower install && gulp sass && gulp minjs",
     "prestart": "npm install",
     "start": "node serve.js",
     "pretest": "npm install",

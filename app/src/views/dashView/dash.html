@@ -51,10 +51,10 @@
 
                   <md-card flex="100" class="md-whiteframe-1dp">
                       <md-card-content>
-                          <fg-activity-adviser></fg-activity-adviser>
-                          <fg-activity-adviser></fg-activity-adviser>
-                          <fg-activity-adviser></fg-activity-adviser>
-                          <fg-activity-adviser></fg-activity-adviser>
+                          <fg-activity-adviser adviser-activity="adviserActivity" ng-repeat="adviserActivity in advisersActivity"></fg-activity-adviser>
+                          <h2 ng-if="!totalAdviser.length" style="color:#888;text-align: center;">
+                              Aún no hay asesores conectados
+                          </h2>
                       </md-card-content>
                   </md-card>
             </div>

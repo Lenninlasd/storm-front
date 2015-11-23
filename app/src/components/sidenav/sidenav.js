@@ -15,8 +15,13 @@ angular
     };
   }
 
-  sideNavCtrl.$inject = ['$scope', '$element','$attrs'];
-  function sideNavCtrl($scope, $element, $attrs) {
-
+  sideNavCtrl.$inject = ['$scope', '$element','$attrs', 'BranchOffice'];
+  function sideNavCtrl($scope, $element, $attrs, BranchOffice) {
+      $scope.branchOfficeList = [];
+      BranchOffice.branchOfficeList.query(function (data) {
+          $scope.branchOffices = data;
+      }, function (err) {
+          console.log(err);
+      });
   }
 })();

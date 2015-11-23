@@ -3,16 +3,7 @@
         <input ng-model="user.email" type="text">
     </md-input-container>
     <ul class="docs-menu">
-        <li>
-            <md-button ng-href="" target="_blank">{{ "Sucursal 1" }}</md-button>
-        </li>
-        <li>
-            <md-button class="active" ng-href="" target="_blank">{{ "Sucursal 2" }}</md-button>
-        </li>
-        <li>
-            <md-button ng-href="" target="_blank">{{ "Sucursal 3" }}</md-button>
-        </li>
-        <li>
-            <md-button ng-href="" target="_blank">{{ "Sucursal 4" }}</md-button>
+        <li ng-repeat="branchOffice in branchOffices">
+            <md-button ng-href="{{'#/dash/' + branchOffice.posCode}}">{{ branchOffice.branchOfficesName }}</md-button>
         </li>
     </ul>

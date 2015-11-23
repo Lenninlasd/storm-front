@@ -41,6 +41,14 @@ angular
     'flugel.components.gtr'
   ]);
 
+angular
+  .module('flugel.views',[
+    'flugel.view1',
+    'flugel.view2',
+    'flugel.views.selectionRole',
+    'flugel.views.dash'
+  ]);
+
 (function () {
     'use strict';
 
@@ -73,18 +81,16 @@ angular
 })();
 
 angular
-  .module('flugel.views',[
-    'flugel.view1',
-    'flugel.view2',
-    'flugel.views.selectionRole',
-    'flugel.views.dash'
-  ]);
-
-angular
   .module('flugel.components.charts', [
     'flugel.components.charts.bar',
     'flugel.components.charts.pie',
     'flugel.components.charts.line'
+  ]);
+
+angular
+  .module('flugel.components.gtr',[
+    'flugel.components.gtr.activityAdviser',
+    'flugel.components.gtr.header'
   ]);
 
 (function () {
@@ -174,12 +180,6 @@ angular
     // };
   }
 })();
-
-angular
-  .module('flugel.components.gtr',[
-    'flugel.components.gtr.activityAdviser',
-    'flugel.components.gtr.header'
-  ]);
 
 (function () {
 'use strict';
@@ -371,9 +371,15 @@ angular
     };
   }
 
-  sideNavCtrl.$inject = ['$scope', '$element','$attrs'];
-  function sideNavCtrl($scope, $element, $attrs) {
-
+  sideNavCtrl.$inject = ['$scope', '$element','$attrs', 'BranchOffice'];
+  function sideNavCtrl($scope, $element, $attrs, BranchOffice) {
+      $scope.branchOfficeList = [];
+      BranchOffice.branchOfficeList.query(function (data) {
+          $scope.branchOffices = data;
+          console.log(data);
+      }, function (err) {
+          console.log(err);
+      });
   }
 })();
 
@@ -758,66 +764,6 @@ angular
 })();
 
 (function () {
-		'use strict';
-		angular.module('flugel.services', ['ngResource'])
-
-		.factory('Config', function () {
-			return {
-					version : '0.0.1',
-					ip: location.hostname,
-					port: 3001,
-		      protocol: 'http'
-			};
-		})
-		.factory('Token',['$resource', 'Config', function ContenidoFactory($resource, Config){
-			return {
-				services : $resource('http://' + Config.ip + ':' + Config.port + '/services'),
-				tokens : $resource('http://' + Config.ip + ':' + Config.port + '/tokens'),
-				callToken : $resource('http://' + Config.ip + ':' + Config.port + '/callToken', {}, { update: {method: 'PUT'}}),
-				takeToken : $resource('http://' + Config.ip + ':' + Config.port + '/takeToken', {}, { update: {method: 'PUT'}}),
-				closeToken : $resource('http://' + Config.ip + ':' + Config.port + '/closeToken', {}, { update: {method: 'PUT'}}),
-				abandoningToken : $resource('http://' + Config.ip + ':' + Config.port + '/abandoningToken', {}, { update: {method: 'PUT'}})
-			};
-		}])
-		.factory('Login',['$resource', 'Config', function ContenidoFactory($resource, Config){
-			return {
-					login : $resource('http://' + Config.ip + ':' + Config.port + '/user/login.json', {}, { update: {method: 'PUT'}}),
-					logout : $resource('http://' + Config.ip + ':' + Config.port + '/user/logout.json', {}, { update: {method: 'PUT'}})
-			};
-		}])
-		.factory('Activity',['$resource', 'Config', function ContenidoFactory($resource, Config){
-			return {
-					activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}})
-			};
-		}])
-
-		.factory('socket', ['$rootScope', 'Config', function ($rootScope, Config) {
-			  //var socket = io.connect();
-				var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
-			  return {
-				    on: function (eventName, callback) {
-					      socket.on(eventName, function () {
-						        var args = arguments;
-						        $rootScope.$apply(function () {
-						          	callback.apply(socket, args);
-						        });
-					      });
-				    },
-				    emit: function (eventName, data, callback) {
-					      socket.emit(eventName, data, function () {
-						        var args = arguments;
-						        $rootScope.$apply(function () {
-							          if (callback) {
-							            callback.apply(socket, args);
-							          }
-						        });
-					      });
-				    }
-		  };
-		}]);
-})();
-
-(function () {
 'use strict';
 
   angular.module('flugel.views.dash', ['ngRoute'])
@@ -826,13 +772,56 @@ angular
     $routeProvider.when('/dash', {
       templateUrl: 'src/views/dashView/dash.html',
       controller: 'dashCtrl'
+    }).when('/dash/:circleId', {
+      templateUrl: 'src/views/dashView/dash.html',
+      controller: 'dashCtrl'
     });
   }])
 
-  .controller('dashCtrl', ['$scope', 'Login', '$window', '$cookies', '$mdSidenav', function($scope, Login, $window, $cookies, $mdSidenav) {
+  .controller('dashCtrl', ['$scope', 'Login', '$window', '$cookies', '$mdSidenav', '$routeParams', 'Activity',
+        function($scope, Login, $window, $cookies, $mdSidenav, $routeParams, Activity) {
       // Login.login.get(function (session) {
       //     if (!session.login) $window.location = '/login';
       // });
+      $scope.adviserActivity = [];
+      $scope.customerActivity = [];
+      if ($routeParams.circleId) {
+          Activity.activityGtr.get({room: $routeParams.circleId}, function (data) {
+              $scope.advisersActivity = data.adviser;
+              $scope.customersActivity = data.customer;
+              console.log($scope.advisersActivity);
+              console.log($scope.customersActivity);
+              joinActivity($scope.advisersActivity, $scope.customersActivity);
+          });
+      }
+
+
+
+      function joinActivity(adviserList, customerList) {
+          console.log(customerList);
+          console.log(adviserList);
+
+          if (!_.size(customerList)) return console.log(adviserList);
+
+          //filtar los clientes que no estan seiendo atendidos
+          var customerListFilter = _.filter(customerList, function (customer) {
+              return !_.isUndefined(customer.token.receiverAdviser);
+          });
+          // console.log(customerListFilter[0].token.receiverAdviser.adviserId);
+
+          _.each(customerListFilter, function function_name(customerFilter) {
+              console.log(customerFilter.token.receiverAdviser.adviserId);
+          });
+          // for ecach cada cliente
+            // leer el asesor que atiende
+            // y unir el cliente a ese asesor
+
+          _.each(adviserList, function (adviser) {
+              console.log(adviser);
+          });
+      }
+
+
       $scope.close = function () {
           $mdSidenav('left').toggle()
           .then(function () {
@@ -1072,6 +1061,73 @@ angular.module('flugel.view2', ['ngRoute'])
 })();
 
 (function () {
+		'use strict';
+		angular.module('flugel.services', ['ngResource'])
+
+		.factory('Config', function () {
+			return {
+					version : '0.0.1',
+					ip: location.hostname,
+					port: 3001,
+		      protocol: 'http',
+					origin: location.origin
+			};
+		})
+		.factory('Token',['$resource', 'Config', function ContenidoFactory($resource, Config){
+			return {
+				services : $resource('http://' + Config.ip + ':' + Config.port + '/services'),
+				tokens : $resource('http://' + Config.ip + ':' + Config.port + '/tokens'),
+				callToken : $resource('http://' + Config.ip + ':' + Config.port + '/callToken', {}, { update: {method: 'PUT'}}),
+				takeToken : $resource('http://' + Config.ip + ':' + Config.port + '/takeToken', {}, { update: {method: 'PUT'}}),
+				closeToken : $resource('http://' + Config.ip + ':' + Config.port + '/closeToken', {}, { update: {method: 'PUT'}}),
+				abandoningToken : $resource('http://' + Config.ip + ':' + Config.port + '/abandoningToken', {}, { update: {method: 'PUT'}})
+			};
+		}])
+		.factory('Login',['$resource', 'Config', function ContenidoFactory($resource, Config){
+			return {
+					login : $resource('http://' + Config.ip + ':' + Config.port + '/user/login.json', {}, { update: {method: 'PUT'}}),
+					logout : $resource('http://' + Config.ip + ':' + Config.port + '/user/logout.json', {}, { update: {method: 'PUT'}})
+			};
+		}])
+		.factory('Activity',['$resource', 'Config', function ContenidoFactory($resource, Config){
+			return {
+					activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}}),
+					activityGtr : $resource('http://' + Config.ip + ':' + Config.port + '/activityGtr', {}, { update: {method: 'PUT'}})
+			};
+		}])
+		.factory('BranchOffice', ['$resource', 'Config', function ContenidoFactory($resource, Config) {
+			return {
+					branchOfficeList : $resource('http://' + Config.ip + ':' + Config.port + '/branchOffice', {}, { update: {method: 'PUT'}})
+			};
+		}])
+
+		.factory('socket', ['$rootScope', 'Config', function ($rootScope, Config) {
+			  //var socket = io.connect();
+				var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
+			  return {
+				    on: function (eventName, callback) {
+					      socket.on(eventName, function () {
+						        var args = arguments;
+						        $rootScope.$apply(function () {
+						          	callback.apply(socket, args);
+						        });
+					      });
+				    },
+				    emit: function (eventName, data, callback) {
+					      socket.emit(eventName, data, function () {
+						        var args = arguments;
+						        $rootScope.$apply(function () {
+							          if (callback) {
+							            callback.apply(socket, args);
+							          }
+						        });
+					      });
+				    }
+		  };
+		}]);
+})();
+
+(function () {
   'use strict';
 
   angular
@@ -1227,15 +1283,16 @@ angular
     return {
       retrict: 'E',
       scope: {
+          adviserActivity : '='
       },
       controller: activityAdviserCtrl,
       templateUrl: 'src/components/gtr/activityAdviser/activityAdviser.html'
     };
   }
 
-  activityAdviserCtrl.$inject = ['$scope', '$element','$attrs'];
-  function activityAdviserCtrl($scope, $element, $attrs) {
-
+  activityAdviserCtrl.$inject = ['$scope', '$element','$attrs', 'Activity', '$routeParams'];
+  function activityAdviserCtrl($scope, $element, $attrs, Activity, $routeParams) {
+      console.log($scope.adviserActivity);
   }
 })();
 
