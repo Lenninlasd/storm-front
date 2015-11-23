@@ -28,6 +28,34 @@
     }]);
 })();
 
+(function () {
+    'use strict';
+
+    angular.module('flugel.themes', [])
+    .config(['$mdThemingProvider', function($mdThemingProvider) {
+      $mdThemingProvider.definePalette('amazingPaletteName', {
+        '50': 'ffebee',
+        '100': 'ffcdd2',
+        '200': 'ef9a9a',
+        '300': 'e57373',
+        '400': 'fafafa',
+        '500': '204C86',
+        '600': 'e53935',
+        '700': 'd32f2f',
+        '800': 'c62828',
+        '900': 'b71c1c',
+        'A100': 'ff8a80',
+        'A200': 'ff5252',
+        'A400': 'ff1744',
+        'A700': 'd50000',
+        'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
+                                            // on this palette should be dark or light
+      });
+      $mdThemingProvider.theme('docs-dark', 'default')
+        .primaryPalette('amazingPaletteName');
+    }]);
+})();
+
 angular
   .module('flugel.components',[
     'flugel.components.keyboard',
@@ -41,37 +69,6 @@ angular
     'flugel.components.gtr'
   ]);
 
-(function () {
-    'use strict';
-
-    angular.module('flugel.themes', [])
-    .config(['$mdThemingProvider', function($mdThemingProvider) {
-      $mdThemingProvider.definePalette('amazingPaletteName', {
-        '50': 'ffebee',
-        '100': 'ffcdd2',
-        '200': 'ef9a9a',
-        '300': 'e57373',
-        '400': 'b71c1c',
-        '500': '9FB4CF',
-        '600': 'e53935',
-        '700': 'd32f2f',
-        '800': 'c62828',
-        '900': 'b71c1c',
-        'A100': 'ff8a80',
-        'A200': 'ff5252',
-        'A400': 'ff1744',
-        'A700': 'd50000',
-        'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
-                                            // on this palette should be dark or light
-        'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
-         '200', '300', '400', 'A100'],
-        'contrastLightColors': undefined    // could also specify this if default was 'dark'
-      });
-      $mdThemingProvider.theme('docs-dark', 'default')
-        .primaryPalette('amazingPaletteName').dark();
-    }]);
-})();
-
 angular
   .module('flugel.views',[
     'flugel.view1',
@@ -79,6 +76,73 @@ angular
     'flugel.views.selectionRole',
     'flugel.views.dash'
   ]);
+
+(function () {
+		'use strict';
+		angular.module('flugel.services', ['ngResource'])
+
+		.factory('Config', function () {
+			return {
+					version : '0.0.1',
+					ip: location.hostname,
+					port: 3001,
+		      protocol: 'http',
+					origin: location.origin
+			};
+		})
+		.factory('Token',['$resource', 'Config', function ContenidoFactory($resource, Config){
+			return {
+				services : $resource('http://' + Config.ip + ':' + Config.port + '/services'),
+				tokens : $resource('http://' + Config.ip + ':' + Config.port + '/tokens'),
+				callToken : $resource('http://' + Config.ip + ':' + Config.port + '/callToken', {}, { update: {method: 'PUT'}}),
+				takeToken : $resource('http://' + Config.ip + ':' + Config.port + '/takeToken', {}, { update: {method: 'PUT'}}),
+				closeToken : $resource('http://' + Config.ip + ':' + Config.port + '/closeToken', {}, { update: {method: 'PUT'}}),
+				abandoningToken : $resource('http://' + Config.ip + ':' + Config.port + '/abandoningToken', {}, { update: {method: 'PUT'}})
+			};
+		}])
+		.factory('Login',['$resource', 'Config', function ContenidoFactory($resource, Config){
+			return {
+					login : $resource('http://' + Config.ip + ':' + Config.port + '/user/login.json', {}, { update: {method: 'PUT'}}),
+					logout : $resource('http://' + Config.ip + ':' + Config.port + '/user/logout.json', {}, { update: {method: 'PUT'}})
+			};
+		}])
+		.factory('Activity',['$resource', 'Config', function ContenidoFactory($resource, Config){
+			return {
+					activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}}),
+					activityGtr : $resource('http://' + Config.ip + ':' + Config.port + '/activityGtr', {}, { update: {method: 'PUT'}})
+			};
+		}])
+		.factory('BranchOffice', ['$resource', 'Config', function ContenidoFactory($resource, Config) {
+			return {
+					branchOfficeList : $resource('http://' + Config.ip + ':' + Config.port + '/branchOffice', {}, { update: {method: 'PUT'}})
+			};
+		}])
+
+		.factory('socket', ['$rootScope', 'Config', function ($rootScope, Config) {
+			  //var socket = io.connect();
+				var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
+			  return {
+				    on: function (eventName, callback) {
+					      socket.on(eventName, function () {
+						        var args = arguments;
+						        $rootScope.$apply(function () {
+						          	callback.apply(socket, args);
+						        });
+					      });
+				    },
+				    emit: function (eventName, data, callback) {
+					      socket.emit(eventName, data, function () {
+						        var args = arguments;
+						        $rootScope.$apply(function () {
+							          if (callback) {
+							            callback.apply(socket, args);
+							          }
+						        });
+					      });
+				    }
+		  };
+		}]);
+})();
 
 angular
   .module('flugel.components.charts', [
@@ -90,59 +154,10 @@ angular
 angular
   .module('flugel.components.gtr',[
     'flugel.components.gtr.activityAdviser',
-    'flugel.components.gtr.header'
+    'flugel.components.gtr.header',
+    'flugel.components.gtr.singleAdviser',
+    'flugel.components.gtr.singleCustomer'
   ]);
-
-(function () {
-'use strict';
-
-angular
-  .module('flugel.components.manageServices', [])
-  .directive('fgManageServices', fgManageServicestDirective);
-
-  function fgManageServicestDirective() {
-    return {
-      retrict: 'E',
-      scope: {
-      },
-      controller: servicesCtrl,
-      controllerAs: 'demo',
-      templateUrl: 'src/components/manageServices/manageServices.html'
-    };
-  }
-  servicesCtrl.$inject = ['$scope', '$element','$attrs', 'Token', '$mdDialog', 'Config', 'socket'];
-  function servicesCtrl($scope, $element, $attrs, Token, $mdDialog, Config, socket) {
-      var self = this;
-      self.services = [];
-      $scope.selectedService = '';
-
-      console.log($attrs);
-      Token.services.query(function (data) {
-          self.services = data;
-          console.log(data);
-      });
-
-      $scope.cancel = function() {
-           $mdDialog.cancel();
-       };
-
-      $scope.choosePurposeVisit = function(ev, serviceData){
-          console.log(serviceData);
-          $scope.selectedService = serviceData._id;
-      };
-
-      $scope.goBackStep = function () {
-          $scope.selectedService = '';
-          $scope.searchText = '';
-      };
-
-      $scope.insertService = function (serviceData, subService) {
-          serviceData.service.subServices = [subService];
-          console.log(serviceData.service);
-          //socket.emit('insertService', serviceData.service);
-      };
-  }
-})();
 
 (function () {
 'use strict';
@@ -229,6 +244,57 @@ angular
     //         alert('No es un número válido')
     //     }
     // };
+  }
+})();
+
+(function () {
+'use strict';
+
+angular
+  .module('flugel.components.manageServices', [])
+  .directive('fgManageServices', fgManageServicestDirective);
+
+  function fgManageServicestDirective() {
+    return {
+      retrict: 'E',
+      scope: {
+      },
+      controller: servicesCtrl,
+      controllerAs: 'demo',
+      templateUrl: 'src/components/manageServices/manageServices.html'
+    };
+  }
+  servicesCtrl.$inject = ['$scope', '$element','$attrs', 'Token', '$mdDialog', 'Config', 'socket'];
+  function servicesCtrl($scope, $element, $attrs, Token, $mdDialog, Config, socket) {
+      var self = this;
+      self.services = [];
+      $scope.selectedService = '';
+
+      console.log($attrs);
+      Token.services.query(function (data) {
+          self.services = data;
+          console.log(data);
+      });
+
+      $scope.cancel = function() {
+           $mdDialog.cancel();
+       };
+
+      $scope.choosePurposeVisit = function(ev, serviceData){
+          console.log(serviceData);
+          $scope.selectedService = serviceData._id;
+      };
+
+      $scope.goBackStep = function () {
+          $scope.selectedService = '';
+          $scope.searchText = '';
+      };
+
+      $scope.insertService = function (serviceData, subService) {
+          serviceData.service.subServices = [subService];
+          console.log(serviceData.service);
+          //socket.emit('insertService', serviceData.service);
+      };
   }
 })();
 
@@ -763,73 +829,6 @@ angular
 })();
 
 (function () {
-		'use strict';
-		angular.module('flugel.services', ['ngResource'])
-
-		.factory('Config', function () {
-			return {
-					version : '0.0.1',
-					ip: location.hostname,
-					port: 3001,
-		      protocol: 'http',
-					origin: location.origin
-			};
-		})
-		.factory('Token',['$resource', 'Config', function ContenidoFactory($resource, Config){
-			return {
-				services : $resource('http://' + Config.ip + ':' + Config.port + '/services'),
-				tokens : $resource('http://' + Config.ip + ':' + Config.port + '/tokens'),
-				callToken : $resource('http://' + Config.ip + ':' + Config.port + '/callToken', {}, { update: {method: 'PUT'}}),
-				takeToken : $resource('http://' + Config.ip + ':' + Config.port + '/takeToken', {}, { update: {method: 'PUT'}}),
-				closeToken : $resource('http://' + Config.ip + ':' + Config.port + '/closeToken', {}, { update: {method: 'PUT'}}),
-				abandoningToken : $resource('http://' + Config.ip + ':' + Config.port + '/abandoningToken', {}, { update: {method: 'PUT'}})
-			};
-		}])
-		.factory('Login',['$resource', 'Config', function ContenidoFactory($resource, Config){
-			return {
-					login : $resource('http://' + Config.ip + ':' + Config.port + '/user/login.json', {}, { update: {method: 'PUT'}}),
-					logout : $resource('http://' + Config.ip + ':' + Config.port + '/user/logout.json', {}, { update: {method: 'PUT'}})
-			};
-		}])
-		.factory('Activity',['$resource', 'Config', function ContenidoFactory($resource, Config){
-			return {
-					activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}}),
-					activityGtr : $resource('http://' + Config.ip + ':' + Config.port + '/activityGtr', {}, { update: {method: 'PUT'}})
-			};
-		}])
-		.factory('BranchOffice', ['$resource', 'Config', function ContenidoFactory($resource, Config) {
-			return {
-					branchOfficeList : $resource('http://' + Config.ip + ':' + Config.port + '/branchOffice', {}, { update: {method: 'PUT'}})
-			};
-		}])
-
-		.factory('socket', ['$rootScope', 'Config', function ($rootScope, Config) {
-			  //var socket = io.connect();
-				var socket = io(Config.protocol + '://' + Config.ip + ':' + Config.port);
-			  return {
-				    on: function (eventName, callback) {
-					      socket.on(eventName, function () {
-						        var args = arguments;
-						        $rootScope.$apply(function () {
-						          	callback.apply(socket, args);
-						        });
-					      });
-				    },
-				    emit: function (eventName, data, callback) {
-					      socket.emit(eventName, data, function () {
-						        var args = arguments;
-						        $rootScope.$apply(function () {
-							          if (callback) {
-							            callback.apply(socket, args);
-							          }
-						        });
-					      });
-				    }
-		  };
-		}]);
-})();
-
-(function () {
 'use strict';
 
   angular.module('flugel.views.dash', ['ngRoute'])
@@ -851,13 +850,20 @@ angular
       // });
       $scope.totalAdviser = [];
       $scope.advisersActivity = [];
+      $scope.freeAdvisers = [];
       $scope.customersActivity = [];
+      $scope.freeCustomers = [];
+
       if ($routeParams.circleId) {
           Activity.activityGtr.get({room: $routeParams.circleId}, function (data) {
               $scope.totalAdviser = data.adviser;
               $scope.customersActivity = data.customer;
               $scope.advisersActivity = joinActivity(data.adviser, $scope.customersActivity);
+              $scope.freeAdvisers = getFreeAdviser(data.adviser);
+              $scope.freeCustomers = getFreeCustomer(data.customer);
               console.log($scope.advisersActivity);
+              console.log($scope.freeAdvisers);
+              console.log($scope.freeCustomers);
           });
       }
 
@@ -872,7 +878,7 @@ angular
               });
           }
 
-          if (!_.size(customerList)) return console.log(adviserList);
+          if (!_.size(customerList)) return [];
 
           //filtar los clientes que no estan seiendo atendidos
           var customerListFilter = _.filter(customerList, function (customer) {
@@ -890,6 +896,20 @@ angular
           });
 
           return adviserListFilter;
+      }
+
+      // obtiene los asesores que no estan atendiendo
+      function getFreeAdviser(adviserList) {
+          return _.filter(adviserList, function (adviser) {
+              return adviser.activity.activityEvent.eventCode !== '2';
+          });
+      }
+
+      // obtiene los clientes que no estan siendo atendidos
+      function getFreeCustomer(customerList) {
+          return _.filter(customerList, function (customer) {
+              return !customer.token.receiverAdviser;
+          });
       }
 
       $scope.close = function () {
@@ -1212,14 +1232,7 @@ angular.module('flugel.view2', ['ngRoute'])
             };
           $scope.lineId = $attrs.id;
 
-          new Chartist.Line('#'+$attrs.id, data, {
-            plugins: [
-              Chartist.plugins.ctPointLabels({
-                textAnchor: 'middle'
-              }),
-              // Chartist.plugins.tooltip()
-            ]
-          });
+          new Chartist.Line('#'+$attrs.id, data);
 
       }
 })();
@@ -1309,6 +1322,76 @@ angular
 
       stopTime = $interval(function () {
           $scope.attentionTime = diffTime($scope.adviserActivity.customer.token.infoToken.logAtentionToken, false);
+      }, 500, false);
+
+      function diffTime(iniTime, endTime) {
+          var momentIniTime = iniTime ? moment(iniTime): moment();
+          var momentEndTime = endTime ? moment(endTime) : moment();
+          return moment.utc(momentEndTime.diff(momentIniTime)).format("HH:mm:ss");
+      }
+  }
+})();
+
+(function () {
+'use strict';
+
+angular
+  .module('flugel.components.gtr.singleAdviser', [])
+  .directive('fgFreeAdviser', fgFreeAdviserDirective);
+
+  function fgFreeAdviserDirective() {
+    return {
+      retrict: 'E',
+      scope: {
+          adviserActivity : '='
+      },
+      controller: activityAdviserCtrl,
+      templateUrl: 'src/components/gtr/activityAdviser/singleAdviser.html'
+    };
+  }
+
+  activityAdviserCtrl.$inject = ['$scope', '$element','$attrs', '$interval'];
+  function activityAdviserCtrl($scope, $element, $attrs, $interval) {
+      var stopTime;
+      $scope.activityTime = "00:00:00";
+
+      stopTime = $interval(function () {
+          $scope.activityTime = diffTime($scope.adviserActivity.activity.activityStartTime, false);
+      }, 500, false);
+
+      function diffTime(iniTime, endTime) {
+          var momentIniTime = iniTime ? moment(iniTime): moment();
+          var momentEndTime = endTime ? moment(endTime) : moment();
+          return moment.utc(momentEndTime.diff(momentIniTime)).format("HH:mm:ss");
+      }
+  }
+})();
+
+(function () {
+'use strict';
+
+angular
+  .module('flugel.components.gtr.singleCustomer', [])
+  .directive('fgFreeCustomer', fgFreeCustomerDirective);
+
+  function fgFreeCustomerDirective() {
+    return {
+      retrict: 'E',
+      scope: {
+          adviserActivity : '='
+      },
+      controller: activityCustomerCtrl,
+      templateUrl: 'src/components/gtr/activityAdviser/singleCustomer.html'
+    };
+  }
+
+  activityCustomerCtrl.$inject = ['$scope', '$element','$attrs', '$interval'];
+  function activityCustomerCtrl($scope, $element, $attrs, $interval) {
+      var stopTime;
+      $scope.waitTime = "00:00:00";
+
+      stopTime = $interval(function () {
+          $scope.waitTime = diffTime($scope.adviserActivity.token.infoToken.logCreationToken, false);
       }, 500, false);
 
       function diffTime(iniTime, endTime) {

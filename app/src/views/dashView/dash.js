@@ -20,13 +20,20 @@
       // });
       $scope.totalAdviser = [];
       $scope.advisersActivity = [];
+      $scope.freeAdvisers = [];
       $scope.customersActivity = [];
+      $scope.freeCustomers = [];
+
       if ($routeParams.circleId) {
           Activity.activityGtr.get({room: $routeParams.circleId}, function (data) {
               $scope.totalAdviser = data.adviser;
               $scope.customersActivity = data.customer;
               $scope.advisersActivity = joinActivity(data.adviser, $scope.customersActivity);
+              $scope.freeAdvisers = getFreeAdviser(data.adviser);
+              $scope.freeCustomers = getFreeCustomer(data.customer);
               console.log($scope.advisersActivity);
+              console.log($scope.freeAdvisers);
+              console.log($scope.freeCustomers);
           });
       }
 
@@ -41,7 +48,7 @@
               });
           }
 
-          if (!_.size(customerList)) return console.log(adviserList);
+          if (!_.size(customerList)) return [];
 
           //filtar los clientes que no estan seiendo atendidos
           var customerListFilter = _.filter(customerList, function (customer) {
@@ -59,6 +66,20 @@
           });
 
           return adviserListFilter;
+      }
+
+      // obtiene los asesores que no estan atendiendo
+      function getFreeAdviser(adviserList) {
+          return _.filter(adviserList, function (adviser) {
+              return adviser.activity.activityEvent.eventCode !== '2';
+          });
+      }
+
+      // obtiene los clientes que no estan siendo atendidos
+      function getFreeCustomer(customerList) {
+          return _.filter(customerList, function (customer) {
+              return !customer.token.receiverAdviser;
+          });
       }
 
       $scope.close = function () {

@@ -1,0 +1,13 @@
+<div layout="row">
+  <div flex="100" class="md-whiteframe-1dp" layout-margin style="margin: 6px 0px 6px;">
+      <div class="">{{adviserActivity.adviser.adviserName}} {{adviserActivity.adviser.adviserLastName}}</div>
+      <div class="md-caption" style="line-height: 20px;">
+          <span class="material-tag">{{adviserActivity.activity.role.name}}</span>
+          <span class="material-tag">{{adviserActivity.activity.activityEvent.eventName}}</span>
+          · {{adviserActivity.activity.branchOffice.terminal.terminalName}}
+          · actividad: {{activityTime}}
+          <!-- · Atendidos: 5 · -->
+          <a href="">Detalles</a>
+      </div>
+  </div>
+</div>

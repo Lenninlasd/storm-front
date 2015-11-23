@@ -6,14 +6,13 @@
           <span class="material-tag">{{adviserActivity.activity.activityEvent.eventName}}</span>
           · {{adviserActivity.activity.branchOffice.terminal.terminalName}}
           <!-- · Atendidos: 5 · -->
-          <a href="">Detalles</a>
       </div>
   </div>
   <div flex="50" class="md-whiteframe-1dp" layout-margin style="margin: 6px 0px 6px;">
       <div class="">{{adviserActivity.customer.token.client.screenName}}</div>
       <div class="md-caption" style="line-height: 20px;">
           <span class="material-tag">{{adviserActivity.customer.token.idToken.numerator}}{{adviserActivity.customer.token.idToken.consecutive}}</span>
-           · Espera: {{waitTime}} min  · Atencion: {{attentionTime}} min
+           · Espera: {{waitTime}}  · Atencion: {{attentionTime}}
       </div>
       <div class="md-caption">{{adviserActivity.customer.token.motivoVisita.serviceName}}</div>
   </div>
