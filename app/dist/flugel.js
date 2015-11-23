@@ -87,6 +87,12 @@ angular
     'flugel.components.charts.line'
   ]);
 
+angular
+  .module('flugel.components.gtr',[
+    'flugel.components.gtr.activityAdviser',
+    'flugel.components.gtr.header'
+  ]);
+
 (function () {
 'use strict';
 
@@ -225,12 +231,6 @@ angular
       };
   }
 })();
-
-angular
-  .module('flugel.components.gtr',[
-    'flugel.components.gtr.activityAdviser',
-    'flugel.components.gtr.header'
-  ]);
 
 (function () {
 'use strict';
@@ -371,9 +371,14 @@ angular
     };
   }
 
-  sideNavCtrl.$inject = ['$scope', '$element','$attrs'];
-  function sideNavCtrl($scope, $element, $attrs) {
-
+  sideNavCtrl.$inject = ['$scope', '$element','$attrs', 'BranchOffice'];
+  function sideNavCtrl($scope, $element, $attrs, BranchOffice) {
+      $scope.branchOfficeList = [];
+      BranchOffice.branchOfficeList.query(function (data) {
+          $scope.branchOffices = data;
+      }, function (err) {
+          console.log(err);
+      });
   }
 })();
 
@@ -766,7 +771,8 @@ angular
 					version : '0.0.1',
 					ip: location.hostname,
 					port: 3001,
-		      protocol: 'http'
+		      protocol: 'http',
+					origin: location.origin
 			};
 		})
 		.factory('Token',['$resource', 'Config', function ContenidoFactory($resource, Config){
@@ -787,7 +793,13 @@ angular
 		}])
 		.factory('Activity',['$resource', 'Config', function ContenidoFactory($resource, Config){
 			return {
-					activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}})
+					activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}}),
+					activityGtr : $resource('http://' + Config.ip + ':' + Config.port + '/activityGtr', {}, { update: {method: 'PUT'}})
+			};
+		}])
+		.factory('BranchOffice', ['$resource', 'Config', function ContenidoFactory($resource, Config) {
+			return {
+					branchOfficeList : $resource('http://' + Config.ip + ':' + Config.port + '/branchOffice', {}, { update: {method: 'PUT'}})
 			};
 		}])
 
@@ -826,13 +838,60 @@ angular
     $routeProvider.when('/dash', {
       templateUrl: 'src/views/dashView/dash.html',
       controller: 'dashCtrl'
+    }).when('/dash/:circleId', {
+      templateUrl: 'src/views/dashView/dash.html',
+      controller: 'dashCtrl'
     });
   }])
 
-  .controller('dashCtrl', ['$scope', 'Login', '$window', '$cookies', '$mdSidenav', function($scope, Login, $window, $cookies, $mdSidenav) {
+  .controller('dashCtrl', ['$scope', 'Login', '$window', '$cookies', '$mdSidenav', '$routeParams', 'Activity',
+        function($scope, Login, $window, $cookies, $mdSidenav, $routeParams, Activity) {
       // Login.login.get(function (session) {
       //     if (!session.login) $window.location = '/login';
       // });
+      $scope.totalAdviser = [];
+      $scope.advisersActivity = [];
+      $scope.customersActivity = [];
+      if ($routeParams.circleId) {
+          Activity.activityGtr.get({room: $routeParams.circleId}, function (data) {
+              $scope.totalAdviser = data.adviser;
+              $scope.customersActivity = data.customer;
+              $scope.advisersActivity = joinActivity(data.adviser, $scope.customersActivity);
+              console.log($scope.advisersActivity);
+          });
+      }
+
+
+      //Añade a la lista de advisers que estan atendiendo un turno
+      // la informacion de cliente que esta atendiendo
+      function joinActivity(adviserList, customerList) {
+
+          function filterById(list, id) {
+              return _.filter(list, function (iten) {
+                  return iten.token.receiverAdviser.adviserId === id;
+              });
+          }
+
+          if (!_.size(customerList)) return console.log(adviserList);
+
+          //filtar los clientes que no estan seiendo atendidos
+          var customerListFilter = _.filter(customerList, function (customer) {
+              return customer.token.receiverAdviser;
+          });
+          // filtra los asesores que estan atendiendo
+          var adviserListFilter = _.filter(adviserList, function (adviser) {
+              return adviser.activity.activityEvent.eventCode === '2';
+          });
+
+          // para cada asesor atendiendo le asocia el cliente
+          _.each(adviserListFilter, function(adviserFilter) {
+              var customerAsociate = filterById(customerListFilter, adviserFilter.adviser.adviserId);
+              adviserFilter.customer = customerAsociate[0];
+          });
+
+          return adviserListFilter;
+      }
+
       $scope.close = function () {
           $mdSidenav('left').toggle()
           .then(function () {
@@ -1227,15 +1286,36 @@ angular
     return {
       retrict: 'E',
       scope: {
+          adviserActivity : '='
       },
       controller: activityAdviserCtrl,
       templateUrl: 'src/components/gtr/activityAdviser/activityAdviser.html'
     };
   }
 
-  activityAdviserCtrl.$inject = ['$scope', '$element','$attrs'];
-  function activityAdviserCtrl($scope, $element, $attrs) {
+  activityAdviserCtrl.$inject = ['$scope', '$element','$attrs', 'Activity', '$routeParams', '$interval'];
+  function activityAdviserCtrl($scope, $element, $attrs, Activity, $routeParams, $interval) {
+      var stopTime;
+      $scope.attentionTime = "00:00:00";
+      $scope.waitTime = "00:00:00";
+      $scope.callTime = "00:00:00";
+      $scope.availableTime = "00:00:00";
 
+      $scope.waitTime = diffTime($scope.adviserActivity.customer.token.infoToken.logCreationToken,
+                        $scope.adviserActivity.customer.token.infoToken.logCalledToken);
+
+      $scope.callTime = diffTime($scope.adviserActivity.customer.token.infoToken.logCalledToken,
+                        $scope.adviserActivity.customer.token.infoToken.logAtentionToken);
+
+      stopTime = $interval(function () {
+          $scope.attentionTime = diffTime($scope.adviserActivity.customer.token.infoToken.logAtentionToken, false);
+      }, 500, false);
+
+      function diffTime(iniTime, endTime) {
+          var momentIniTime = iniTime ? moment(iniTime): moment();
+          var momentEndTime = endTime ? moment(endTime) : moment();
+          return moment.utc(momentEndTime.diff(momentIniTime)).format("HH:mm:ss");
+      }
   }
 })();
 

@@ -7,7 +7,8 @@
 					version : '0.0.1',
 					ip: location.hostname,
 					port: 3001,
-		      protocol: 'http'
+		      protocol: 'http',
+					origin: location.origin
 			};
 		})
 		.factory('Token',['$resource', 'Config', function ContenidoFactory($resource, Config){
@@ -28,7 +29,13 @@
 		}])
 		.factory('Activity',['$resource', 'Config', function ContenidoFactory($resource, Config){
 			return {
-					activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}})
+					activity : $resource('http://' + Config.ip + ':' + Config.port + '/activity', {}, { update: {method: 'PUT'}}),
+					activityGtr : $resource('http://' + Config.ip + ':' + Config.port + '/activityGtr', {}, { update: {method: 'PUT'}})
+			};
+		}])
+		.factory('BranchOffice', ['$resource', 'Config', function ContenidoFactory($resource, Config) {
+			return {
+					branchOfficeList : $resource('http://' + Config.ip + ':' + Config.port + '/branchOffice', {}, { update: {method: 'PUT'}})
 			};
 		}])
 
