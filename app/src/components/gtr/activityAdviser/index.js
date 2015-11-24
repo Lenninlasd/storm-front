@@ -14,27 +14,36 @@ angular
     };
   }
 
-  activityCtrl.$inject = ['$scope', '$element','$attrs', 'Activity', '$routeParams', '$interval'];
-  function activityCtrl($scope, $element, $attrs, Activity, $routeParams, $interval) {
+  activityCtrl.$inject = ['$scope', '$element','$attrs', 'Activity', '$routeParams', '$interval', 'socket'];
+  function activityCtrl($scope, $element, $attrs, Activity, $routeParams, $interval, socket) {
       $scope.totalAdviser = [];
       $scope.advisersActivity = [];
       $scope.freeAdvisers = [];
       $scope.customersActivity = [];
       $scope.freeCustomers = [];
 
-      if ($routeParams.circleId) {
-          Activity.activityGtr.get({room: $routeParams.circleId}, function (data) {
-              $scope.totalAdviser = data.adviser;
-              $scope.customersActivity = data.customer;
-              $scope.advisersActivity = joinActivity(data.adviser, $scope.customersActivity);
-              $scope.freeAdvisers = getFreeAdviser(data.adviser);
-              $scope.freeCustomers = getFreeCustomer(data.customer);
-              console.log($scope.advisersActivity);
-              console.log($scope.freeAdvisers);
-              console.log($scope.freeCustomers);
-          });
-      }
+      // actualiza la actividad del gtr
+      updateActivity();
 
+      //Se genera dos veces cuando va de cerrado a disponible
+      socket.on('updateActivity', function () {
+          updateActivity();
+      });
+
+      function updateActivity() {
+          if ($routeParams.circleId) {
+              Activity.activityGtr.get({room: $routeParams.circleId}, function (data) {
+                  $scope.totalAdviser = data.adviser;
+                  $scope.customersActivity = data.customer;
+                  $scope.advisersActivity = joinActivity(data.adviser, $scope.customersActivity);
+                  $scope.freeAdvisers = getFreeAdviser(data.adviser);
+                  $scope.freeCustomers = getFreeCustomer(data.customer);
+                  console.log($scope.advisersActivity);
+                  console.log($scope.freeAdvisers);
+                  console.log($scope.freeCustomers);
+              });
+          }
+      }
 
       //Añade a la lista de advisers que estan atendiendo un turno
       // la informacion de cliente que esta atendiendo
