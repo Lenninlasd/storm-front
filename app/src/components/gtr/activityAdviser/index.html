@@ -1,0 +1,40 @@
+
+<md-card ng-if="!totalAdviser.length" layout="row" flex="100" class="md-whiteframe-1dp">
+  <h2 style="color:#888;text-align: center;">Aún no hay asesores conectados</h2>
+</md-card>
+
+<md-card md-theme="docs-dark" ng-show="advisersActivity.length" flex="100" class="md-whiteframe-1dp">
+    <md-toolbar class="md-primary" style="border-radius: 2px 2px 0px 0px;">
+        <div class="md-toolbar-tools"><h2 class="md-flex">Turnos en atención</h2></div>
+    </md-toolbar>
+    <md-card-content>
+        <fg-activity-adviser adviser-activity="adviserActivity" ng-repeat="adviserActivity in advisersActivity"></fg-activity-adviser>
+    </md-card-content>
+</md-card>
+
+<div layout="row" layout-wrap flex="100"  layout-align="center">
+    <div flex-gt-md="50" flex="100">
+      <md-card md-theme="docs-dark" ng-show="freeAdvisers.length"  class="md-whiteframe-1dp" style="margin-left: 0;">
+          <md-toolbar class="md-primary" style="border-radius: 2px 2px 0px 0px;">
+              <div class="md-toolbar-tools">
+                <h2 class="md-flex" flex="50">No atención</h2>
+              </div>
+          </md-toolbar>
+          <md-card-content>
+              <fg-free-adviser adviser-activity="freeAdviser" ng-repeat="freeAdviser in freeAdvisers"></fg-free-adviser>
+          </md-card-content>
+      </md-card>
+    </div>
+    <div flex-gt-md="50" flex="100">
+        <md-card md-theme="docs-dark" ng-show="freeCustomers.length" class="md-whiteframe-1dp" style="margin-right: 0;">
+            <md-toolbar class="md-primary" style="border-radius: 2px 2px 0px 0px;">
+                <div class="md-toolbar-tools">
+                  <h2 class="md-flex" flex="50">Clientes en espera</h2>
+                </div>
+            </md-toolbar>
+            <md-card-content>
+                <fg-free-customer adviser-activity="freeCustomer" ng-repeat="freeCustomer in freeCustomers"></fg-free-customer>
+            </md-card-content>
+        </md-card>
+    </div>
+</div>
