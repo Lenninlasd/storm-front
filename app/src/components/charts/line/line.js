@@ -11,27 +11,29 @@
           scope: {
           },
           controller: chartLineCtrl,
-          template: '<div class="ct-chart" id="{{lineId}}"></div>'
+          link: chartLineLink,
+          template: '<canvas id="line" class="chart chart-line" chart-data="data"' +
+                      'chart-labels="labels" chart-legend="true" chart-series="series"' +
+                      'chart-click="onClick" chart-options="options" height="{{heights}}"' +
+                    '</canvas>'
         };
       }
       chartLineCtrl.$inject = ['$scope', '$element', '$attrs'];
       function chartLineCtrl($scope, $element, $attrs) {
-          var data = {
-              labels: ['8:00', '8:30', '9:00', '9:30', '10:00', '10:30'],
-              series: [
-                  {
-                    name: 'NS',
-                    data: [100, 60, 83, 75, 90, 88]
-                  },
-                  {
-                    name: 'NS Acumulado',
-                    data: [100, 83, 85, 70, 60, 86]
-                  }
-              ]
-            };
-          $scope.lineId = $attrs.id;
+        $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+        $scope.series = ['Series A', 'Series Lennin'];
+        $scope.data = [
+          [65, 59, 80, 81, 56, 55, 40],
+          [28, 48, 40, 19, 86, 27, 90]
+        ];
+        $scope.options = {scaleShowGridLines : false};
+        $scope.onClick = function (points, evt) {
+          console.log(points, evt);
+        };
 
-          new Chartist.Line('#'+$attrs.id, data);
+      }
 
+      function chartLineLink(scope, element, attrs) {
+          scope.heights = window.innerWidth <= 600 ? 150 : 40;
       }
 })();

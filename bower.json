@@ -17,6 +17,8 @@
     "fontawesome": "~4.4.0",
     "moment": "~2.10.6",
     "underscore": "~1.8.3",
-    "chartist": "~0.9.4"
+    "chartist": "~0.9.4",
+    "angular-google-chart": "~0.0.11",
+    "angular-chart.js": "~0.8.6"
   }
 }

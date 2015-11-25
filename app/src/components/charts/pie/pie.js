@@ -2,7 +2,7 @@
 'use strict';
 
 angular
-  .module('flugel.components.charts.pie', [])
+  .module('flugel.components.charts.pie', ['googlechart'])
   .directive('fgChartPie', fgChartBarDirective);
 
   function fgChartBarDirective() {
@@ -11,40 +11,16 @@ angular
       scope: {
       },
       controller: chartPieCtrl,
-      template: '<div class="ct-chart" id="{{pieId}}"></div>'
+      template: '<canvas id="pie" class="chart chart-pie"' +
+                  'chart-data="data" chart-labels="labels" chart-legend="true" height="{{heights}}">' +
+                '</canvas> '
     };
   }
-  
+
   chartPieCtrl.$inject = ['$scope', '$element', '$attrs'];
   function chartPieCtrl($scope, $element, $attrs) {
-    $scope.pieId = $attrs.id;
-
-    var data = {
-        labels: ['Bananas', 'Apples', 'Grapes'],
-        series: [20, 15, 40]
-    };
-
-    var options = {
-        labelInterpolationFnc: function(value) {
-            return value[0];
-        }
-    };
-
-    var responsiveOptions = [
-        ['screen and (min-width: 640px)', {
-            chartPadding: 30,
-            labelOffset: 100,
-            labelDirection: 'explode',
-            labelInterpolationFnc: function(value) {
-              return value;
-            }
-        }],
-        ['screen and (min-width: 1024px)', {
-            labelOffset: 80,
-            chartPadding: 20
-        }]
-    ];
-
-    new Chartist.Pie('#'+$attrs.id, data, options, responsiveOptions);
+    $scope.labels = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
+    $scope.data = [300, 500, 100];
+    $scope.heights = window.innerWidth <= 600 ? 150 : 50;
   }
 })();

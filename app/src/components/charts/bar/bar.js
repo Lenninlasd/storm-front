@@ -2,7 +2,7 @@
   'use strict';
 
   angular
-    .module('flugel.components.charts.bar', [])
+    .module('flugel.components.charts.bar', ['chart.js'])
     .directive('fgChartBar', fgChartBarDirective);
 
     function fgChartBarDirective() {
@@ -11,38 +11,20 @@
         scope: {
         },
         controller: chartBarCtrl,
-        template: '<div class="ct-chart" id="{{barId}}"></div>'
+        template: '<canvas chart-bar class="chart"' +
+                      'chart-data="data" chart-labels="labels" chart-legend="true" height="{{heights}}">' +
+                  '</canvas'
       };
     }
     chartBarCtrl.$inject = ['$scope', '$element', '$attrs'];
     function chartBarCtrl($scope, $element, $attrs) {
-
-      $scope.barId = $attrs.id;
-      var data = {
-          labels: ['Disponible', 'Ocupado', 'Breack', 'Alm', 'Cap'],
-          series: [
-            [50, 14, 32, 7, 5]
-          ]
-      };
-
-      var options = {
-          seriesBarDistance: 2
-      };
-
-      var responsiveOptions = [
-          ['screen and (max-width: 640px)', {
-            seriesBarDistance: 5,
-            axisX: {
-              labelInterpolationFnc: function (value) {
-                  return value[0];
-              }
-            }
-          }]
+      $scope.labels = ['2006', '2007', '2008', '2009', '2010', '2011', '2012'];
+      $scope.series = ['SeriesA', 'SeriesB'];
+      $scope.data = [
+        [65, 59, 80, 81, 56, 55, 40],
+        [28, 48, 40, 19, 86, 27, 90],
+        [78, 41, 43, 59, 36, 27, 60]
       ];
-
-      new Chartist.Bar('#'+$attrs.id, data, options, responsiveOptions)
-      .on('draw', function(data) {
-          if(data.type === 'bar') data.element.attr({style: 'stroke-width: '+ $attrs.ancho});
-      });
+      $scope.heights = window.innerWidth <= 600 ? 150 : 60;
     }
 })();
