@@ -4,5 +4,6 @@ angular
     'flugel.components.gtr.activityAdviser',
     'flugel.components.gtr.header',
     'flugel.components.gtr.singleAdviser',
-    'flugel.components.gtr.singleCustomer'
+    'flugel.components.gtr.singleCustomer',
+    'flugel.components.gtr.metadataActivity'
   ]);

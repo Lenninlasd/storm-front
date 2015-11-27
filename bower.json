@@ -9,7 +9,7 @@
     "angular-aria": "~1.4.0",
     "angular-cookies": "~1.4.0",
     "angular-loader": "~1.4.0",
-    "angular-material": "1.0.0-rc3",
+    "angular-material": "1.0.0-rc4",
     "angular-mocks": "~1.4.0",
     "angular-resource": "~1.4.0",
     "angular-route": "~1.4.0",
@@ -17,8 +17,6 @@
     "fontawesome": "~4.4.0",
     "moment": "~2.10.6",
     "underscore": "~1.8.3",
-    "chartist": "~0.9.4",
-    "angular-google-chart": "~0.0.11",
     "angular-chart.js": "~0.8.6"
   }
 }

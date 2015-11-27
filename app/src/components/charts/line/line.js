@@ -20,11 +20,11 @@
       }
       chartLineCtrl.$inject = ['$scope', '$element', '$attrs'];
       function chartLineCtrl($scope, $element, $attrs) {
-        $scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
-        $scope.series = ['Series A', 'Series Lennin'];
+        $scope.labels = ["08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00"];
+        $scope.series = ['NS', 'NS acumulado'];
         $scope.data = [
-          [65, 59, 80, 81, 56, 55, 40],
-          [28, 48, 40, 19, 86, 27, 90]
+          [28, 48, 40, 19, 86, 27, 90],
+          [30, 59, 65, 41, 60, 55, 60]          
         ];
         $scope.options = {scaleShowGridLines : false};
         $scope.onClick = function (points, evt) {

@@ -2,7 +2,7 @@
 'use strict';
 
 angular
-  .module('flugel.components.charts.pie', ['googlechart'])
+  .module('flugel.components.charts.pie', [])
   .directive('fgChartPie', fgChartBarDirective);
 
   function fgChartBarDirective() {
@@ -21,6 +21,6 @@ angular
   function chartPieCtrl($scope, $element, $attrs) {
     $scope.labels = ["Download Sales", "In-Store Sales", "Mail-Order Sales"];
     $scope.data = [300, 500, 100];
-    $scope.heights = window.innerWidth <= 600 ? 150 : 50;
+    $scope.heights = window.innerWidth <= 600 ? 150 : 80;
   }
 })();
