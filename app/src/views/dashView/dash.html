@@ -24,21 +24,24 @@
                 </div>
             </md-toolbar>
             <div layout="row" layout-wrap layout-margin>
-                <md-card flex="100">
-                      <md-card-content style="padding: 0px;">
+                <md-card flex="100" class="md-whiteframe-1dp">
+                      <md-card-content style="padding: 0;">
                             <fg-header></fg-header>
                       </md-card-content>
                 </md-card>
 
-                <md-card flex="95" flex-md="100" flex-sm="100" class="md-whiteframe-1dp">
-                    <md-card-content layout="row">
-                      <div fg-chart-line flex="100"></div>
+                <md-card layout="row" flex="100" class="md-whiteframe-1dp">
+                    <md-card-content flex="95">
+                      <div fg-chart-bar-ns></div>
                     </md-card-content>
                 </md-card>
 
-                <md-card flex="95" flex-md="100" flex-sm="100" class="md-whiteframe-1dp">
-                    <md-card-content>
-                      <div fg-chart-bar></div>
+                <md-card layout="row" layout-wrap flex="100" class="md-whiteframe-1dp">
+                    <md-card-content flex-gt-sm="50" flex-sm="100">
+                      <div fg-chart-line flex="100"></div>
+                    </md-card-content>
+                    <md-card-content flex-gt-sm="50" flex-sm="100">
+                      <div fg-chart-bar-aht flex="100"></div>
                     </md-card-content>
                 </md-card>
 
