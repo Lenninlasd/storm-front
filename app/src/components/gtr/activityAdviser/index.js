@@ -21,6 +21,7 @@ angular
       $scope.freeAdvisers = [];
       $scope.customersActivity = [];
       $scope.freeCustomers = [];
+      $scope.allData = {};
 
       // actualiza la actividad del gtr
       updateActivity();
@@ -33,14 +34,16 @@ angular
       function updateActivity() {
           if ($routeParams.circleId) {
               Activity.activityGtr.get({room: $routeParams.circleId}, function (data) {
+                  $scope.allData = data;
                   $scope.totalAdviser = data.adviser;
                   $scope.customersActivity = data.customer;
                   $scope.advisersActivity = joinActivity(data.adviser, $scope.customersActivity);
                   $scope.freeAdvisers = getFreeAdviser(data.adviser);
                   $scope.freeCustomers = getFreeCustomer(data.customer);
-                  console.log($scope.advisersActivity);
-                  console.log($scope.freeAdvisers);
-                  console.log($scope.freeCustomers);
+                  // console.log($scope.advisersActivity);
+                  // console.log($scope.freeAdvisers);
+                  // console.log($scope.freeCustomers);
+                  // console.log($scope.totalAdviser);
               });
           }
       }
