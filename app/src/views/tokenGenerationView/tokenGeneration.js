@@ -146,13 +146,16 @@ function DialogCtrl($scope, $mdDialog, dataCustomer, branchOffice, Token) {
 
     $scope.dataCustomer = dataCustomer;
     $scope.showTokenResult = false;
+    $scope.disableBottonGen = false;
 
     $scope.tokenGeneration = function () {
         console.log($scope.dataCustomer);
+        $scope.disableBottonGen = true;
         Token.tokens.save($scope.dataCustomer.token, function (data) {
             console.log(data.token);
             $scope.generatedToken = data.token.token;
             $scope.showTokenResult = true;
+            $scope.disableBottonGen = false;
 
         }, function (err) {
             console.log(err);

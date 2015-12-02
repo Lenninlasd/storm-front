@@ -33,7 +33,7 @@
       </md-dialog-content>
       <div class="md-actions" >
         <md-button ng-hide="showTokenResult" ng-click="cancel()" class="md-primary md-warn" >Cancelar</md-button>
-        <md-button ng-hide="showTokenResult" ng-click="tokenGeneration()" class="md-primary md-raised" >Generar</md-button>
+        <md-button ng-hide="showTokenResult" ng-disabled="disableBottonGen" ng-click="tokenGeneration()" class="md-primary md-raised" >Generar</md-button>
         <md-button ng-show="showTokenResult" ng-click="answer('ok')" class="md-primary md-raised" >Aceptar</md-button>
       </div>
     </md-dialog>

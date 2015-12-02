@@ -23,16 +23,20 @@ angular
       $scope.waitTime = "00:00:00";
       $scope.callTime = "00:00:00";
       $scope.availableTime = "00:00:00";
+      console.log($scope.adviserActivity.customer);
+      //** validar si existe **
+      if ($scope.adviserActivity.customer) {
+        $scope.waitTime = diffTime($scope.adviserActivity.customer.token.infoToken.logCreationToken,
+                          $scope.adviserActivity.customer.token.infoToken.logCalledToken);
 
-      $scope.waitTime = diffTime($scope.adviserActivity.customer.token.infoToken.logCreationToken,
-                        $scope.adviserActivity.customer.token.infoToken.logCalledToken);
+        $scope.callTime = diffTime($scope.adviserActivity.customer.token.infoToken.logCalledToken,
+                          $scope.adviserActivity.customer.token.infoToken.logAtentionToken);
 
-      $scope.callTime = diffTime($scope.adviserActivity.customer.token.infoToken.logCalledToken,
-                        $scope.adviserActivity.customer.token.infoToken.logAtentionToken);
+        stopTime = $interval(function () {
+            $scope.attentionTime = diffTime($scope.adviserActivity.customer.token.infoToken.logAtentionToken, false);
+        }, 500, false);
+      }
 
-      stopTime = $interval(function () {
-          $scope.attentionTime = diffTime($scope.adviserActivity.customer.token.infoToken.logAtentionToken, false);
-      }, 500, false);
 
       function diffTime(iniTime, endTime) {
           var momentIniTime = iniTime ? moment(iniTime): moment();

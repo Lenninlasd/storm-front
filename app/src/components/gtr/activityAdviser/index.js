@@ -37,6 +37,7 @@ angular
                   $scope.allData = data;
                   $scope.totalAdviser = data.adviser;
                   $scope.customersActivity = data.customer;
+                  console.log(data.customer);
                   $scope.advisersActivity = joinActivity(data.adviser, $scope.customersActivity);
                   $scope.freeAdvisers = getFreeAdviser(data.adviser);
                   $scope.freeCustomers = getFreeCustomer(data.customer);
