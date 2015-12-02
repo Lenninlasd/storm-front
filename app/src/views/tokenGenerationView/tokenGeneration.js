@@ -99,7 +99,7 @@ function TokenGenerationCtrl($scope, $mdDialog, $window, $cookies, Token, Activi
 
                 Activity.activity.get(self.dataCustomer.token, function (data) {
                     $scope.activity = data;
-                    setEventActivity('0', 'generateToken');
+                    setEventActivity('0', 'generando turnos');
                 });
             }else{
                 $window.location = '/login';
@@ -123,7 +123,7 @@ function TokenGenerationCtrl($scope, $mdDialog, $window, $cookies, Token, Activi
     }
 
     function closeAttention() {
-      setEventActivity('10', 'closed', function (data) {
+      setEventActivity('10', 'cerrado', function (data) {
           socket.emit('closeAttention');
           $window.location = '#/select'; return;
       });

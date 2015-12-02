@@ -126,7 +126,7 @@ angular
         self.tokenInAttention = {};
 
          // *** Punto 1 ***
-        setEventActivity('3', 'available', function (data) {
+        setEventActivity('3', 'disponible', function (data) {
               var activityStartTime = _.last($scope.activity.activity).activityStartTime;
               $interval.cancel(availableTime);
               availableTime = $interval(function () {
@@ -167,7 +167,7 @@ angular
         }else{
             // Nuevo turno a llamar
             Token.callToken.update(id, function (tokenCalled) {
-                setEventActivity('1', 'callToken'); // *** Punto 2 *** (update calling )Pending
+                setEventActivity('1', 'llamando'); // *** Punto 2 *** (update calling )Pending
                 setTokenToBeTaken(tokenCalled);
             });
         }
@@ -193,7 +193,7 @@ angular
         console.log(adviserInfo);
         Token.takeToken.update(id, adviserInfo, function (data) {
             // *** Punto 3 (update attendToken) ***
-            setEventActivity('2', 'attendToken');
+            setEventActivity('2', 'en atención');
             self.stateAttention = 2;
             self.tokenInAttention = data;
             $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
@@ -276,7 +276,7 @@ angular
     }
 
     function closeAttention() {
-        setEventActivity('10', 'closed', function (data) {
+        setEventActivity('10', 'cerrado', function (data) {
             socket.emit('closeAttention');
             $window.location = '#/select'; return;
         });
