@@ -100,6 +100,7 @@ angular
     function inicializeSocket() {
         socket.on('newToken', function (data) {
             console.log(data);
+            if (!data.availableUser) return;
             if (self.stateAttention === 0 && adviserInfo.adviserId === data.availableUser.adviserId) {
                 getPendingToken(data.token);
             }
