@@ -153,7 +153,8 @@ angular
 
     function callToken() {
         Token.tokens.query({state: 0, room: room}, function (data) {
-            if (data.length) return getPendingToken(data[0]);  // Hay turnos Disponibles?
+            // Hay turnos Disponibles? soy yo el asesor que va a atender?
+            if (data.length && data[0].token.receiverAdviser.adviserId === adviserInfo.adviserId) return getPendingToken(data[0]);
             available();
         });
     }
@@ -167,13 +168,14 @@ angular
             setTokenToBeTaken(token);
         }else{
             // Nuevo turno a llamar
-            Token.callToken.update(id, function (tokenCalled) {
+            Token.callToken.update(id, adviserInfo, function (tokenCalled) {
                 setEventActivity('1', 'llamando'); // *** Punto 2 *** (update calling )Pending
                 setTokenToBeTaken(tokenCalled);
             });
         }
         // Llama turno.
         function setTokenToBeTaken(token) {
+            console.log(token);
             self.stateAttention = 1;
             self.tokenToBeTaken = token.token;
             self.tokenToBeTaken.id = token._id;
