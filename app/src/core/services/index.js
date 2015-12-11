@@ -35,7 +35,8 @@
 		}])
 		.factory('BranchOffice', ['$resource', 'Config', function ContenidoFactory($resource, Config) {
 			return {
-					branchOfficeList : $resource('http://' + Config.ip + ':' + Config.port + '/branchOffice', {}, { update: {method: 'PUT'}})
+					branchOfficeList : $resource('http://' + Config.ip + ':' + Config.port + '/branchOffice', {}, { update: {method: 'PUT'}}),
+					terminal : $resource('http://' + Config.ip + ':' + Config.port + '/terminal', {}, { update: {method: 'PUT'}})
 			};
 		}])
 

@@ -15,14 +15,20 @@ angular
     };
   }
 
-  selectionRoleDirectiveCtrl.$inject = ['$scope', '$element','$attrs', 'Login', 'Activity', '$window', 'socket'];
-  function selectionRoleDirectiveCtrl($scope, $element, $attrs, Login, Activity, $window, socket) {
+  selectionRoleDirectiveCtrl.$inject = ['$scope', '$element','$attrs', 'Login', 'Activity', '$window', 'socket', 'BranchOffice'];
+  function selectionRoleDirectiveCtrl($scope, $element, $attrs, Login, Activity, $window, socket, BranchOffice) {
     var adviserInfo = {};
     var userSession;
     var redirection;
 
     $scope.data = {};
     $scope.activity = {};
+    $scope.roles = [
+        {code: '0', name: 'Orientador'},
+        {code: '1', name: 'Servicio'},
+        {code: '2', name: 'Venta'}
+    ];
+    $scope.terminals =  [];
 
     Login.login.get(function (session) {
           if (!session.login) {
@@ -52,26 +58,15 @@ angular
                 }else{
                     $scope.data.role = activitiesList.role.code;
                     $scope.data.branchOffice = activitiesList.branchOffice.posCode;
-                    $scope.data.terminal = activitiesList.branchOffice.terminal.terminalId;
-                    console.log($scope.data);
+                    //
+                    terminalList(activitiesList.branchOffice.posCode, function (terminals) {
+                        $scope.terminals = terminals;
+                        $scope.data.terminal = activitiesList.branchOffice.terminal.terminalId;
+                    });
                 }
             });
           }
       });
-    // venta: 0, servicio: 1, orientador:2
-    $scope.roles = [
-        {code: '0', name: 'Orientador'},
-        {code: '1', name: 'Servicio'},
-        {code: '2', name: 'Venta'}
-    ];
-    $scope.terminals =  [
-      {terminalId: '1', terminalName: 'Terminal 1'},
-      {terminalId: '2', terminalName: 'Terminal 2'},
-      {terminalId: '3', terminalName: 'Terminal 3'},
-      {terminalId: '4', terminalName: 'Terminal 4'},
-      {terminalId: '5', terminalName: 'Terminal 5'},
-      {terminalId: '6', terminalName: 'Terminal 6'},
-    ];
 
     $scope.setConfData = function () {
         console.log($scope.branchOffices);
@@ -108,6 +103,18 @@ angular
         }
 
     };
+
+    $scope.setTerminal = function (posCode) {
+        terminalList(posCode, function (terminals) {
+            $scope.terminals = terminals;
+        });
+    };
+
+    function terminalList(posCode, callback) {
+        BranchOffice.terminal.get({posCode: posCode}, function(branchOfficeTerminals){
+            return callback(branchOfficeTerminals.terminals[0]);
+        });
+    }
 
     function redirectActivity(data) {
         var roleCode = _.last(data.activity).role.code;
