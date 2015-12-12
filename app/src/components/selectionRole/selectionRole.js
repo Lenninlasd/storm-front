@@ -61,7 +61,12 @@ angular
                     //
                     terminalList(activitiesList.branchOffice.posCode, function (terminals) {
                         $scope.terminals = terminals;
-                        $scope.data.terminal = activitiesList.branchOffice.terminal.terminalId;
+                        BranchOffice.availableTerminals.query({posCode: activitiesList.branchOffice.posCode}, function (availableTerminals) {
+                            console.log(availableTerminals);
+                            joinTerminalBusy($scope.terminals, availableTerminals)
+                            console.log($scope.terminals);
+                            $scope.data.terminal = activitiesList.branchOffice.terminal.terminalId;
+                        });
                     });
                 }
             });
@@ -113,6 +118,18 @@ angular
     function terminalList(posCode, callback) {
         BranchOffice.terminal.get({posCode: posCode}, function(branchOfficeTerminals){
             return callback(branchOfficeTerminals.terminals[0]);
+        });
+    }
+
+    function joinTerminalBusy(terminalList, availableTerminals) {
+        var sw = 0;
+        _.map(terminalList, function (terminal) {
+            _.each(availableTerminals, function (availableTerminal) {
+                if (terminal.terminalId === availableTerminal.terminal.terminalId) {
+                    terminal.disable = true; sw++; return;
+                }
+            });
+            if (sw === availableTerminals.length) return;
         });
     }
 

@@ -151,9 +151,12 @@ angular
         if (callback) return callback(null);
     }
 
+    /* ¿Hay turnos Disponibles? no --> available();
+    ¿Habia algun asesor Disponible al momento de la creación de un turno? si --> available(), no --> llama
+    ¿soy yo el asesor que va a atender? no --> available(), si --> llama */
     function callToken() {
         Token.tokens.query({state: 0, room: room}, function (data) {
-            // Hay turnos Disponibles? soy yo el asesor que va a atender?
+            if (data.length && !data[0].token.receiverAdviser) return getPendingToken(data[0]);
             if (data.length && data[0].token.receiverAdviser.adviserId === adviserInfo.adviserId) return getPendingToken(data[0]);
             available();
         });
