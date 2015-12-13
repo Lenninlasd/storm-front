@@ -5,6 +5,8 @@ var gulp = require('gulp'),
   minifyCss = require('gulp-minify-css'),
   uglify = require('gulp-uglify'),
   streamqueue  = require('streamqueue'),
+  sourcemaps = require('gulp-sourcemaps'),
+  babel = require('gulp-babel'),
   bases = {
       app: '/',
       dist: './app/dist'
@@ -26,16 +28,21 @@ gulp.task('sass:watch', function () {
     gulp.watch('./app/src/**/*.scss', ['sass']);
 });
 
-gulp.task('minjs', function(){
+gulp.task('minjs', function() {
     'use strict';
     return streamqueue({ objectMode: true },
         gulp.src('app/app.js'),
         gulp.src('app/src/**/*.js')
     )
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+        presets: ['es2015']
+    }))
     .pipe(concat('flugel.js'))
     .pipe(gulp.dest(bases.dist))
-  	.pipe(uglify())
+    .pipe(uglify())
     .pipe(rename('flugel.min.js'))
+    .pipe(sourcemaps.write('.'))
   	.pipe(gulp.dest(bases.dist));
 });
 

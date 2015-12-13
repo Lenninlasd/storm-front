@@ -1,6 +1,7 @@
 {
   "globalstrict": true,
   "validthis":true,
+  "esnext": true,
   "globals": {
     "angular": false,
     "describe": false,
