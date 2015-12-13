@@ -78,13 +78,17 @@ angular
         if (!$scope.branchOffices) return console.log('closed');
 
         var branchOffice = _.clone(_.findWhere($scope.branchOffices, {posCode: $scope.data.branchOffice}));
-        branchOffice.blueCircle = branchOffice.blueCircles[0]; //*** tempo
+        branchOffice.blueCircle = branchOffice.blueCircles[0]; //*** temporal
         branchOffice.terminal = _.findWhere($scope.terminals, {terminalId: $scope.data.terminal});
         delete branchOffice.blueCircles;
 
         var role = _.findWhere($scope.roles, {code: $scope.data.role});
+
+        //Obtiene la información de branchOffice, terminal y rol
         adviserInfo.role = role;
         adviserInfo.branchOffice = branchOffice;
+
+        //check if terminal is take *** backlog
 
         if (_.size($scope.activity)) {
             //validar si hubo cambio de rol o terminal
@@ -93,13 +97,11 @@ angular
             activity.role = role;
             Activity.activity.update(activity, function (data) {
                 $scope.activity = data;
-                socket.emit('selectionRole');
+                socket.emit('selectionRole'); // Se une al canal del circulo Azul
                 redirectActivity(data);
             });
-
         }else{
             Activity.activity.save(adviserInfo, function (data) {
-                console.log(data);
                 $scope.activity = data;
                 redirectActivity(data);
             }, function (err) {
