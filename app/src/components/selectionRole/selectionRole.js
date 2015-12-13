@@ -17,9 +17,9 @@ angular
 
   selectionRoleDirectiveCtrl.$inject = ['$scope', '$element','$attrs', 'Login', 'Activity', '$window', 'socket', 'BranchOffice'];
   function selectionRoleDirectiveCtrl($scope, $element, $attrs, Login, Activity, $window, socket, BranchOffice) {
-    var adviserInfo = {};
-    var userSession;
-    var redirection;
+    let adviserInfo = {};
+    let userSession;
+    let redirection;
 
     $scope.data = {};
     $scope.activity = {};
@@ -30,7 +30,7 @@ angular
     ];
     $scope.terminals =  [];
 
-    Login.login.get(function (session) {
+    Login.login.get( (session) => {
           if (!session.login) {
             $window.location = '/login'; return;
           }else{
@@ -42,13 +42,14 @@ angular
                   adviserId: userSession.idUser,
                   adviserEmail: userSession.email
             };
-            Activity.activity.get(adviserInfo, function (activities) {
+            Activity.activity.get(adviserInfo, (activities) => {
+
                 if (!activities._id) return;
 
                 $scope.activity = activities;
 
-                var activitiesList = _.last(activities.activity);
-                var closeEvent = activitiesList.activityEvent.eventCode;
+                let activitiesList = _.last(activities.activity);
+                let closeEvent = activitiesList.activityEvent.eventCode;
                 if (closeEvent !== '10') {
                     if (activitiesList.role.code === '0') {
                         $window.location = '#/view1'; return;
@@ -59,12 +60,10 @@ angular
                     $scope.data.role = activitiesList.role.code;
                     $scope.data.branchOffice = activitiesList.branchOffice.posCode;
                     //
-                    terminalList(activitiesList.branchOffice.posCode, function (terminals) {
+                    terminalList(activitiesList.branchOffice.posCode, (terminals) => {
                         $scope.terminals = terminals;
-                        BranchOffice.availableTerminals.query({posCode: activitiesList.branchOffice.posCode}, function (availableTerminals) {
-                            console.log(availableTerminals);
-                            joinTerminalBusy($scope.terminals, availableTerminals)
-                            console.log($scope.terminals);
+                        BranchOffice.availableTerminals.query({posCode: activitiesList.branchOffice.posCode}, (availableTerminals) => {
+                            joinTerminalBusy($scope.terminals, availableTerminals);
                             $scope.data.terminal = activitiesList.branchOffice.terminal.terminalId;
                         });
                     });
@@ -77,12 +76,12 @@ angular
         console.log($scope.branchOffices);
         if (!$scope.branchOffices) return console.log('closed');
 
-        var branchOffice = _.clone(_.findWhere($scope.branchOffices, {posCode: $scope.data.branchOffice}));
+        let branchOffice = _.clone(_.findWhere($scope.branchOffices, {posCode: $scope.data.branchOffice}));
         branchOffice.blueCircle = branchOffice.blueCircles[0]; //*** temporal
         branchOffice.terminal = _.findWhere($scope.terminals, {terminalId: $scope.data.terminal});
         delete branchOffice.blueCircles;
 
-        var role = _.findWhere($scope.roles, {code: $scope.data.role});
+        let role = _.findWhere($scope.roles, {code: $scope.data.role});
 
         //Obtiene la información de branchOffice, terminal y rol
         adviserInfo.role = role;
@@ -92,16 +91,16 @@ angular
 
         if (_.size($scope.activity)) {
             //validar si hubo cambio de rol o terminal
-            var activity = {idActivity: $scope.activity._id, eventCode: '10', eventName: 'closed'};
+            let activity = {idActivity: $scope.activity._id, eventCode: '10', eventName: 'closed'};
             activity.terminal = branchOffice.terminal;
             activity.role = role;
-            Activity.activity.update(activity, function (data) {
+            Activity.activity.update(activity, (data) => {
                 $scope.activity = data;
                 socket.emit('selectionRole'); // Se une al canal del circulo Azul
                 redirectActivity(data);
             });
         }else{
-            Activity.activity.save(adviserInfo, function (data) {
+            Activity.activity.save(adviserInfo, (data) => {
                 $scope.activity = data;
                 redirectActivity(data);
             }, function (err) {
@@ -112,21 +111,24 @@ angular
     };
 
     $scope.setTerminal = function (posCode) {
-        terminalList(posCode, function (terminals) {
+        terminalList(posCode, (terminals) => {
             $scope.terminals = terminals;
+            BranchOffice.availableTerminals.query({posCode: posCode}, (availableTerminals) => {
+                joinTerminalBusy($scope.terminals, availableTerminals);
+            });
         });
     };
 
     function terminalList(posCode, callback) {
-        BranchOffice.terminal.get({posCode: posCode}, function(branchOfficeTerminals){
+        BranchOffice.terminal.get({posCode: posCode}, (branchOfficeTerminals) => {
             return callback(branchOfficeTerminals.terminals[0]);
         });
     }
 
     function joinTerminalBusy(terminalList, availableTerminals) {
-        var sw = 0;
-        _.map(terminalList, function (terminal) {
-            _.each(availableTerminals, function (availableTerminal) {
+        let sw = 0;
+        _.map(terminalList, (terminal) => {
+            _.each(availableTerminals, (availableTerminal) => {
                 if (terminal.terminalId === availableTerminal.terminal.terminalId) {
                     terminal.disable = true; sw++; return;
                 }
@@ -136,7 +138,7 @@ angular
     }
 
     function redirectActivity(data) {
-        var roleCode = _.last(data.activity).role.code;
+        let roleCode = _.last(data.activity).role.code;
         if (roleCode === '0') {
             $window.location = '#/view1'; return;
         }else{
