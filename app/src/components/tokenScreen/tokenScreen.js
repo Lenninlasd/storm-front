@@ -17,19 +17,19 @@ angular
   function tokenScreenCtrl($scope, $element, $attrs, Token, Config, socket) {
       $scope.pendingTokens = [];
 
-      Token.tokens.query({state: 0}, function (data) {
+      Token.tokens.query({state: 0}, (data) => {
           $scope.pendingTokens = data;
           console.log(data);
       });
 
-      socket.on('newToken', function (data) {
+      socket.on('newToken', (data) => {
           console.log(data);
-          Token.tokens.query({state: 0}, function (data) {
+          Token.tokens.query({state: 0}, (data) => {
               $scope.pendingTokens = data;
           });
       });
-      socket.on('takeToken', function () {
-        Token.tokens.query({state: 0}, function (data) {
+      socket.on('takeToken', () => {
+        Token.tokens.query({state: 0}, (data) => {
             $scope.pendingTokens = data;
         });
       });

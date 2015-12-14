@@ -56,56 +56,62 @@ angular
 
     // valida que se esté atendiendo un turno
     function inicializeAttending() {
-        getAdviserInfo(function () {
-            checkIfAttending();
-        });
+        getAdviserInfo()
+        .then(() => {return checkIfAttending();})
+        .then(isAttending => callToken(isAttending));
     }
 
     function getAdviserInfo(callback) {
-        Login.login.get(function (session) {
-            if (session.login) {
-                room = session.userData.circleList.branchOffices[0].posCode;
-                inicializeSocket(room);
-                adviserInfo = {
-                      adviserName: session.userData.name,
-                      adviserLastName: session.userData.lastName,
-                      adviserId: session.userData.idUser,
-                      adviserEmail: session.userData.email
-                };
-                Activity.activity.get(adviserInfo, function (data) {
-                    $scope.activity = data;
-                    return callback();
-                });
-            }
+        return new Promise((resolve, reject) => {
+            Login.login.get(session => {
+                if (session.login) {
+                    room = session.userData.circleList.branchOffices[0].posCode;
+                    inicializeSocket(room);
+                    adviserInfo = {
+                          adviserName: session.userData.name,
+                          adviserLastName: session.userData.lastName,
+                          adviserId: session.userData.idUser,
+                          adviserEmail: session.userData.email
+                    };
+                    Activity.activity.get(adviserInfo, data => {
+                        $scope.activity = data;
+                        resolve();
+                    });
+                }
+            });
         });
     }
+
     function checkIfAttending(){
-      Token.tokens.query({state: 2}, function (data) {
-          if (data.length) {
-              // Cambiar esto ******* del receiverAdviser
-              self.tokenInAttention =  _.find(data, function (obj) {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;}) || {};
-              console.log(self.tokenInAttention);
-              if (_.size(self.tokenInAttention)) {
-                  self.stateAttention = 2;
-                  $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
-                  $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
-                  stopTime = $interval(callAtInterval, 200, false);
-                  return;
+      return new Promise((resolve, reject) => {
+          Token.tokens.query({state: 2}, data => {
+              if (data.length) {
+                  // Cambiar esto ******* del receiverAdviser
+                  self.tokenInAttention =  _.find(data, obj => {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;}) || {};
+                  // ¿soy el que está atendiendo el turno?
+                  if (_.size(self.tokenInAttention)) {
+                      self.stateAttention = 2;
+                      $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
+                      $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
+                      stopTime = $interval(callAtInterval, 200, false);
+                      resolve(true);
+                  }
               }
-          }
-          callToken();
+              resolve(false);
+              // callToken();
+          });
       });
     }
 
     function inicializeSocket() {
-        socket.on('newToken', function (data) {
+        socket.on('newToken', data => {
             console.log(data);
             if (!data.availableUser) return;
             if (self.stateAttention === 0 && adviserInfo.adviserId === data.availableUser.adviserId) {
                 getPendingToken(data.token);
             }
         });
-        socket.on('resultService', function (data) {
+        socket.on('resultService', data => {
             self.tokenInAttention = data;
             $mdDialog.hide();
         });
@@ -154,7 +160,8 @@ angular
     /* ¿Hay turnos Disponibles? no --> available();
     ¿Habia algun asesor Disponible al momento de la creación de un turno? si --> available(), no --> llama
     ¿soy yo el asesor que va a atender? no --> available(), si --> llama */
-    function callToken() {
+    function callToken(isAttending = false) {
+        if (isAttending) return;
         Token.tokens.query({state: 0, room: room}, function (data) {
             if (data.length && !data[0].token.receiverAdviser) return getPendingToken(data[0]);
             if (data.length && data[0].token.receiverAdviser.adviserId === adviserInfo.adviserId) return getPendingToken(data[0]);
