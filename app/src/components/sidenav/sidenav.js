@@ -15,12 +15,14 @@ angular
     };
   }
 
-  sideNavCtrl.$inject = ['$scope', '$element','$attrs', 'BranchOffice'];
-  function sideNavCtrl($scope, $element, $attrs, BranchOffice) {
+  sideNavCtrl.$inject = ['$scope', '$element','$attrs', 'BranchOffice', '$location'];
+  function sideNavCtrl($scope, $element, $attrs, BranchOffice, $location) {
       $scope.branchOfficeList = [];
-      BranchOffice.branchOfficeList.query(function (data) {
+      $scope.currentBranchOffice = $location.path().split('/')[2];
+      
+      BranchOffice.branchOfficeList.query(data => {
           $scope.branchOffices = data;
-      }, function (err) {
+      }, err => {
           console.log(err);
       });
   }
