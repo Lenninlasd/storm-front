@@ -4,7 +4,7 @@
     <fg-keyboard ng-show="vc1.step === 1" keyboardnumber="keyboardNumber"></fg-keyboard>
 
     <div ng-show="vc1.step === 2" layout="row" layout-align="center center">
-        <div flex="60" flex-md="80" flex-sm="100" class="md-whiteframe-z2" layout-padding layout="column" style="background-color:white;padding:5%">
+        <div flex-xs="95" flex-gt-xs="80" flex-gt-md="60"  class="md-whiteframe-z2" layout="column" style="background-color:white;padding:30px 20px">
             <md-input-container>
                 <label style="font-size:1.2em">Ingrese el nombre del cliente con la id: {{vc1.dataCustomer.token.lineNumber}}</label>
                 <input ng-model="vc1.dataCustomer.token.screenName">
@@ -18,7 +18,7 @@
 
     <div ng-show="vc1.step === 3" layout="row" layout-align="center center">
 
-        <div flex="60" flex-md="90" flex-sm="100" layout="row" layout-wrap layout-align="start center"
+        <div flex-gt-sm="60" flex-gt-xs="90" flex-xs="95" layout="row" layout-wrap layout-align="start center"
         class="md-whiteframe-z2" layout-padding style="background-color:#E8E8E8;margin-top:15px">
             <md-button ng-click="goBackStep(2)" class="md-fab md-mini" style="background-color: rgba(224, 224, 224, 0.96);color:#111">
                 <md-tooltip hide-sm>Atrás</md-tooltip><i class="fa fa-arrow-left fa-lg"></i>
