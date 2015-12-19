@@ -93,10 +93,14 @@
           </div>
         </md-card-content>
 
-        <div layout="row"  layout-align="space-between center" ng-hide="demo.onlyRead">
-            <md-button ng-disabled="demo.stateAttention !== 0" ng-click="closeAttention()" class="md-raised">{{"cierre atención"}}</md-button>
-            <md-fab-speed-dial layout="column" layout-align="center end" ng-hide="demo.hidden || demo.stateAttention < 2  ? true : false"
-                md-direction="{{demo.direction}}" class="md-fling">
+        <div layout="row"  layout-align="space-between center" ng-hide="demo.onlyRead"
+              style="position: relative;bottom: 100px;height: 100px;">
+            <md-button ng-disabled="demo.stateAttention !== 0" ng-click="closeAttention()"
+                        class="md-raised" style="margin-top: 100px;bottom: -60px;">{{"cierre atención"}}
+            </md-button>
+            <md-fab-speed-dial md-open="demo.isOpen" layout="column" layout-align="center end"
+                              ng-hide="demo.hidden || demo.stateAttention < 2  ? true : false"
+                              md-direction="{{demo.direction}}" class="md-fling">
               <md-fab-trigger layout="row" layout-align="end center">
                 <md-button aria-label="menu" class="md-fab md-primary" ng-click="demo.fondonegroT()">
                   <md-tooltip hide-sm md-direction="left" md-autohide="false">Menu</md-tooltip>
@@ -104,9 +108,9 @@
                 </md-button>
               </md-fab-trigger>
 
-              <md-fab-actions style="height: 0px;">
+              <md-fab-actions style="/*height: 0px;*/">
                 <div layout="row" layout-align="end center" ng-repeat="(key, item) in demo.items" >
-                  <span class="material-tag">{{item.name}}</span>
+                  <span ng-show="demo.isOpen" class="material-tag">{{item.name}}</span>
                   <md-button ng-click="tokenAction(key)" aria-label="{{item.name}}" class="md-fab md-raised {{item.btnColor}}">
                       <i class="fa fa-lg {{item.icon}}"></i>
                   </md-button>

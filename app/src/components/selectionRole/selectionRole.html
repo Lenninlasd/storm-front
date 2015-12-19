@@ -1,5 +1,5 @@
 <div layout="row"  layout-align="center center">
-      <form name="myForm" ng-submit="setConfData()" layout="column" flex-sm="100" flex-md="80" flex-gt-md="50">
+      <form name="myForm" ng-submit="setConfData()" layout="column" flex-xs="100" flex-sm="80" flex-gt-sm="50">
         <h2 style="color:white;text-align:center">Selecciona tus preferencias</h2>
         <md-card flex class="" layout-margin layout-padding>
             <p>Selecciona una sucursal: </p>
@@ -19,7 +19,7 @@
           <md-card flex class="" layout-margin layout-padding ng-show="terminals.length">
               <p>Selecciona una terminal: <span class="radioValue">{{ data.terminal }}</span> </p>
               <md-radio-group required layout="row" layout-padding layout-wrap ng-model="data.terminal">
-                  <md-radio-button flex-sm="40" flex="25" class="md-primary"
+                  <md-radio-button flex-xs="40" flex-sm="40" flex-md="40" flex="25" class="md-primary"
                       ng-repeat="terminal in terminals" ng-value="terminal.terminalId"  ng-disabled="!data.role || terminal.disable">
                       {{terminal.terminalName}}
                   </md-radio-button>
