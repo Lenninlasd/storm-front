@@ -192,7 +192,7 @@ angular
             callTime = $interval(function() {
                 $scope.callTime = diffTime(token.token.infoToken.logCalledToken, false);
                 let minute = parseInt($scope.callTime[4]);
-                if ($scope.callTime !== '23:59:59' && !isNaN(minute) && minute >= 2) { //tiempo en minutos
+                if ($scope.callTime !== '23:59:59' && !isNaN(minute) && minute >= 20) { //tiempo en minutos
                     Token.abandoningToken.update({id: token._id}, function (data) {
                         $interval.cancel(callTime);
                         callToken();

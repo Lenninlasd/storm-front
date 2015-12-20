@@ -12,7 +12,7 @@
       'flugel.components',
     ]).
     config(['$routeProvider', function($routeProvider) {
-      $routeProvider.otherwise({redirectTo: '/'});
+      $routeProvider.otherwise({redirectTo: '/login'});
     }])
     .config(['$httpProvider', function($httpProvider) {
         $httpProvider.interceptors.push(['$cookies', '$location', '$q', function ($cookies, $location, $q) {

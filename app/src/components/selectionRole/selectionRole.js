@@ -32,7 +32,7 @@ angular
 
     Login.login.get( (session) => {
           if (!session.login) {
-            $window.location = '/login'; return;
+            $window.location = '#/login'; return;
           }else{
             $scope.branchOffices = session.userData.circleList.branchOffices;
             userSession = session.userData;

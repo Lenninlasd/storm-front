@@ -19,7 +19,7 @@
             event.preventDefault();
             Login.logout.save(function(session) {
                 $cookies.remove('session');
-                if (!session.login) $window.location = '/login';
+                if (!session.login) $window.location = '#/login';
             });
         };
 

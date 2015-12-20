@@ -9,10 +9,11 @@ angular
       retrict: 'E',
       scope: {},
       controller: loginCardCtrl,
-      templateUrl: '/login/src/components/loginCard/loginCard.html'
+      templateUrl: 'src/components/loginCard/loginCard.html'
     };
   }
 
+  loginCardCtrl.$inject = ['$scope', '$element', '$attrs', '$window', '$cookies', 'Login'];
   function loginCardCtrl($scope, $element, $attrs, $window, $cookies, Login) {
       $scope.user = {name:"", password:""};
       $scope.msj = "";

@@ -1,10 +1,10 @@
 'use strict';
 
-angular.module('flugel.loginview', ['ngRoute'])
+angular.module('flugel.views.login', ['ngRoute'])
 
 .config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/', {
-    templateUrl: '/login/src/views/login/login.html',
+  $routeProvider.when('/login', {
+    templateUrl: 'src/views/login/login.html',
     controllerAs: 'demo',
     controller: 'LoginCtrl'
   });

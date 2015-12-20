@@ -8,5 +8,6 @@ angular
     'flugel.components.selectionRole',
     'flugel.components.charts',
     'flugel.components.sidenav',
-    'flugel.components.gtr'
+    'flugel.components.gtr',
+    'flugel.components.loginCard'
   ]);
