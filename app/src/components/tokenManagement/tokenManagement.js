@@ -57,8 +57,20 @@ angular
     // valida que se esté atendiendo un turno
     function inicializeAttending() {
         getAdviserInfo()
-        .then(() => {return checkIfAttending();})
-        .then(isAttending => callToken(isAttending));
+        .then(() => {
+            return checkIfAttending();
+        })
+        .then(isNoAttending => {
+            return callToken(isNoAttending);
+        })
+        .then(tokens => {
+            if (tokens.length) {
+                getPendingToken(tokens[0]);
+            }else{
+                available();
+            }
+        })
+        .catch(() => {}); // attending
     }
 
     function getAdviserInfo(callback) {
@@ -94,11 +106,10 @@ angular
                       $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
                       $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
                       stopTime = $interval(callAtInterval, 200, false);
-                      resolve(true);
+                      resolve(false);
                   }
               }
-              resolve(false);
-              // callToken();
+              resolve(true);
           });
       });
     }
@@ -131,7 +142,6 @@ angular
         self.stateAttention = 0; // 0 = pending, 1 = calling, 2 = in attention, 3 = closed, 4 = abandoned, 5 = canceled
         self.tokenToBeTaken = {};
         self.tokenInAttention = {};
-
          // *** Punto 1 ***
         setEventActivity('3', 'disponible', function (data) {
               var activityStartTime = _.last($scope.activity.activity).activityStartTime;
@@ -160,7 +170,20 @@ angular
     /* ¿Hay turnos Disponibles? no --> available();
     ¿Habia algun asesor Disponible al momento de la creación de un turno? si --> available(), no --> llama
     ¿soy yo el asesor que va a atender? no --> available(), si --> llama */
-    function callToken(isAttending = false) {
+    function callToken(isNoAttending = true) {
+        return new Promise ((resolve, reject) => {
+            if (!isNoAttending) return reject();
+            Token.tokens.query({state: 0, room: room}, function (data) {
+                if (data.length && (!data[0].token.receiverAdviser || data[0].token.receiverAdviser.adviserId === adviserInfo.adviserId)) {
+                    resolve(data);
+                }else {
+                    resolve([]);
+                }
+            });
+        });
+    }
+
+    function callToken2(isAttending = false) {
         if (isAttending) return;
         Token.tokens.query({state: 0, room: room}, function (data) {
             if (data.length && !data[0].token.receiverAdviser) return getPendingToken(data[0]);
@@ -192,10 +215,10 @@ angular
             callTime = $interval(function() {
                 $scope.callTime = diffTime(token.token.infoToken.logCalledToken, false);
                 let minute = parseInt($scope.callTime[4]);
-                if ($scope.callTime !== '23:59:59' && !isNaN(minute) && minute >= 20) { //tiempo en minutos
+                if ($scope.callTime !== '23:59:59' && !isNaN(minute) && minute >= 2) { //tiempo en minutos
                     Token.abandoningToken.update({id: token._id}, function (data) {
                         $interval.cancel(callTime);
-                        callToken();
+                        callToken2();
                     });
                 }
             }, 200, false);
@@ -229,7 +252,7 @@ angular
            console.log(id);
            Token.closeToken.update(id, function (data) {
                $interval.cancel(stopTime);
-               callToken();
+               callToken2();
            });
 
        }, function() {

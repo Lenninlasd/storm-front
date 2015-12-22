@@ -13,13 +13,13 @@ angular.module('flugel.view2', ['ngRoute'])
 .controller('View2Ctrl', ['$scope', 'Login', '$window', '$cookies', function($scope, Login, $window, $cookies) {
     Login.login.get(function (session) {
         console.log(session);
-        if (!session.login) $window.location = '/login';
+        if (!session.login) $window.location = '#/login';
     });
     $scope.logout = function(event) {
         event.preventDefault();
         Login.logout.save(function(session) {
             $cookies.remove('session');
-            if (!session.login) $window.location = '/login';
+            if (!session.login) $window.location = '#/login';
         });
     };
 }]);

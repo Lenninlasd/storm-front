@@ -12,7 +12,7 @@
 
     .controller('selectionRoleCtrl', ['$scope', 'Login', '$window', '$cookies', function($scope, Login, $window, $cookies) {
         Login.login.get(function (session) {
-            if (!session.login) $window.location = '/login';
+            if (!session.login) $window.location = '#/login';
         });
 
         $scope.logout = function(event) {
