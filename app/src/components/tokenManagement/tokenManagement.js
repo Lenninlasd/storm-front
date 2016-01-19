@@ -16,8 +16,10 @@ angular
     };
   }
 
-  tokenManagementCtrl.$inject = ['$scope', '$element','$attrs', '$interval', '$mdDialog', '$cookies', '$window', 'Token', 'Config', 'Login', 'Activity', 'socket'];
-  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies, $window, Token, Config, Login, Activity, socket) {
+  tokenManagementCtrl.$inject = ['$scope', '$element','$attrs', '$interval', '$mdDialog',
+                                '$cookies', '$window', 'Token', 'Config', 'Login', 'Activity', 'socket'];
+  function tokenManagementCtrl($scope, $element, $attrs, $interval, $mdDialog, $cookies,
+                                $window, Token, Config, Login, Activity, socket) {
     var stopTime,
         callTime,
         availableTime,
@@ -53,6 +55,13 @@ angular
     $scope.closeAttention = closeAttention;
 
     inicializeAttending();
+
+    window.onbeforeunload = function (e) {
+        var time = 1;
+        let msg = `Si ciera la ventana el turno se cerrará en ${time} minuto(s)`;
+        if (self.tokenInAttention._id) return msg;
+        return null;
+    };
 
     // valida que se esté atendiendo un turno
     function inicializeAttending() {
@@ -99,12 +108,16 @@ angular
           Token.tokens.query({state: 2}, data => {
               if (data.length) {
                   // Cambiar esto ******* del receiverAdviser
-                  self.tokenInAttention =  _.find(data, obj => {return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;}) || {};
+                  self.tokenInAttention =  _.find(data, obj => {
+                        return  obj.token.receiverAdviser.adviserId === adviserInfo.adviserId;
+                    }) || {};
                   // ¿soy el que está atendiendo el turno?
                   if (_.size(self.tokenInAttention)) {
                       self.stateAttention = 2;
-                      $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
-                      $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
+                      $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, 
+                                                    self.tokenInAttention.token.infoToken.logCalledToken);
+                      $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, 
+                                                    self.tokenInAttention.token.infoToken.logAtentionToken);
                       stopTime = $interval(callAtInterval, 200, false);
                       resolve(false);
                   }
@@ -174,7 +187,8 @@ angular
         return new Promise ((resolve, reject) => {
             if (!isNoAttending) return reject();
             Token.tokens.query({state: 0, room: room}, function (data) {
-                if (data.length && (!data[0].token.receiverAdviser || data[0].token.receiverAdviser.adviserId === adviserInfo.adviserId)) {
+                if (data.length && (!data[0].token.receiverAdviser || 
+                                    data[0].token.receiverAdviser.adviserId === adviserInfo.adviserId)) {
                     resolve(data);
                 }else {
                     resolve([]);
@@ -233,8 +247,10 @@ angular
             setEventActivity('2', 'en atención');
             self.stateAttention = 2;
             self.tokenInAttention = data;
-            $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken, self.tokenInAttention.token.infoToken.logCalledToken);
-            $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken, self.tokenInAttention.token.infoToken.logAtentionToken);
+            $scope.waitTime = diffTime(self.tokenInAttention.token.infoToken.logCreationToken,
+                                        self.tokenInAttention.token.infoToken.logCalledToken);
+            $scope.callTime = diffTime(self.tokenInAttention.token.infoToken.logCalledToken,
+                                        self.tokenInAttention.token.infoToken.logAtentionToken);
             stopTime = $interval(callAtInterval, 200);
             $interval.cancel(callTime);
             initService();
